@@ -1,11 +1,14 @@
 package com.m_life.m_life.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Comment extends BaseTimeEntity{
     @Id
@@ -21,9 +24,7 @@ public class Comment extends BaseTimeEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    protected Comment() {
 
-    }
     private Comment(String content, Post post){
         this.content = content;
         this.post = post;
