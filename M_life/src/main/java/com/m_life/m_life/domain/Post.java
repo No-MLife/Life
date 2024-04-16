@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +22,11 @@ public class Post extends BaseTimeEntity{
     @Setter
     @Column(nullable = false, length = 10000)
     private String content;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList = new ArrayList<>();
+
 
 //    @Setter
 //    private int like;

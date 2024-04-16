@@ -1,4 +1,4 @@
-package com.m_life.m_life.controller.Post;
+package com.m_life.m_life.controller;
 
 import com.m_life.m_life.dto.request.PostRequest;
 import com.m_life.m_life.dto.response.PostResponse;
@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/")
-public class postController {
+public class PostController {
 
     private final PostService postService;
     @PostMapping("/post")
