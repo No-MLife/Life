@@ -1,7 +1,9 @@
 package com.m_life.m_life.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Post extends BaseTimeEntity{
     @Id
@@ -37,9 +40,7 @@ public class Post extends BaseTimeEntity{
 //    private String userId;
 
 
-    protected Post() {
 
-    }
     private Post(String title, String content){
         this.title = title;
         this.content = content;
