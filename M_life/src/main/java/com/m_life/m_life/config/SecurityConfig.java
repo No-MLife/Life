@@ -2,6 +2,7 @@ package com.m_life.m_life.config;
 
 import com.m_life.m_life.jwt.JWTFilter;
 import com.m_life.m_life.jwt.JWTUtil;
+import com.m_life.m_life.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,7 @@ public class SecurityConfig {
     }
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
 
 
@@ -81,7 +83,7 @@ public class SecurityConfig {
 
         //JWTFilter 등록
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, customUserDetailsService), LoginFilter.class);
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
@@ -92,4 +94,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

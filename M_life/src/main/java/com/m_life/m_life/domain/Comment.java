@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.catalina.User;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import lombok.Setter;
 public class Comment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Setter
     @Column(nullable = false, length = 10000)
@@ -24,13 +25,19 @@ public class Comment extends BaseTimeEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "useraccount_id")
+    private UserAccount userAccount;
 
-    private Comment(String content, Post post){
+
+    private Comment(String content, Post post, UserAccount userAccount){
         this.content = content;
         this.post = post;
+        this.userAccount = userAccount;
     }
-    public static Comment of(String content, Post post){
+    public static Comment of(String content, Post post, UserAccount userAccount){
 
-        return new Comment(content, post);
+        return new Comment(content, post, userAccount);
     }
 }

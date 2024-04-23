@@ -7,14 +7,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record CommentResponse(
-        int id,
+        Long id,
         String content,
         LocalDateTime createAt,
-        int postId
+        Long postId,
+        String commentAuthor
 
 ) {
-    public static CommentResponse of(int id, String content, LocalDateTime localDateTime, int postId){
-        return new CommentResponse(id, content, localDateTime, postId);
+    public static CommentResponse of(Long id, String content, LocalDateTime localDateTime, Long postId, String commentAuthor){
+        return new CommentResponse(id, content, localDateTime, postId, commentAuthor);
     }
 
     public static CommentResponse from(Comment comment){
@@ -22,7 +23,8 @@ public record CommentResponse(
                 comment.getId(),
                 comment.getContent(),
                 comment.getCreateDate(),
-                comment.getPost().getId()
+                comment.getPost().getId(),
+                comment.getUserAccount().getNickname()
         );
     }
 }

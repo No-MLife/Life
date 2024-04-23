@@ -67,4 +67,8 @@ public class CustomUserDetails implements UserDetails {
 
         return true;
     }
+
+    public UserAccount getUserAccount() {
+        return userEntity;
+    }
 }

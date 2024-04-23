@@ -7,16 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Setter
     @Column(nullable = false)
@@ -31,21 +33,22 @@ public class Post extends BaseTimeEntity{
     private List<Comment> commentList = new ArrayList<>();
 
 
-//    @Setter
-//    private int like;
-
-    // user 엔티티를 만들면 연결 해야함
-//    @Setter
-//    @ManyToOne(optional = false)
-//    private String userId;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PostLike> likes = new HashSet<>();
 
 
+    @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "useraccount_id")
+    private UserAccount userAccount;
 
-    private Post(String title, String content){
+
+    private Post(String title, String content) {
         this.title = title;
         this.content = content;
     }
-    public static Post of(String title, String content){
+
+    public static Post of(String title, String content) {
         return new Post(title, content);
     }
 }
