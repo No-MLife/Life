@@ -1,6 +1,6 @@
 {
-    "name": "test_app",
-    "short_name": "test_app",
+    "name": "m_life_app",
+    "short_name": "m_life_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
