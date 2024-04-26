@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       // 라우트 설계 필요없이 GetX를 이용
-      home: SignupPage(
+      home: HomePage(
 
       ),
     );

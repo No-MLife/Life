@@ -3,8 +3,9 @@ import 'package:m_life_app/size.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String text;
+  final funValidator;
 
-  const CustomTextFormField({required this.text});
+  const CustomTextFormField({required this.text, this.funValidator});
 
 
   @override
@@ -17,17 +18,10 @@ class CustomTextFormField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: TextFormField(
-            validator: (value){
-              if(value == null || value.isEmpty){
-                return "아이디 또는 비밀번호를 입력해주세요";
-              }else{
-                return null;
-              }
-            },
-
-            obscureText: text == "Password" ? true : false,
+            validator: funValidator,
+            obscureText: text == "비밀번호" ? true : false,
             decoration: InputDecoration(
-              hintText: "Enter Your $text",
+              hintText: "$text 입력란",
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
