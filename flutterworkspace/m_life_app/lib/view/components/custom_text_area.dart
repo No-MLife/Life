@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:m_life_app/size.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormArea extends StatelessWidget {
   final String text;
   final funValidator;
+  final String? value;
 
-  const CustomTextFormField({required this.text, this.funValidator});
-
+  const CustomTextFormArea({required this.text, this.funValidator, this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -18,26 +18,26 @@ class CustomTextFormField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: TextFormField(
+            initialValue: value ?? "",
+            maxLines: 10,
             validator: funValidator,
-            obscureText: text == "비밀번호" ? true : false,
             decoration: InputDecoration(
               hintText: "$text 입력란",
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(5),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(5),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(5),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(5),
               ),
             ),
           ),
         ),
-
       ],
     );
   }
