@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String username = loginRequest.getUsername();
             String password = loginRequest.getPassword();
 
+
             //스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
@@ -63,6 +65,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String username = customUserDetails.getUsername();
+        String nickname = customUserDetails.getUserAccount().getNickname();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -70,7 +73,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role, 30*60*1000L);
+        String token = jwtUtil.createJwt(username, nickname, role, 30*60*10000L);
         response.addHeader("Authorization", "Bearer " + token);
         logger.info("로그인을 성공했습니다.");
     }
@@ -85,6 +88,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private static class LoginRequest {
         private String username;
         private String password;
+        private String nickname;
 
         // getter와 setter는 Lombok의 @Data 어노테이션을 사용하여 자동 생성 가능
         public String getUsername() {
