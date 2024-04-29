@@ -4,10 +4,10 @@ import 'package:m_life_app/size.dart';
 class CustomTextFormField extends StatelessWidget {
   final String text;
   final funValidator;
-  final String? value;
+  final controller;
 
   const CustomTextFormField(
-      {required this.text, this.funValidator, this.value});
+      {required this.text, required this.funValidator, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CustomTextFormField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: TextFormField(
-            initialValue: value ?? "",
+            controller: controller,
             validator: funValidator,
             obscureText: text == "비밀번호" ? true : false,
             decoration: InputDecoration(

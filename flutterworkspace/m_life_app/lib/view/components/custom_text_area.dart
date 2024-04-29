@@ -4,12 +4,14 @@ import 'package:m_life_app/size.dart';
 class CustomTextFormArea extends StatelessWidget {
   final String text;
   final funValidator;
-  final String? value;
+  final controller;
 
-  const CustomTextFormArea({required this.text, this.funValidator, this.value});
+  const CustomTextFormArea(
+      {required this.text, this.funValidator, this.controller});
 
   @override
   Widget build(BuildContext context) {
+    final BorderRadius borderRadius = BorderRadius.circular(15);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -18,22 +20,22 @@ class CustomTextFormArea extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: TextFormField(
-            initialValue: value ?? "",
-            maxLines: 10,
+            controller: controller,
+            maxLines: 13,
             validator: funValidator,
             decoration: InputDecoration(
               hintText: "$text 입력란",
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: borderRadius,
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: borderRadius,
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: borderRadius,
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: borderRadius,
               ),
             ),
           ),
