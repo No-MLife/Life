@@ -29,4 +29,12 @@ class UserRepository {
     }
     return false;
   }
+
+  Future<int> getLike() async {
+    Response response = await _userProvider.getLike();
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+    return -1;
+  }
 }

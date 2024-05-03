@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:m_life_app/util/jwt.dart';
 
-const host = "http://192.168.0.9:8080";
+// const host = "http://192.168.0.9:8080";
 // const host = "http://172.168.1.50:8080";
+
+const host = "http://172.19.32.1:8080"; // home
 
 class CommentProvider extends GetConnect {
   Future<Response> findAllComment(int postId) =>

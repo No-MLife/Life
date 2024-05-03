@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/controller/comment_controller.dart';
+import 'package:m_life_app/controller/postLike_controller.dart';
 import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/view/components/custom_text_form_field.dart';
 import 'package:m_life_app/view/pages/post/update_page.dart';
 
 import '../../../util/validator_util.dart';
+import '../../components/ad_banner.dart';
 import 'home_page.dart';
 
 class DetailPage extends StatelessWidget {
@@ -17,7 +19,9 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     PostController p = Get.find();
     UserController u = Get.find();
+    PostLikeController pl = Get.put(PostLikeController(this.id!));
     CommentController c = Get.put(CommentController(this.id!));
+
 
     final _comment = TextEditingController();
 
@@ -70,7 +74,7 @@ class DetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${p.post.value.authorName} + 유저의 좋아요 개수 + ",
+                        "${p.post.value.authorName} ${u.totalLike.value}",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -101,21 +105,14 @@ class DetailPage extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   IconButton(
-                    // 좋아요 기능 추가해야함
                     icon: Icon(
-                      p.post.value.authorName != u.principal.value.nickname
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: p.post.value.likeCount != null
-                          ? Colors.red
-                          : Colors.grey,
+                      pl.isLiked.value ? Icons.favorite : Icons.favorite_border,
+                      color: pl.isLiked.value ? Colors.red : Colors.grey,
                     ),
-                    onPressed: () {
-                      print("Hello world");
-                      p.post.value.likeCount!;
-                    },
-                  )
-                ],
+                      onPressed: (){
+                      pl.isLiked.value ? pl.unlikePost(id!) : pl.likePost(id!);
+                      },
+                  ),                ],
               ),
               Divider(),
               Expanded(
@@ -127,23 +124,15 @@ class DetailPage extends StatelessWidget {
                       Text("${p.post.value.content}",
                           style: TextStyle(fontSize: 18)),
                       SizedBox(height: 16),
-                      Container(
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.amber[200],
-                          borderRadius: BorderRadius.circular(35.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '광고 영역',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
+                      Divider(),
+                    AdBanner(
+                      imagePaths: [
+                        'assets/ad1.png',
+                        'assets/ad2.png',
+                        'assets/ad3.png',
+                        'assets/ad4.png',
+                      ],
+                    ),
                       Divider(),
                       SizedBox(height: 8),
                       ListView.builder(

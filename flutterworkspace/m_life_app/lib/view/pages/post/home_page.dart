@@ -7,6 +7,7 @@ import 'package:m_life_app/view/components/custom_header_navi.dart';
 import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 
+import '../../components/ad_banner.dart';
 import '../user/user_info.dart';
 import 'detail_page.dart';
 
@@ -40,14 +41,13 @@ class HomePage extends StatelessWidget {
                       color: Colors.amber[200],
                       borderRadius: BorderRadius.circular(45.0),
                     ),
-                    child: Center(
-                      child: Text(
-                        '광고 영역',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    child:AdBanner(
+                      imagePaths: [
+                        'assets/ad1.png',
+                        'assets/ad2.png',
+                        'assets/ad3.png',
+                        'assets/ad4.png',
+                      ],
                     ),
                   );
                 } else if (index == 1) {
@@ -200,8 +200,8 @@ class HomePage extends StatelessWidget {
             label: '인기 게시글',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: '즐겨찾기',
+            icon: Icon(Icons.category),
+            label: '게시판 카테고리',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
