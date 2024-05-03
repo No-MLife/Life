@@ -1,6 +1,6 @@
 import 'package:get/get_connect/http/src/response/response.dart';
-import 'package:m_life_app/controller/dto/LoginReqDto.dart';
-import 'package:m_life_app/controller/dto/SignupReqDto.dart';
+import 'package:m_life_app/controller/dto/Req/LoginReqDto.dart';
+import 'package:m_life_app/controller/dto/Req/SignupReqDto.dart';
 
 import 'package:m_life_app/domain/user/user_provider.dart';
 

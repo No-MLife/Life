@@ -1,9 +1,9 @@
 import 'package:get/get_connect/http/src/response/response.dart';
-import 'package:m_life_app/controller/dto/PostReqDto.dart';
+import 'package:m_life_app/controller/dto/Req/PostReqDto.dart';
 import 'package:m_life_app/domain/post/post_provider.dart';
 import 'package:m_life_app/util/convert_utf8.dart';
 
-import '../../controller/dto/PostResDto.dart';
+import '../../controller/dto/Res/PostResDto.dart';
 
 // Json -> Dart
 class PostRepository {

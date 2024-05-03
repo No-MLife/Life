@@ -69,7 +69,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponse> getAllposts() {
-        return postRepository.findAll().stream().map(PostResponse::from).collect(Collectors.toList());
+        return postRepository.findAllByOrderByCreateDateDesc().stream().map(PostResponse::from).collect(Collectors.toList());
     }
 
     public PostResponse getMypost(Long id) {

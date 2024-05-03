@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/util/validator_util.dart';
 import '../../components/custom_elevated_button.dart';
+import '../../components/custom_header_navi.dart';
 import '../../components/custom_text_area.dart';
 import '../../components/custom_text_form_field.dart';
 import 'home_page.dart';
@@ -16,7 +17,9 @@ class WritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     PostController p = Get.find();
     return Scaffold(
-      appBar: AppBar(),
+      appBar: CustomAppBar(
+        title: 'M-Life',
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

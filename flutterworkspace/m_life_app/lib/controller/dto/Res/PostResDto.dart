@@ -9,6 +9,9 @@ class PostResDto {
   final DateTime? created;
   final int? likeCount;
   final String? authorName;
+  final List<dynamic>? commentList;
+
+  // final
 
   PostResDto(
       {this.id,
@@ -16,7 +19,8 @@ class PostResDto {
       this.content,
       this.created,
       this.likeCount,
-      this.authorName});
+      this.authorName,
+      this.commentList});
 
   // 통신을 위해서 Json 처럼 생긴 문자열
   PostResDto.fromJson(Map<String, dynamic> json)
@@ -26,5 +30,6 @@ class PostResDto {
         created =
             DateFormat("yyyy-MM-ddTHH:mm:ss.SSSSSS").parse(json["createAt"]),
         likeCount = json["likeCount"],
-        authorName = json["authorName"] ?? '';
+        authorName = json["authorName"] ?? '',
+        commentList = json["commentList"] ?? '';
 }

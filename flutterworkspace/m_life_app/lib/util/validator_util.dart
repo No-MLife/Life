@@ -73,3 +73,14 @@ Function validate_content() {
       return null;
   };
 }
+
+Function validate_comment() {
+  return (String? value) {
+    if (value!.isEmpty) {
+      return "댓글을 입력해주세요";
+    } else if (value.length > 500) {
+      return "내용의 최대 길이는 500을 초과할 수 없습니다.";
+    } else
+      return null;
+  };
+}
