@@ -33,35 +33,33 @@ class CommentRepository {
     return -1;
   }
 
-//
-  // Future<PostResDto> findByid(int id) async {
-  //   Response response = await _postProvider.findByid(id);
-  //   dynamic body = response.body;
-  //   dynamic convertBody = convertUtf8ToObject(body);
-  //
-  //   PostResDto post = PostResDto();
-  //   if (convertBody is Map<String, dynamic>)
-  //     post = PostResDto.fromJson(convertBody);
-  //   return post;
-  // }
-  //
-  // Future<int> deleteByid(int id) async {
-  //   Response response = await _postProvider.deleteByid(id);
-  //   if (response.statusCode == 200) {
-  //     return 1;
-  //   } else {
-  //     return -1;
-  //   }
-  // }
-  //
-  // Future<int> postUpdate(String title, String content, int id) async {
-  //   PostReqDto postReqDto = PostReqDto(title, content);
-  //   Response response = await _postProvider.postUpdate(postReqDto.toJson(), id);
-  //
-  //   if (response.statusCode == 200) {
-  //     return 1;
-  //   }
-  //   return -1;
-  // }
-  //
+  Future<int> deleteByid(int postId, int commentId) async {
+    Response response = await _commentProvider.deleteByid(postId, commentId);
+    if (response.statusCode == 200) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
+  Future<int> commentUpdate(String content, int postID, int commentId) async {
+    CommentReqDto commentReqDto = CommentReqDto(content);
+    Response response = await _commentProvider.commentUpdate(
+        commentReqDto.toJson(), postID, commentId);
+    if (response.statusCode == 200) {
+      return 1;
+    }
+    return -1;
+  }
+
+  Future<CommentResDto> findByid(int postId, int commentId) async {
+    Response response = await _commentProvider.findByid(postId, commentId);
+    dynamic body = response.body;
+    dynamic convertBody = convertUtf8ToObject(body);
+
+    CommentResDto comment = CommentResDto();
+    if (convertBody is Map<String, dynamic>)
+      comment = CommentResDto.fromJson(convertBody);
+    return comment;
+  }
 }

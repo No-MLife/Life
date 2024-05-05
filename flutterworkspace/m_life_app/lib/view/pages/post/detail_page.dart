@@ -7,6 +7,7 @@ import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/view/components/custom_text_form_field.dart';
 import 'package:m_life_app/view/pages/post/update_page.dart';
 
+import '../../../util/confirmation_dialog.dart';
 import '../../../util/validator_util.dart';
 import '../../components/ad_banner.dart';
 import 'home_page.dart';
@@ -21,15 +22,14 @@ class DetailPage extends StatelessWidget {
     UserController u = Get.find();
     PostLikeController pl = Get.put(PostLikeController(this.id!));
     CommentController c = Get.put(CommentController(this.id!));
-
-
+    c.findAllComment(this.id!);
     final _comment = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
+          onPressed: () => Get.off(() => HomePage()),
         ),
         centerTitle: true,
         title: Text("M-Life"),
@@ -109,10 +109,11 @@ class DetailPage extends StatelessWidget {
                       pl.isLiked.value ? Icons.favorite : Icons.favorite_border,
                       color: pl.isLiked.value ? Colors.red : Colors.grey,
                     ),
-                      onPressed: (){
+                    onPressed: () {
                       pl.isLiked.value ? pl.unlikePost(id!) : pl.likePost(id!);
-                      },
-                  ),                ],
+                    },
+                  ),
+                ],
               ),
               Divider(),
               Expanded(
@@ -125,14 +126,14 @@ class DetailPage extends StatelessWidget {
                           style: TextStyle(fontSize: 18)),
                       SizedBox(height: 16),
                       Divider(),
-                    AdBanner(
-                      imagePaths: [
-                        'assets/ad1.png',
-                        'assets/ad2.png',
-                        'assets/ad3.png',
-                        'assets/ad4.png',
-                      ],
-                    ),
+                      AdBanner(
+                        imagePaths: [
+                          'assets/ad1.png',
+                          'assets/ad2.png',
+                          'assets/ad3.png',
+                          'assets/ad4.png',
+                        ],
+                      ),
                       Divider(),
                       SizedBox(height: 8),
                       ListView.builder(
@@ -141,23 +142,105 @@ class DetailPage extends StatelessWidget {
                         itemCount: c.comments.length,
                         itemBuilder: (context, index) {
                           final comment = c.comments[index];
-                          print(comment.authorName);
-                          return ListTile(
-                            leading: Image.asset("assets/logo.png"),
-                            title: Text(
-                              "${comment.authorName}",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                          final isAuthor =
+                              u.principal.value.nickname == comment.authorName;
+                          final isEditing =
+                              c.editingCommentId.value == comment.id;
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                leading: Image.asset("assets/logo.png"),
+                                title: isEditing
+                                    ? TextField(
+                                        controller: c.editingController,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                          hintText: "댓글을 입력하세요",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        onSubmitted: (value) {
+                                          c.commentUpdate(
+                                              value, id!, comment.id!);
+                                          c.editingCommentId.value = null;
+                                          c.editingController.clear();
+                                        },
+                                      )
+                                    : Text(
+                                        "${comment.authorName}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                subtitle: isEditing
+                                    ? SizedBox()
+                                    : Text(
+                                        "${comment.comment}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                trailing: isAuthor
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (!isEditing)
+                                            IconButton(
+                                              icon: Icon(Icons.edit),
+                                              onPressed: () {
+                                                c.editingController.text =
+                                                    comment.comment!;
+                                                c.editingCommentId.value =
+                                                    comment.id;
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
+                                              },
+                                            ),
+                                          if (isEditing)
+                                            IconButton(
+                                              icon: Icon(Icons.check),
+                                              onPressed: () {
+                                                c.commentUpdate(
+                                                    c.editingController.text,
+                                                    id!,
+                                                    comment.id!);
+                                                c.editingCommentId.value = null;
+                                                c.editingController.clear();
+                                              },
+                                            ),
+                                          IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    ConfirmationDialog(
+                                                  title: "댓글 삭제",
+                                                  content: "댓글을 삭제하시겠습니까?",
+                                                  confirmText: "삭제",
+                                                  onConfirm: () {
+                                                    // 댓글 삭제 로직
+                                                    c.deleteByid(
+                                                        this.id!, comment.id!);
+                                                    Navigator.of(context).pop();
+                                                    Get.off(() =>
+                                                        DetailPage(this.id));
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    : null,
                               ),
-                            ),
-                            subtitle: Text(
-                              "${comment.comment}",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                              Divider(),
+                            ],
                           );
                         },
                       ),
@@ -165,27 +248,28 @@ class DetailPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    // TextField
-                    child: CustomTextFormField(
-                      controller: _comment,
-                      text: "",
-                      funValidator: validate_comment(),
+              if (c.editingCommentId.value == null)
+                Row(
+                  children: [
+                    Expanded(
+                      // TextField
+                      child: CustomTextFormField(
+                        controller: _comment,
+                        text: "",
+                        funValidator: validate_comment(),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 6),
-                  ElevatedButton(
-                    onPressed: () {
-                      c.commentCreate(_comment.text, p.post.value.id!);
-                      _comment.clear();
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Text("등록"),
-                  ),
-                ],
-              ),
+                    SizedBox(width: 6),
+                    ElevatedButton(
+                      onPressed: () {
+                        c.commentCreate(_comment.text, p.post.value.id!);
+                        _comment.clear();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text("등록"),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

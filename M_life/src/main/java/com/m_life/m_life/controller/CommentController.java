@@ -50,4 +50,10 @@ public class CommentController {
     public List<CommentResponse> getComments(@PathVariable(name = "postid")Long postid){
         return commentService.getAllcomments(postid);
     }
+
+    @GetMapping("/{postid}/comment/{commentid}")
+    public CommentResponse getComment(@PathVariable(name = "postid")Long postid,
+                                            @PathVariable(name = "commentid") Long commentid){
+        return commentService.getAllcomment(postid, commentid);
+    }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/controller/dto/Res/CommentResDto.dart';
 import 'package:m_life_app/domain/comment/comment_repository.dart';
@@ -7,6 +8,9 @@ class CommentController extends GetxController {
   final comments = <CommentResDto>[].obs;
   final comment = CommentResDto().obs;
   final int postId;
+
+  final editingCommentId = Rxn<int>();
+  final editingController = TextEditingController();
 
   CommentController(this.postId);
 
@@ -29,30 +33,31 @@ class CommentController extends GetxController {
     }
   }
 
-  // Future<void> findByid(int id) async {
-  //   PostResDto post = await _postRepository.findByid(id);
-  //   this.post.value = post;
-  // }
-  //
-  // Future<void> deleteByid(int id) async {
-  //   int result = await _postRepository.deleteByid(id);
-  //
-  //   if (result == 1) {
-  //     List<PostResDto> reslut =
-  //         posts.value.where((post) => post.id != id).toList();
-  //
-  //     posts.value = reslut;
-  //     ;
-  //   }
-  // }
-  //
-  // Future<void> postUpdate(String title, String content, int id) async {
-  //   int result = await _postRepository.postUpdate(title, content, id);
-  //   if (result == 1) {
-  //     PostResDto post = await _postRepository.findByid(id);
-  //     this.post.value = post;
-  //     this.posts.value = this.posts.map((e) => e.id == id ? post : e).toList();
-  //   }
-  // }
-  //
+  Future<void> deleteByid(int postId, int commentId) async {
+    int result = await _commentRepository.deleteByid(postId, commentId);
+
+    if (result == 1) {
+      List<CommentResDto> reslut =
+          comments.value.where((comment) => comment.id != commentId).toList();
+      comments.value = reslut;
+    }
+  }
+
+  Future<void> commentUpdate(String content, int postId, int commentId) async {
+    int result =
+        await _commentRepository.commentUpdate(content, postId, commentId);
+    if (result == 1) {
+      CommentResDto comment =
+          await _commentRepository.findByid(postId, commentId);
+      this.comment.value = comment;
+      this.comments.value =
+          this.comments.map((e) => e.id == commentId ? comment : e).toList();
+    }
+  }
+
+  Future<void> findByid(int postId, int commentId) async {
+    CommentResDto comment =
+        await _commentRepository.findByid(postId, commentId);
+    this.comment.value = comment;
+  }
 }

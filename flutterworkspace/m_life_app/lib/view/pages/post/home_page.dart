@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                       color: Colors.amber[200],
                       borderRadius: BorderRadius.circular(45.0),
                     ),
-                    child:AdBanner(
+                    child: AdBanner(
                       imagePaths: [
                         'assets/ad1.png',
                         'assets/ad2.png',
@@ -99,7 +99,6 @@ class HomePage extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Icon(Icons.arrow_back),
                                     Image.asset(
                                       "assets/logo.png",
                                       height: 45,
@@ -108,7 +107,6 @@ class HomePage extends StatelessWidget {
                                     SizedBox(height: 8),
                                     Text(
                                       "${post.authorName} ${post.likeCount}",
-                                      // textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
