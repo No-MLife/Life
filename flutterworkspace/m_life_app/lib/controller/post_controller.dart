@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:m_life_app/controller/dto/PostResDto.dart';
+import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
 import 'package:m_life_app/domain/post/post_repository.dart';
 
 class PostController extends GetxController {

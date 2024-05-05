@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/post/{postId}/like")
+@RequestMapping("/api/v1/post/{postId}/like")
 @RequiredArgsConstructor
 public class PostLikeController {
     private final PostLikeService postLikeService;
@@ -19,6 +19,7 @@ public class PostLikeController {
     @PostMapping
     public ResponseEntity<Void> likePost(@PathVariable(name = "postId") Long postId,
                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
+
         UserAccount userAccount = userDetails.getUserAccount();
         postLikeService.likePost(postId, userAccount);
         return ResponseEntity.ok().build();
@@ -32,11 +33,11 @@ public class PostLikeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> getLikeCount(@PathVariable(name = "postId") Long postId) {
-        long likeCount = postLikeService.getLikeCount(postId);
-        return ResponseEntity.ok(likeCount);
-    }
+//    @GetMapping("/count")
+//    public ResponseEntity<Long> getLikeCount(@PathVariable(name = "postId") Long postId) {
+//        long likeCount = postLikeService.getLikeCount(postId);
+//        return ResponseEntity.ok(likeCount);
+//    }
 
     @GetMapping("/liked")
     public ResponseEntity<Boolean> isLikedByCurrentUser(@PathVariable(name = "postId") Long postId,

@@ -1,10 +1,6 @@
 package com.m_life.m_life.dto.response;
-
 import com.m_life.m_life.domain.Comment;
-import com.m_life.m_life.domain.Post;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record CommentResponse(
         Long id,

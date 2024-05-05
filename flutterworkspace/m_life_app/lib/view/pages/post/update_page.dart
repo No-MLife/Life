@@ -5,6 +5,7 @@ import 'package:m_life_app/util/validator_util.dart';
 import 'package:m_life_app/view/pages/post/detail_page.dart';
 import 'package:m_life_app/view/pages/post/home_page.dart';
 import '../../components/custom_elevated_button.dart';
+import '../../components/custom_header_navi.dart';
 import '../../components/custom_text_area.dart';
 import '../../components/custom_text_form_field.dart';
 
@@ -20,7 +21,9 @@ class UpdatePage extends StatelessWidget {
     _content.text = "${p.post.value.content}";
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: CustomAppBar(
+        title: 'M-Life',
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

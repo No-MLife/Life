@@ -88,4 +88,15 @@ public class CommentService {
             return  null;
         }
     }
+
+    public CommentResponse getAllcomment(Long postid, Long commentid) {
+        boolean isPost = postRepository.existsById(postid);
+        if(isPost){
+            if(commentRepository.existsById(commentid)){
+                Comment comment = commentRepository.findById(commentid).orElseThrow();
+                return CommentResponse.from(comment);
+            }
+        }
+        return  null;
+    }
 }

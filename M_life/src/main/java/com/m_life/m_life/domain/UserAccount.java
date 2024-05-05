@@ -43,6 +43,7 @@ public class UserAccount {
         return new UserAccount(nickname, username, password, role);
     }
 
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
