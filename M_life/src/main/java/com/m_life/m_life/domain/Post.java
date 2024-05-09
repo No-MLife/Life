@@ -28,6 +28,10 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false, length = 10000)
     private String content;
 
+    @Setter
+    @Column(nullable = false)
+    private int view_count;
+
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
@@ -42,13 +46,26 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "useraccount_id")
     private UserAccount userAccount;
 
+    @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id")
+    private PostCategory category;
 
-    private Post(String title, String content) {
+
+    private Post(String title, String content, PostCategory category) {
         this.title = title;
         this.content = content;
+        this.category = category;
     }
 
-    public static Post of(String title, String content) {
-        return new Post(title, content);
+
+
+    public static Post of(String title, String content, PostCategory category) {
+        return new Post(title, content, category);
+    }
+
+    public void mappingCategory(PostCategory postCategory){
+        this.category = postCategory;
+        postCategory.mappingPost(this);
     }
 }

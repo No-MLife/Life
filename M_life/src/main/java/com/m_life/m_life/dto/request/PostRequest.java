@@ -1,10 +1,13 @@
 package com.m_life.m_life.dto.request;
 
 public record PostRequest(
+        long id,
         String title,
-        String content
+        String content,
+        String boardName
+
 ) {
-    public static PostRequest of(String title, String content){
-        return new PostRequest(title, content);
+    public static PostRequest of(long id, String title, String content, String boardName){
+        return new PostRequest(id, title, content, boardName);
     }
 }
