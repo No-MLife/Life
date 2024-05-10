@@ -19,12 +19,14 @@ public class PostController {
 
     private final PostService postService;
 
+    // 인기 게시글 조회
     @GetMapping("/popular-posts/{limit}")
     public ResponseEntity<List<PostResponse>> getPopularPosts(@PathVariable(name = "limit") Long limit) {
         List<PostResponse> popularPosts = postService.getPopularPostsFromAllCategories(limit);
         return ResponseEntity.ok(popularPosts);
     }
 
+    // 게시판 카테고리별 게시글 조회
     @GetMapping("/{categoryId}")
     public ResponseEntity<List<PostResponse>> getPostsByCategory(@PathVariable(name = "categoryId") Long categoryId) {
         if(categoryId!=1){
@@ -32,6 +34,18 @@ public class PostController {
             return ResponseEntity.ok(posts);
         }
         return ResponseEntity.badRequest().body(null);
+    }
+
+    // 전체 게시글 조회(카테고리별로 대체 해야할듯)
+    @GetMapping("/post")
+    public List<PostResponse> getPosts(){
+        return postService.getAllposts();
+    }
+
+    // 각각 게시글 조회
+    @GetMapping("/post/{postid}")
+    public PostResponse getPost(@PathVariable(name = "postid") Long id){
+        return postService.getMypost(id);
     }
 
     @PostMapping("/{categoryId}/post")
@@ -57,23 +71,13 @@ public class PostController {
         return ResponseEntity.badRequest().body("인기 게시판에는 게시글 작성이 불가능합니다.");
     }
 
-    @DeleteMapping("/{categoryId}/post/{postid}")
+    @DeleteMapping("/post/{postid}")
     public ResponseEntity<String> deletePost(
-            @PathVariable(name = "categoryId") Long categoryId,
             @PathVariable(name= "postid") Long id,
                                              @AuthenticationPrincipal CustomUserDetails userDetails){
         UserAccount userAccount = userDetails.getUserAccount();
         return postService.delete(id, userAccount);
     }
 
-    @GetMapping("/{categoryId}/post")
-    public List<PostResponse> getPosts(@PathVariable(name = "categoryId") Long categoryId){
-        return postService.getAllposts();
-    }
-
-    @GetMapping("/{categoryId}/post/{postid}")
-    public PostResponse getPost(@PathVariable(name = "categoryId") Long categoryId,
-                                @PathVariable(name = "postid") Long id){
-        return postService.getMypost(id);
-    }
+    
 }

@@ -18,8 +18,8 @@ class PostController extends GetxController {
     this.posts.value = posts;
   }
 
-  Future<void> findall() async {
-    List<PostResDto> posts = await _postRepository.findall();
+  Future<void> getPostsByCategory(int categoryId) async {
+    List<PostResDto> posts = await _postRepository.getPostsByCategory(categoryId);
     this.posts.value = posts;
   }
 
@@ -40,8 +40,8 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> postUpdate(String title, String content, int id) async {
-    int result = await _postRepository.postUpdate(title, content, id);
+  Future<void> postUpdate(String title, String content, int categoryId, int id) async {
+    int result = await _postRepository.postUpdate(title, content, categoryId, id);
     if (result == 1) {
       PostResDto post = await _postRepository.findByid(id);
       this.post.value = post;
@@ -49,12 +49,14 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> postCreate(String title, String content) async {
-    int result = await _postRepository.postCreate(title, content);
+
+
+  Future<void> postCreate(String title, String content, int categoryId) async {
+    int result = await _postRepository.postCreate(title, content, categoryId);
     if (result == 1) {
       // 현재 불필요하게 전체 갱신을 하고 있다. 추가적으로 단순히 리스트 뒤에 add 하는 방법을 상객해야함
       // 대표적으로는 스프링부트에서 post를 리턴해주는 방법이 있을듯
-      findall();
+      // getPostsByCategory(categoryId);
     }
   }
 }

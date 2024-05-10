@@ -7,7 +7,7 @@ import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/view/components/custom_text_form_field.dart';
 import 'package:m_life_app/view/pages/post/update_page.dart';
 
-import '../../../util/confirmation_dialog.dart';
+import '../../components/confirmation_dialog.dart';
 import '../../../util/validator_util.dart';
 import '../../components/ad_banner.dart';
 import 'home_page.dart';
@@ -29,7 +29,7 @@ class DetailPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Get.off(() => HomePage()),
+          onPressed: () => Get.back(),
         ),
         centerTitle: true,
         title: Text("M-Life"),

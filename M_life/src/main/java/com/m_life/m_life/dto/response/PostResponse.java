@@ -17,11 +17,12 @@ public record PostResponse(
         int likeCount,
         String authorName, // 작성자 이름 필드 추가
         String boardName,
-        String description
+        String description,
+        Long categoryId
 ) {
     public static PostResponse of(Long id, String title, String content, LocalDateTime localDateTime, List<CommentResponse> commentList, int likeCount,
-                                  String authorName, String boardName, String description) {
-        return new PostResponse(id, title, content, localDateTime, commentList, likeCount, authorName, boardName, description);
+                                  String authorName, String boardName, String description, Long categoryId) {
+        return new PostResponse(id, title, content, localDateTime, commentList, likeCount, authorName, boardName, description, categoryId);
     }
 
     public static PostResponse from(Post post) {
@@ -34,7 +35,8 @@ public record PostResponse(
                 post.getLikes().size(), // 좋아요 개수 계산,
                 post.getUserAccount().getNickname(),
                 post.getCategory().getBoardName(),
-                post.getCategory().getDescription()
+                post.getCategory().getDescription(),
+                post.getCategory().getId()
         );
     }
 }

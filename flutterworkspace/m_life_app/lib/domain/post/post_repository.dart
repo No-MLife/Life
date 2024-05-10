@@ -14,6 +14,7 @@ class PostRepository {
     dynamic body = response.body;
     dynamic convertBody = convertUtf8ToObject(body);
 
+
     List<PostResDto> posts = [];
 
     if (convertBody is List) {
@@ -22,8 +23,8 @@ class PostRepository {
     return posts;
   }
 
-  Future<List<PostResDto>> findall() async {
-    Response response = await _postProvider.findall();
+  Future<List<PostResDto>> getPostsByCategory(int categoryId) async {
+    Response response = await _postProvider.getPostsByCategory(categoryId);
     dynamic body = response.body;
     dynamic convertBody = convertUtf8ToObject(body);
 
@@ -55,9 +56,9 @@ class PostRepository {
     }
   }
 
-  Future<int> postUpdate(String title, String content, int id) async {
+  Future<int> postUpdate(String title, String content, int categoryId, int id) async {
     PostReqDto postReqDto = PostReqDto(title, content);
-    Response response = await _postProvider.postUpdate(postReqDto.toJson(), id);
+    Response response = await _postProvider.postUpdate(postReqDto.toJson(), categoryId, id);
 
     if (response.statusCode == 200) {
       return 1;
@@ -65,9 +66,9 @@ class PostRepository {
     return -1;
   }
 
-  Future<int> postCreate(String title, String content) async {
+  Future<int> postCreate(String title, String content, int categoryId) async {
     PostReqDto postReqDto = PostReqDto(title, content);
-    Response response = await _postProvider.postCreate(postReqDto.toJson());
+    Response response = await _postProvider.postCreate(postReqDto.toJson(), categoryId);
     if (response.statusCode == 200) {
       return 1;
     }
