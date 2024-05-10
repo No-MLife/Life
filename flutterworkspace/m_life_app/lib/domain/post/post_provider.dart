@@ -3,7 +3,12 @@ import 'package:m_life_app/util/jwt.dart';
 
 import '../../util/host.dart';
 
+const RequestURL = "/api/v1/category";
+
 class PostProvider extends GetConnect {
+  Future<Response> findallpopular() => get("$host/$RequestURL/popular-posts/20",
+      headers: {"Authorization": jwtToken ?? ""});
+
   Future<Response> findall() =>
       get("$host/api/v1/post", headers: {"Authorization": jwtToken ?? ""});
 

@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
   // UserController u = Get.find();
   @override
   Widget build(BuildContext context) {
-    p.findall();
+    p.findallpopular();
     return Scaffold(
       drawer: _nvaigation(context),
       appBar: CustomAppBar(
@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
       body: Obx(() => RefreshIndicator(
             key: refreshKey,
             onRefresh: () async {
-              await p.findall();
+              await p.findallpopular();
             },
             child: ListView.builder(
               itemCount: p.posts.length + 2,

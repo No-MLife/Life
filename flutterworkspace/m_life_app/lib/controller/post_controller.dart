@@ -10,7 +10,12 @@ class PostController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    findall();
+    findallpopular();
+  }
+
+  Future<void> findallpopular() async {
+    List<PostResDto> posts = await _postRepository.findallpopular();
+    this.posts.value = posts;
   }
 
   Future<void> findall() async {

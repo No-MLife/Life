@@ -1,1 +1,1 @@
-const host = "http://192.168.0.63:8080"; // home
+const host = "http://192.168.102.126:8080"; // home

@@ -9,6 +9,19 @@ import '../../controller/dto/Res/PostResDto.dart';
 class PostRepository {
   final PostProvider _postProvider = PostProvider();
 
+  Future<List<PostResDto>> findallpopular() async {
+    Response response = await _postProvider.findallpopular();
+    dynamic body = response.body;
+    dynamic convertBody = convertUtf8ToObject(body);
+
+    List<PostResDto> posts = [];
+
+    if (convertBody is List) {
+      posts = convertBody.map((post) => PostResDto.fromJson(post)).toList();
+    }
+    return posts;
+  }
+
   Future<List<PostResDto>> findall() async {
     Response response = await _postProvider.findall();
     dynamic body = response.body;
