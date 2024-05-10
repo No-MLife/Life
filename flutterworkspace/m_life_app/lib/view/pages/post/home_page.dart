@@ -4,6 +4,7 @@ import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/size.dart';
 import 'package:m_life_app/view/components/custom_header_navi.dart';
+import 'package:m_life_app/view/pages/post/category_page.dart';
 import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 
@@ -211,7 +212,7 @@ class HomePage extends StatelessWidget {
           if (index == 0) {
             Get.off(() => HomePage());
           } else if (index == 1) {
-            Get.off(() => HomePage());
+            Get.off(() => CategoryPage());
           } else {
             Get.off(() => UserInfo());
           }
