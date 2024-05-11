@@ -14,12 +14,12 @@ import 'detail_page.dart';
 
 class HomePage extends StatelessWidget {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  UserController u = Get.put(UserController());
-  PostController p = Get.put(PostController());
+  UserController _userController = Get.put(UserController());
+  PostController _postController = Get.put(PostController());
 
   @override
   Widget build(BuildContext context) {
-    p.findallpopular();
+    _postController.findallpopular();
     return Scaffold(
       drawer: _navigation(context),
       appBar: AppBar(
@@ -38,10 +38,10 @@ class HomePage extends StatelessWidget {
         () => RefreshIndicator(
           key: refreshKey,
           onRefresh: () async {
-            await p.findallpopular();
+            await _postController.findallpopular();
           },
           child: ListView.builder(
-            itemCount: p.posts.length + 3, // 구분선 개수 조정
+            itemCount: _postController.posts.length + 3, // 구분선 개수 조정
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Container(
@@ -84,19 +84,19 @@ class HomePage extends StatelessWidget {
               }
 
               final itemIndex = index - 3; // 구분선을 고려하여 인덱스 조정
-              final post = p.posts[itemIndex];
+              final post = _postController.posts[itemIndex];
 
               return Column(
                 children: [
                   PostItem(
                     post: post,
                     onTap: () async {
-                      await p.findByid(post.id!);
+                      await _postController.findByid(post.id!);
                       Get.to(() => DetailPage(post.id), arguments: "매개변수 테스트용");
                     },
                     showCategory: true,
                   ),
-                  if (itemIndex < p.posts.length - 1) Divider(),
+                  if (itemIndex < _postController.posts.length - 1) Divider(),
                 ],
               );
             },
@@ -155,7 +155,7 @@ class HomePage extends StatelessWidget {
               Divider(),
               TextButton(
                 onPressed: () {
-                  u.logout();
+                  _userController.logout();
                   Get.off(() => LoginPage());
                   print("로그아웃 되었습니다.");
                 },

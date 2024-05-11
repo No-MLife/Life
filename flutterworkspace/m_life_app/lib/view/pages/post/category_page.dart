@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/util/post_category.dart';
 import 'package:m_life_app/view/pages/post/category/freeboard_page.dart';
+import '../../../controller/post_controller.dart';
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/buildFloatingActionButton.dart';
 import '../../components/ad_banner.dart';
@@ -19,6 +20,8 @@ import 'category/union_related_page.dart';
 class CategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final PostController _postController = Get.find();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'M-Life',
@@ -58,44 +61,34 @@ class CategoryPage extends StatelessWidget {
 
           return InkWell(
             onTap: () {
+              _postController.getPostsByCategory(category.id);
               switch (category) {
                 case Category.free:
-                  Get.to(() => FreePage(category: Category.free));
+                  Get.to(() => FreePage());
                   break;
                 case Category.dailyProof:
-                  Get.to(() => DailyProofPage(category: Category.dailyProof));
+                  Get.to(() => DailyProofPage());
                   break;
                 case Category.constructionMethod:
-                  Get.to(() => ConstructionMethodPage(
-                      category: Category.constructionMethod));
+                  Get.to(() => ConstructionMethodPage());
                   break;
                 case Category.graduationReview:
-                  Get.to(() => GraduationReviewPage(
-                      category: Category.graduationReview));
+                  Get.to(() => GraduationReviewPage());
                   break;
                 case Category.complaintDiscussion:
-                  Get.to(() => ComplaintDiscussionPage(
-                      category: Category.complaintDiscussion));
+                  Get.to(() => ComplaintDiscussionPage());
                   break;
                 case Category.siteDebateDispute:
-                  Get.to(() => SiteDebateDisputePage(
-                        category: Category.siteDebateDispute,
-                      ));
+                  Get.to(() => SiteDebateDisputePage());
                   break;
                 case Category.unionRelated:
-                  Get.to(() => UnionRelatedPage(
-                        category: Category.unionRelated,
-                      ));
+                  Get.to(() => UnionRelatedPage());
                   break;
                 case Category.equipmentRecommendation:
-                  Get.to(() => EquipmentRecommendationPage(
-                        category: Category.equipmentRecommendation,
-                      ));
+                  Get.to(() => EquipmentRecommendationPage());
                   break;
                 case Category.restaurant:
-                  Get.to(() => RestaurantPage(
-                        category: Category.restaurant,
-                      ));
+                  Get.to(() => RestaurantPage());
                   break;
               }
             },

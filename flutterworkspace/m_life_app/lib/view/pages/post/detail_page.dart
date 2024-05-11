@@ -5,12 +5,10 @@ import 'package:m_life_app/controller/postLike_controller.dart';
 import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/view/components/custom_text_form_field.dart';
-import 'package:m_life_app/view/pages/post/update_page.dart';
-
 import '../../components/confirmation_dialog.dart';
 import '../../../util/validator_util.dart';
 import '../../components/ad_banner.dart';
-import 'home_page.dart';
+import '../../components/custom_header_navi.dart';
 
 class DetailPage extends StatelessWidget {
   final int? id;
@@ -22,41 +20,13 @@ class DetailPage extends StatelessWidget {
     UserController u = Get.find();
     PostLikeController pl = Get.put(PostLikeController(this.id!));
     CommentController c = Get.put(CommentController(this.id!));
+
     c.findAllComment(this.id!);
     final _comment = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
-        centerTitle: true,
-        title: Text("M-Life"),
-        actions: [
-          u.principal.value.nickname == p.post.value.authorName
-              ? PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text("수정"),
-                      value: 1,
-                    ),
-                    PopupMenuItem(
-                      child: Text("삭제"),
-                      value: 2,
-                    ),
-                  ],
-                  onSelected: (value) {
-                    if (value == 1) {
-                      Get.off(() => UpdatePage());
-                    } else if (value == 2) {
-                      p.deleteByid(p.post.value.id!);
-                      Get.off(() => HomePage());
-                    }
-                  },
-                )
-              : SizedBox(),
-        ],
+      appBar: CustomAppBar(
+        title: 'M-life',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

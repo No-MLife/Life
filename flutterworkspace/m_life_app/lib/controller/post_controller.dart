@@ -10,7 +10,6 @@ class PostController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    findallpopular();
   }
 
   Future<void> findallpopular() async {

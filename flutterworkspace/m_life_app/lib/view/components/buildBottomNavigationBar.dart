@@ -13,6 +13,11 @@ class CustomBottomNavBarController extends GetxController {
   void updateIndex(int index) {
     _currentIndex.value = index;
     _navigateTo(index);
+    update();
+  }
+  void updateColor(int index) {
+    _currentIndex.value = index;
+    update();
   }
 
   void _navigateTo(int index) {
@@ -27,7 +32,8 @@ class CustomBottomNavBarController extends GetxController {
         Get.to(() => UserInfo());
         break;
     }
-  }}
+  }
+}
 
 class buildBottomNavigationBar extends StatelessWidget {
   final controller = Get.put(CustomBottomNavBarController());
