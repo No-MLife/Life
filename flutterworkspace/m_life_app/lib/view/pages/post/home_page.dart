@@ -7,7 +7,6 @@ import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 
 import '../../components/buildBottomNavigationBar.dart';
-import '../../components/buildFloatingActionButton.dart';
 import '../../components/post_item.dart';
 import '../../components/ad_banner.dart';
 import '../user/user_info.dart';
@@ -15,88 +14,110 @@ import 'detail_page.dart';
 
 class HomePage extends StatelessWidget {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  // put은 없으면 만들고 있으면 찾는다.
   UserController u = Get.put(UserController());
   PostController p = Get.put(PostController());
-  // UserController u = Get.find();
+
   @override
   Widget build(BuildContext context) {
     p.findallpopular();
     return Scaffold(
-      drawer: _nvaigation(context),
+      drawer: _navigation(context),
       appBar: AppBar(
         centerTitle: true,
-        title: Text("M-Life"),
+        title: Text(
+          "M-Life",
+          style: TextStyle(
+            fontFamily: 'CustomFont',
+            fontSize: 24,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.amber,
       ),
-      body: Obx(() => RefreshIndicator(
-            key: refreshKey,
-            onRefresh: () async {
-              await p.findallpopular();
+      body: Obx(
+        () => RefreshIndicator(
+          key: refreshKey,
+          onRefresh: () async {
+            await p.findallpopular();
+          },
+          child: ListView.builder(
+            itemCount: p.posts.length + 3, // 구분선 개수 조정
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return Container(
+                  height: 70,
+                  margin: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.amber[200],
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: AdBanner(
+                    imagePaths: [
+                      'assets/ad1.png',
+                      'assets/ad2.png',
+                      'assets/ad3.png',
+                      'assets/ad4.png',
+                    ],
+                  ),
+                );
+              } else if (index == 1) {
+                return Container(
+                  padding: EdgeInsets.all(1.0),
+                  color: Colors.white,
+                  child: Text(
+                    '🔥 인기 게시글',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              } else if (index == 2) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Divider(
+                    color: Colors.grey[400],
+                    thickness: 1.0,
+                  ),
+                );
+              }
+
+              final itemIndex = index - 3; // 구분선을 고려하여 인덱스 조정
+              final post = p.posts[itemIndex];
+
+              return Column(
+                children: [
+                  PostItem(
+                    post: post,
+                    onTap: () async {
+                      await p.findByid(post.id!);
+                      Get.to(() => DetailPage(post.id), arguments: "매개변수 테스트용");
+                    },
+                    showCategory: true,
+                  ),
+                  if (itemIndex < p.posts.length - 1) Divider(),
+                ],
+              );
             },
-            child: ListView.builder(
-              itemCount: p.posts.length + 2,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Container(
-                    height: 70,
-                    margin: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.amber[200],
-                      borderRadius: BorderRadius.circular(45.0),
-                    ),
-                    child: AdBanner(
-                      imagePaths: [
-                        'assets/ad1.png',
-                        'assets/ad2.png',
-                        'assets/ad3.png',
-                        'assets/ad4.png',
-                      ],
-                    ),
-                  );
-                } else if (index == 1) {
-                  return Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      '🔥인기 게시글',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
-                }
-
-                final itemIndex = index - 2;
-                final post = p.posts[itemIndex];
-
-                return Column(
-                  children: [
-                    PostItem(
-                      post: post,
-                      onTap: () async {
-                        print(post.id);
-                        await p.findByid(post.id!);
-                        Get.to(() => DetailPage(post.id), arguments: "매개변수 테스트용");
-                      },
-                      showCategory: true,
-                    ),
-                    if (itemIndex < p.posts.length - 1) SizedBox(height: 8),
-                  ],
-                );              },
-            ),
-          )),
-      floatingActionButton: buildFloatingActionButton(),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(() => WritePage());
+        },
+        child: Icon(Icons.edit),
+        backgroundColor: Colors.amber,
+      ),
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
 
-
-
-  Widget _nvaigation(BuildContext context) {
+  Widget _navigation(BuildContext context) {
     return Container(
       width: getDrawerWidth(context),
-      height: double.infinity,
-      color: Colors.white,
+      color: Colors.grey[100],
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -110,9 +131,10 @@ class HomePage extends StatelessWidget {
                 child: Text(
                   "글쓰기",
                   style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               Divider(),
@@ -124,9 +146,10 @@ class HomePage extends StatelessWidget {
                 child: Text(
                   "회원정보보기",
                   style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               Divider(),
@@ -139,9 +162,10 @@ class HomePage extends StatelessWidget {
                 child: Text(
                   "로그아웃",
                   style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               Divider(),

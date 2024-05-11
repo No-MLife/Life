@@ -18,7 +18,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text("$title"),
+      title: Text("$title",
+          style: TextStyle(
+            fontFamily: 'CustomFont',
+            fontSize: 24,
+            color: Colors.white,
+          )),
+      backgroundColor: Colors.amber,
     );
   }
 

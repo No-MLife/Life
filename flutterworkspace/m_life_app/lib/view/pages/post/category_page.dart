@@ -1,18 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/util/post_category.dart';
-import 'package:m_life_app/view/pages/post/detail_page.dart';
+import 'package:m_life_app/view/pages/post/category/freeboard_page.dart';
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/buildFloatingActionButton.dart';
-import '../../components/post_item.dart';
 import '../../components/ad_banner.dart';
+import '../../components/category_emogi.dart';
 import '../../components/custom_header_navi.dart';
+import 'category/complaint_discussion_page.dart';
+import 'category/construction_method_page.dart';
+import 'category/daily_proof_page.dart';
+import 'category/equipment_recommendation_page.dart';
+import 'category/graduation_review_page.dart';
+import 'category/restaurant_page.dart';
+import 'category/site_debate_dispute_page.dart';
+import 'category/union_related_page.dart';
 
 class CategoryPage extends StatelessWidget {
-  final PostController _postController = Get.put(PostController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +24,7 @@ class CategoryPage extends StatelessWidget {
         title: 'M-Life',
       ),
       body: ListView.builder(
-        itemCount: Category.values.length + 1,
+        itemCount: Category.values.length + 2, // 구분선을 위해 itemCount 수정
         itemBuilder: (context, index) {
           if (index == 0) {
             return Container(
@@ -28,7 +32,7 @@ class CategoryPage extends StatelessWidget {
               margin: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.amber[200],
-                borderRadius: BorderRadius.circular(45.0),
+                borderRadius: BorderRadius.circular(16.0),
               ),
               child: AdBanner(
                 imagePaths: [
@@ -39,55 +43,113 @@ class CategoryPage extends StatelessWidget {
                 ],
               ),
             );
+          } else if (index == 1) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1),
+              child: Divider(
+                color: Colors.grey[400],
+                thickness: 1.0,
+              ),
+            );
           }
 
-          final categoryIndex = index - 1;
+          final categoryIndex = index - 2; // 구분선을 고려하여 인덱스 조정
           final category = Category.values[categoryIndex];
 
-          return Obx(
-                () {
-              final posts = _postController.posts
-                  .where((post) => post.categoryId == category.id)
-                  .toList();
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        category.name,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: posts.length > 2 ? 2 : posts.length,
-                      itemBuilder: (context, postIndex) {
-                        final post = posts[postIndex];
-                        return Column(
-                          children: [
-                            PostItem(
-                              post: post,
-                              onTap: () async {
-                                await _postController.findByid(post.id!);
-                                Get.to(() => DetailPage(post.id));
-                              },
-                            ),
-                            if (postIndex < posts.length - 1) SizedBox(height: 8),
-                          ],
-                        );                      },
-                    ),
-                    Divider(),
-                  ],
-                ),
-              );
+          return InkWell(
+            onTap: () {
+              switch (category) {
+                case Category.free:
+                  Get.to(() => FreePage(category: Category.free));
+                  break;
+                case Category.dailyProof:
+                  Get.to(() => DailyProofPage(category: Category.dailyProof));
+                  break;
+                case Category.constructionMethod:
+                  Get.to(() => ConstructionMethodPage(
+                      category: Category.constructionMethod));
+                  break;
+                case Category.graduationReview:
+                  Get.to(() => GraduationReviewPage(
+                      category: Category.graduationReview));
+                  break;
+                case Category.complaintDiscussion:
+                  Get.to(() => ComplaintDiscussionPage(
+                      category: Category.complaintDiscussion));
+                  break;
+                case Category.siteDebateDispute:
+                  Get.to(() => SiteDebateDisputePage(
+                        category: Category.siteDebateDispute,
+                      ));
+                  break;
+                case Category.unionRelated:
+                  Get.to(() => UnionRelatedPage(
+                        category: Category.unionRelated,
+                      ));
+                  break;
+                case Category.equipmentRecommendation:
+                  Get.to(() => EquipmentRecommendationPage(
+                        category: Category.equipmentRecommendation,
+                      ));
+                  break;
+                case Category.restaurant:
+                  Get.to(() => RestaurantPage(
+                        category: Category.restaurant,
+                      ));
+                  break;
+              }
             },
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: categoryIndex % 2 == 0 ? Colors.white : Colors.grey[100],
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey[300]!,
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        getCategoryEmoji(category),
+                        style: TextStyle(
+                          fontSize: 32,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              category.name,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              category.description,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
