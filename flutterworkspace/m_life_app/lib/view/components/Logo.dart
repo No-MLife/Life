@@ -11,9 +11,10 @@ class Logo extends StatelessWidget {
 
       children: [
         Image.asset(
-          "assets/logo.png",
-          height: size=="small" ? 100 : 250,
-          width: size=="small" ? 120 : 250,
+          "assets/new_logo_p.png",
+          height: size=="small" ? 150 : 300,
+          width: size=="small" ? 150 : 300,
+          color: Colors.amber,
         ),
         Text(
             title,

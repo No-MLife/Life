@@ -56,7 +56,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:62451"));
 //                        configuration.setAllowedOrigins(Collections.singletonList("*"));
 
 
@@ -82,6 +82,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/signup", "/").permitAll()
+                        .requestMatchers("/api/v1/category/popular-posts/**").permitAll() // 인기 게시글 조회 URL 패턴
+                        .requestMatchers("/api/v1/category/**").permitAll() // 카테고리별 게시글 조회 URL 패턴
+                        .requestMatchers("/api/v1/category/post/**").permitAll() // 전체 게시글 조회 URL 패턴
                         .anyRequest().authenticated());
 
         //JWTFilter 등록

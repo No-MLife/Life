@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../pages/post/home_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final VoidCallback? onBackPressed;
 
-  const CustomAppBar({Key? key, required this.title}) : super(key: key);
+  const CustomAppBar({
+    Key? key,
+    required this.title,
+    this.onBackPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () => Get.off(() => HomePage()),
+        onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text("$title"),
+      title: Text("$title",
+          style: TextStyle(
+            fontFamily: 'CustomFont',
+            fontSize: 24,
+            color: Colors.white,
+          )),
+      backgroundColor: Colors.amber,
     );
   }
 

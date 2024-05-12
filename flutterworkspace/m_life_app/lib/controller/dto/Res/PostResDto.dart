@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:intl/intl.dart';
 
@@ -10,17 +9,25 @@ class PostResDto {
   final int? likeCount;
   final String? authorName;
   final List<dynamic>? commentList;
+  final String? boardName;
+  final String? description;
+  final int? categoryId;
 
   // final
 
   PostResDto(
-      {this.id,
-      this.title,
-      this.content,
-      this.created,
-      this.likeCount,
-      this.authorName,
-      this.commentList});
+      {
+        this.id,
+        this.title,
+        this.content,
+        this.created,
+        this.likeCount,
+        this.authorName,
+        this.commentList,
+        this.boardName,
+        this.description,
+        this.categoryId
+      });
 
   // 통신을 위해서 Json 처럼 생긴 문자열
   PostResDto.fromJson(Map<String, dynamic> json)
@@ -31,5 +38,8 @@ class PostResDto {
             DateFormat("yyyy-MM-ddTHH:mm:ss.SSSSSS").parse(json["createAt"]),
         likeCount = json["likeCount"],
         authorName = json["authorName"] ?? '',
-        commentList = json["commentList"] ?? '';
+        commentList = json["commentList"] ?? '',
+        boardName = json["boardName"] ?? '',
+        description = json["description"] ?? '',
+        categoryId = json["categoryId"] ?? '';
 }
