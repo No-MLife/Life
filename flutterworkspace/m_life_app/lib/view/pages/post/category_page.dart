@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/util/post_category.dart';
 import 'package:m_life_app/view/pages/post/category/freeboard_page.dart';
+import 'package:m_life_app/view/pages/post/home_page.dart';
 import '../../../controller/post_controller.dart';
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/buildFloatingActionButton.dart';
@@ -25,6 +26,7 @@ class CategoryPage extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'M-Life',
+        onBackPressed: () => Get.offAll(() => HomePage()),
       ),
       body: ListView.builder(
         itemCount: Category.values.length + 2, // 구분선을 위해 itemCount 수정

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 
 import '../../components/buildBottomNavigationBar.dart';
+import '../../components/custom_header_navi.dart';
 
 class UserInfo extends StatefulWidget {
   @override
@@ -13,6 +14,47 @@ class _ProfileSettingsPageState extends State<UserInfo> {
   final UserController _userController = Get.find();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
+  String _selectedJob = ''; // 선택된 직업을 저장할 변수
+  String _selectedCareer = ''; // 선택된 경력을 저장할 변수
+  String _selectedPosition = ''; // 선택된 직책을 저장할 변수
+
+  List<String> _jobOptions = [
+    '철근공',
+    '목수',
+    '콘크리트공',
+    '용접공',
+    '설비공',
+    '전기공',
+    '기타',
+  ]; // 건설현장 노동직 옵션 리스트
+
+  List<String> _careerOptions = [
+    '0년',
+    '1~2년 이하',
+    '3~5년',
+    '6년 이상',
+  ]; // 경력 옵션 리스트
+
+  void _updatePosition() {
+    setState(() {
+      switch (_selectedCareer) {
+        case '0년':
+          _selectedPosition = '잡부';
+          break;
+        case '1~2년 이하':
+          _selectedPosition = '기능공';
+          break;
+        case '3~5년':
+          _selectedPosition = '기술자';
+          break;
+        case '6년 이상':
+          _selectedPosition = '현장소장';
+          break;
+        default:
+          _selectedPosition = '';
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -24,31 +66,78 @@ class _ProfileSettingsPageState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("프로필 설정"),
-        backgroundColor: Colors.amber[300],
+      appBar: CustomAppBar(
+        title: 'M-Life',
+        onBackPressed: () => Get.back(),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                // 프로필 이미지 선택 또는 촬영 로직 추가
-              },
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white70,
-                ),
-                child: Image.asset(
-                  'assets/logo.png',
-                  fit: BoxFit.contain,
+          Column(
+            children: [
+              Text(
+                '프로필 설정',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(height: 8),
+              Text(
+                '나중에 언제든지 변경할 수 있습니다',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+              SizedBox(height: 24),
+            ],
+          ),
+          Center(
+            child: Stack(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    print("로직 추가");
+                    // 프로필 이미지 선택 또는 촬영 로직 추가
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[200],
+                    ),
+                    child: Image.asset(
+                      "assets/new_logo_p.png",
+                      color: Colors.amber,
+                      height: 80,
+                      width: 80,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.amber,
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.camera_alt),
+                      color: Colors.white,
+                      onPressed: () {
+                        print("카메라 버튼 클릭");
+                        // 카메라 촬영 또는 이미지 선택 로직 추가
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20),
@@ -70,9 +159,47 @@ class _ProfileSettingsPageState extends State<UserInfo> {
           SizedBox(height: 16),
           TextField(
             controller: _bioController,
-            maxLines: 3,
+            maxLines: 1,
             decoration: InputDecoration(
-              labelText: '소개',
+              labelText: '한 줄 자기 소개',
+              labelStyle: TextStyle(color: Colors.black54),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(color: Colors.amber[300]!),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(color: Colors.amber[300]!),
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          JobDropdown(
+            selectedJob: _selectedJob,
+            jobOptions: _jobOptions,
+            onChanged: (value) {
+              setState(() {
+                _selectedJob = value!;
+              });
+            },
+          ),
+          SizedBox(height: 16),
+          CareerDropdown(
+            selectedCareer: _selectedCareer,
+            careerOptions: _careerOptions,
+            onChanged: (value) {
+              setState(() {
+                _selectedCareer = value!;
+                _updatePosition();
+              });
+            },
+          ),
+          SizedBox(height: 16),
+          TextFormField(
+            controller: TextEditingController(text: _selectedPosition),
+            enabled: false,
+            decoration: InputDecoration(
+              labelText: '직책',
               labelStyle: TextStyle(color: Colors.black54),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -105,6 +232,82 @@ class _ProfileSettingsPageState extends State<UserInfo> {
         ],
       ),
       bottomNavigationBar: buildBottomNavigationBar(),
+    );
+  }
+}
+
+class JobDropdown extends StatelessWidget {
+  final String selectedJob;
+  final List<String> jobOptions;
+  final Function(String?) onChanged;
+
+  JobDropdown({
+    required this.selectedJob,
+    required this.jobOptions,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField(
+      value: selectedJob.isNotEmpty ? selectedJob : null,
+      items: jobOptions.map((job) {
+        return DropdownMenuItem(
+          value: job,
+          child: Text(job),
+        );
+      }).toList(),
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: '직업',
+        labelStyle: TextStyle(color: Colors.black54),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.amber[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.amber[300]!),
+        ),
+      ),
+    );
+  }
+}
+
+class CareerDropdown extends StatelessWidget {
+  final String selectedCareer;
+  final List<String> careerOptions;
+  final Function(String?) onChanged;
+
+  CareerDropdown({
+    required this.selectedCareer,
+    required this.careerOptions,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField(
+      value: selectedCareer.isNotEmpty ? selectedCareer : null,
+      items: careerOptions.map((career) {
+        return DropdownMenuItem(
+          value: career,
+          child: Text(career),
+        );
+      }).toList(),
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: '경력',
+        labelStyle: TextStyle(color: Colors.black54),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.amber[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.amber[300]!),
+        ),
+      ),
     );
   }
 }

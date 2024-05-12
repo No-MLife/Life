@@ -36,6 +36,7 @@ class _UpdatePageState extends State<UpdatePage> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'M-Life',
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
