@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../size.dart';
+
 class Logo extends StatelessWidget {
   final String title;
   final String size;
@@ -11,11 +13,12 @@ class Logo extends StatelessWidget {
 
       children: [
         Image.asset(
-          "assets/new_logo_p.png",
-          height: size=="small" ? 150 : 300,
-          width: size=="small" ? 150 : 300,
+          "assets/copy_logo.png",
+          height: size=="small" ? 150 : 250,
+          width: size=="small" ? 150 : 250,
           color: Colors.amber,
         ),
+        SizedBox(height: size== "small" ? small_gap : large_gap),
         Text(
             title,
             style: TextStyle(

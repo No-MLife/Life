@@ -23,7 +23,7 @@ class Comment {
       : id = json["id"],
         comment = json["comment"],
         user = User.fromJson(json["user"]),
-        created = DateFormat("yyyy-mm-dd").parse(json["created"]),
-        updated = DateFormat("yyyy-mm-dd").parse(json["updated"]),
+        created = DateFormat("yyyy-mm-dd HH:mm:ss").parse(json["created"].toString().substring(0, 16)),
+        updated = DateFormat("yyyy-mm-dd HH:mm:ss").parse(json["updated"].toString().substring(0, 16)),
         likecomment = json["likecomment"];
 }

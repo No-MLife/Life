@@ -4,6 +4,7 @@ import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/util/validator_util.dart';
 import 'package:m_life_app/view/pages/post/detail_page.dart';
 import '../../../util/post_category.dart';
+import '../../components/confirmation_dialog.dart';
 import '../../components/custom_elevated_button.dart';
 import '../../components/custom_header_navi.dart';
 import '../../components/custom_text_area.dart';
@@ -75,9 +76,21 @@ class _UpdatePageState extends State<UpdatePage> {
                   text: "글 수정하기",
                   destination: () async {
                     if (_formKey.currentState!.validate()) {
-                      await p.postUpdate(
-                          _title.text, _content.text, _selectedCategory.id, p.post.value.id!);
-                      Get.off(() => DetailPage(p.post.value.id!));
+                      showDialog(
+                        context: context,
+                        builder: (context) =>
+                            ConfirmationDialog(
+                              title: "게시글 수정",
+                              content: "게시글을 수정하시겠습니까?",
+                              confirmText: "수정",
+                              onConfirm: () async {
+                                // 게시글 수정 로직
+                                await p.postUpdate(
+                                    _title.text, _content.text, _selectedCategory.id, p.post.value.id!);
+                                Get.off(() => DetailPage(p.post.value.id!));
+                              },
+                            ),
+                      );
                     }
                   },
                 )

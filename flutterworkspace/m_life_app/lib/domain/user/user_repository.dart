@@ -20,14 +20,20 @@ class UserRepository {
     }
   }
 
-  Future<bool> signup(String username, String password, String nickname) async {
+  Future<Map<String, dynamic>?> signup(String username, String password, String nickname) async {
     SignupDto signupDto = SignupDto(username, password, nickname);
     Response response = await _userProvider.signup(signupDto.toJson());
     print(response.statusCode);
     if (response.statusCode == 200) {
-      return true;
+      return {
+        'success': true,
+        'message': response.body,
+      };
     }
-    return false;
+      return {
+        'success': false,
+        'message': response.body,
+      };
   }
 
   Future<int> getLike() async {

@@ -5,6 +5,7 @@ import 'package:m_life_app/util/validator_util.dart';
 import '../../../util/post_category.dart';
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/category_board_page.dart';
+import '../../components/confirmation_dialog.dart';
 import '../../components/custom_elevated_button.dart';
 import '../../components/custom_header_navi.dart';
 import '../../components/custom_text_area.dart';
@@ -66,38 +67,50 @@ class _WritePageState extends State<WritePage> {
                   text: "글쓰기",
                   destination: () async {
                     if (_formKey.currentState!.validate()) {
-                      await p.postCreate(_title.text, _content.text, _selectedCategory.id);
-                      switch (_selectedCategory) {
-                        case Category.free:
-                          Get.offAll(() => CategoryBoardPage(category: Category.free));
-                          break;
-                        case Category.dailyProof:
-                          Get.offAll(() => CategoryBoardPage(category: Category.dailyProof));
-                          break;
-                        case Category.constructionMethod:
-                          Get.offAll(() => CategoryBoardPage(category: Category.constructionMethod));
-                          break;
-                        case Category.graduationReview:
-                          Get.offAll(() => CategoryBoardPage(category: Category.graduationReview));
-                          break;
-                        case Category.complaintDiscussion:
-                          Get.offAll(() => CategoryBoardPage(category: Category.complaintDiscussion));
-                          break;
-                        case Category.siteDebateDispute:
-                          Get.offAll(() => CategoryBoardPage(category: Category.siteDebateDispute));
-                          break;
-                        case Category.unionRelated:
-                          Get.offAll(() => CategoryBoardPage(category: Category.unionRelated));
-                          break;
-                        case Category.equipmentRecommendation:
-                          Get.offAll(() => CategoryBoardPage(category: Category.equipmentRecommendation));
-                          break;
-                        case Category.restaurant:
-                          Get.offAll(() => CategoryBoardPage(category: Category.restaurant));
-                          break;
-                      }
-                      CustomBottomNavBarController bottomNavBarController = Get.put(CustomBottomNavBarController());
-                      bottomNavBarController.updateColor(1); // 카테고리 탭 인덱스로 설정
+                      showDialog(
+                        context: context,
+                        builder: (context) =>
+                            ConfirmationDialog(
+                              title: "게시글 등록",
+                              content: "게시글을 등록하시겠습니까?",
+                              confirmText: "등록",
+                              onConfirm: () async {
+                                // 게시글 등록 로직
+                                await p.postCreate(_title.text, _content.text, _selectedCategory.id);
+                                switch (_selectedCategory) {
+                                  case Category.free:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.free));
+                                    break;
+                                  case Category.dailyProof:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.dailyProof));
+                                    break;
+                                  case Category.constructionMethod:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.constructionMethod));
+                                    break;
+                                  case Category.graduationReview:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.graduationReview));
+                                    break;
+                                  case Category.complaintDiscussion:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.complaintDiscussion));
+                                    break;
+                                  case Category.siteDebateDispute:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.siteDebateDispute));
+                                    break;
+                                  case Category.unionRelated:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.unionRelated));
+                                    break;
+                                  case Category.equipmentRecommendation:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.equipmentRecommendation));
+                                    break;
+                                  case Category.restaurant:
+                                    Get.offAll(() => CategoryBoardPage(category: Category.restaurant));
+                                    break;
+                                }
+                                CustomBottomNavBarController bottomNavBarController = Get.put(CustomBottomNavBarController());
+                                bottomNavBarController.updateColor(1); // 카테고리 탭 인덱스로 설정
+                              },
+                            ),
+                      );
                     }
                   },
                 )              ],
