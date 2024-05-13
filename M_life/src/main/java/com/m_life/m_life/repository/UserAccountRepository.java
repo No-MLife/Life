@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
     Boolean existsByUserid(String userid);
+    Boolean existsByNickname(String nickname);
     UserAccount findByUserid(String userid);
     @EntityGraph(attributePaths = {"likedPosts"})
     Optional<UserAccount> findWithLikedPostsById(Long id);

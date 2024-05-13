@@ -28,6 +28,10 @@ public class MyUserService {
         if (isExist) {
             return ResponseEntity.badRequest().body("이미 존재하는 회원 아이디입니다.");
         }
+        boolean isExistNick = userRepository.existsByNickname(nickname);
+        if(isExistNick){
+            return ResponseEntity.badRequest().body("이미 존재하는 회원 닉네임입니다.");
+        }
 
         UserAccount userAccount = UserAccount.of(
                 nickname,

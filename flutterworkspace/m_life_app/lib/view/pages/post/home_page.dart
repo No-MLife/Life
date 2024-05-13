@@ -7,6 +7,7 @@ import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 
 import '../../components/buildBottomNavigationBar.dart';
+import '../../components/confirmation_dialog.dart';
 import '../../components/post_item.dart';
 import '../../components/ad_banner.dart';
 import '../user/user_info.dart';
@@ -155,9 +156,20 @@ class HomePage extends StatelessWidget {
               Divider(),
               TextButton(
                 onPressed: () {
-                  _userController.logout();
-                  Get.off(() => LoginPage());
-                  print("로그아웃 되었습니다.");
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        ConfirmationDialog(
+                          title: "로그아웃",
+                          content: "로그아웃 하시겠습니까?",
+                          confirmText: "로그아웃",
+                          onConfirm: () async {
+                            // 게시글 수정 로직
+                            _userController.logout();
+                            Get.off(() => LoginPage());
+                          },
+                        ),
+                  );
                 },
                 child: Text(
                   "로그아웃",

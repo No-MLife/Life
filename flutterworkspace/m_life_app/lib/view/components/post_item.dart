@@ -42,7 +42,8 @@ class PostItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    "assets/logo.png",
+                    "assets/copy_logo.png",
+                    color: Colors.amber,
                     height: 45,
                     width: 45,
                   ),
@@ -62,9 +63,8 @@ class PostItem extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16),
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

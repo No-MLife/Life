@@ -23,13 +23,13 @@ class SignupPage extends StatelessWidget {
         children: [
           SizedBox(height: large_gap),
           Logo("회원가입", "small"),
-          _joinForm(),
+          _joinForm(context),
         ],
       ),
     );
   }
 
-  Widget _joinForm() {
+  Widget _joinForm(BuildContext context) {
     return ResponsiveContainer(
       child: Form(
         key: _formKey,
@@ -60,12 +60,107 @@ class SignupPage extends StatelessWidget {
               destination: () async {
                 if (_formKey.currentState!.validate()) {
                   UserRepository u = UserRepository();
-                  bool isSign = await u.signup(_username.text.trim(),
+                  var response = await u.signup(_username.text.trim(),
                       _password.text.trim(), _nickname.text.trim());
-                  if (isSign) {
-                    Get.off(() => LoginPage());
+                  if (response!['success'] == true) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "회원가입 결과",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                response['message'],
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 24),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.amber,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "확인",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Get.off(() => LoginPage());
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   } else {
-                    print("회원가입에 실패하였습니다.");
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "회원가입 실패",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                response['message'],
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 24),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.amber,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "확인",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   }
                 }
               },
@@ -76,19 +171,19 @@ class SignupPage extends StatelessWidget {
               },
               child: RichText(
                   text: TextSpan(children: [
-                TextSpan(
-                  text: "이미 ",
-                  style: TextStyle(color: Colors.black),
-                ),
-                TextSpan(
-                  text: "회원가입",
-                  style: TextStyle(color: Colors.amber),
-                ),
-                TextSpan(
-                  text: "이 되어 있나요? ",
-                  style: TextStyle(color: Colors.black),
-                )
-              ])),
+                    TextSpan(
+                      text: "이미 ",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    TextSpan(
+                      text: "회원가입",
+                      style: TextStyle(color: Colors.amber),
+                    ),
+                    TextSpan(
+                      text: "이 되어 있나요? ",
+                      style: TextStyle(color: Colors.black),
+                    )
+                  ])),
             )
           ],
         ),

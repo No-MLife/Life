@@ -23,6 +23,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
+          SizedBox(height: large_gap),
           Logo("로그인", "large"),
           _loginForm(),
         ],
