@@ -32,7 +32,10 @@ class DetailPage extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Get.off(() => HomePage()),
+            onPressed: () {
+              Get.back();
+            },
+            // onPressed: () => Get.off(() => HomePage()),
           ),
           centerTitle: true,
           title: Text("M-Life", style: TextStyle(
