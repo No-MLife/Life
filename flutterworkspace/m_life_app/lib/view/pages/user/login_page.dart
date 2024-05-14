@@ -25,13 +25,13 @@ class LoginPage extends StatelessWidget {
         children: [
           SizedBox(height: 70),
           Logo("로그인", "large"),
-          _loginForm(),
+          _loginForm(context),
         ],
       ),
     );
   }
 
-  Widget _loginForm() {
+  Widget _loginForm(BuildContext context) {
     return ResponsiveContainer(
       child: Form(
         key: _formKey,
@@ -59,7 +59,54 @@ class LoginPage extends StatelessWidget {
                     print("토큰을 정상적으로 받았습니다.");
                     Get.off(() => HomePage());
                   } else {
-                    print("토큰을 정상적으로 받지 못했습니다.");
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "로그인",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                "아이디 또는 비밀번호를 확인해주세요.",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 24),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.amber,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "확인",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   }
                 }
               },

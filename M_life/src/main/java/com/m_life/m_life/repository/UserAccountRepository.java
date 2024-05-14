@@ -12,4 +12,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     UserAccount findByUserid(String userid);
     @EntityGraph(attributePaths = {"likedPosts"})
     Optional<UserAccount> findWithLikedPostsById(Long id);
+
+    @EntityGraph(attributePaths = {"likedPosts"})
+    Optional<UserAccount> findWithLikedPostsByNickname(String nickname);
 }

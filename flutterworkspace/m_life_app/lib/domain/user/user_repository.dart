@@ -36,8 +36,8 @@ class UserRepository {
       };
   }
 
-  Future<int> getLike() async {
-    Response response = await _userProvider.getLike();
+  Future<int> getLike(String nickname) async {
+    Response response = await _userProvider.getLike(nickname);
     if (response.statusCode == 200) {
       return response.body;
     }

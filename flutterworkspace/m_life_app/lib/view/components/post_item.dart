@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
+import 'package:m_life_app/controller/user_controller.dart';
 
 class PostItem extends StatelessWidget {
   final PostResDto post;
@@ -15,6 +17,8 @@ class PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserController _userController = Get.find();
+    
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -52,9 +56,10 @@ class PostItem extends StatelessWidget {
                     width: 80,
                     child: Text(
                       "${post.authorName}",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -102,6 +107,7 @@ class PostItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
+
                         "댓글 ${post.commentList!.length}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

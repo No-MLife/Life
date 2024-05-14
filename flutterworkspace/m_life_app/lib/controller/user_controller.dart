@@ -15,7 +15,6 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getLike();
   }
 
 
@@ -50,10 +49,13 @@ class UserController extends GetxController {
   }
 
 
-  Future<void> getLike() async {
-    int ret = await _userRepository.getLike();
+  Future<void> getLike(String nickname) async {
+    int ret = await _userRepository.getLike(nickname);
     if(ret != -1){
       this.totalLike.value = ret;
+    }
+    else{
+      this.totalLike.value = 0;
     }
 
   }
