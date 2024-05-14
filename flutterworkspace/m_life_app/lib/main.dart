@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:m_life_app/view/pages/post/home_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 
 void main() {

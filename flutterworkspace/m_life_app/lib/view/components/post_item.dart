@@ -4,6 +4,7 @@ import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 
 import '../../util/formatLikes.dart';
+import '../../util/format_date_time.dart';
 
 class PostItem extends StatelessWidget {
   final PostResDto post;
@@ -19,8 +20,6 @@ class PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserController _userController = Get.find();
-
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -110,18 +109,44 @@ class PostItem extends StatelessWidget {
                   SizedBox(height: 8),
                   Row(
                     children: [
+                      Icon(
+                        Icons.comment,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 4),
                       Text(
-                        "댓글 ${post.commentList!.length}",
+                        "${post.commentList!.length}",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
                           fontSize: 12,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: 12),
+                      Icon(
+                        Icons.favorite,
+                        size: 16,
+                        color: Colors.red,
+                      ),
+                      SizedBox(width: 4),
                       Text(
-                        "좋아요 ${post.likeCount}",
+                        "${post.likeCount}",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.access_time,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        formatDateTime(post.created!),
+                        style: TextStyle(
+                          color: Colors.grey,
                           fontSize: 12,
                         ),
                       ),

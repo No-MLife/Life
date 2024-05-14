@@ -67,7 +67,8 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
       return _buildDivider();
     }
 
-    final post = _postController.posts[index - 3];
+    final reversedIndex = _postController.posts.length - 1 - (index - 3);
+    final post = _postController.posts[reversedIndex];
 
     return Column(
       children: [
@@ -75,7 +76,10 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           post: post,
           onTap: () async {
             await _postController.findByid(post.id!);
-            Get.to(() => DetailPage(post.id));
+            final result = await Get.to(() => DetailPage(post.id));
+            if (result != null && result) {
+              _postController.getPostsByCategory(widget.category.id);
+            }
           },
           showCategory: false,
         ),
@@ -83,7 +87,6 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
       ],
     );
   }
-
   Widget _buildAdBanner() {
     return Container(
       height: 70,
