@@ -3,11 +3,11 @@ package com.m_life.m_life.service;
 import com.m_life.m_life.domain.UserAccount;
 import com.m_life.m_life.dto.request.SignupRequest;
 import com.m_life.m_life.repository.UserAccountRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +37,10 @@ public class MyUserService {
                 nickname,
                 userid,
                 bCryptPasswordEncoder.encode(password),
-                "ROLE_ADMIN"
+                "ROLE_USER"
         );
         userRepository.save(userAccount);
         return ResponseEntity.ok().body("회원가입 되었습니다.");
     }
 
-    @Transactional
-    public ResponseEntity<Integer> getLike(Long userId) {
-        UserAccount userAccount = userRepository.findWithLikedPostsById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-
-        return ResponseEntity.ok(userAccount.getLikedPosts().size());
-    }
 }

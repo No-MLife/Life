@@ -1,29 +1,49 @@
 package com.m_life.m_life.config;
 
+import com.m_life.m_life.domain.Post;
 import com.m_life.m_life.domain.PostCategory;
-import com.m_life.m_life.repository.PostCategoryRepository;
+import com.m_life.m_life.domain.UserAccount;
+import com.m_life.m_life.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 //@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
     private final PostCategoryRepository postCategoryRepository;
+    private final PostRepository postRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    public DataInitializer(PostCategoryRepository postCategoryRepository) {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+
+    public DataInitializer(PostCategoryRepository postCategoryRepository, PostRepository postRepository, UserAccountRepository userAccountRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.postCategoryRepository = postCategoryRepository;
+        this.postRepository = postRepository;
+        this.userAccountRepository = userAccountRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+
         if (postCategoryRepository.count() == 0) {
+            ArrayList<PostCategory>postCategories = new ArrayList<>();
 
             PostCategory category1 = PostCategory.of(
                     "인기 게시판",
                     "인기 게시글을 모아놓은 게시판입니다."
             );
             postCategoryRepository.save(category1);
+
 
             PostCategory category2= PostCategory.of(
                     "자유 게시판",
@@ -79,6 +99,25 @@ public class DataInitializer implements CommandLineRunner {
             );
             postCategoryRepository.save(category10);
 
+
+            // 유저 2~3명 생성
+            UserAccount user = UserAccount.of("허훈도령", "test", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
+            UserAccount user1 = UserAccount.of("콩쥐들쥐", "test1", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
+            UserAccount user2 = UserAccount.of("현모양초", "test2", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
+            UserAccount user3 = UserAccount.of("휴지필름", "test3", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
+            userAccountRepository.saveAll(Arrays.asList(user, user1, user2, user3));
+
+            postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8, category9, category10));
+            // 게시글
+            List<Post> posts = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                Post post = Post.of("title" + i, "content" + i, postCategories.get(i));
+                post.setUserAccount(user);
+                posts.add(post);
+            }
+            postRepository.saveAll(posts);
         }
+
+
     }
 }

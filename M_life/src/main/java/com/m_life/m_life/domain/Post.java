@@ -42,7 +42,7 @@ public class Post extends BaseTimeEntity {
 
 
     @Setter
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "useraccount_id")
     private UserAccount userAccount;
 
