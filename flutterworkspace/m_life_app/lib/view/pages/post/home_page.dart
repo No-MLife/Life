@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
                     post: post,
                     onTap: () async {
                       await _postController.findByid(post.id!);
-                      Get.to(() => DetailPage(post.id), arguments: "매개변수 테스트용");
+                      Get.to(() => DetailPage(id:post.id), arguments: "매개변수 테스트용");
                     },
                     showCategory: true,
                   ),

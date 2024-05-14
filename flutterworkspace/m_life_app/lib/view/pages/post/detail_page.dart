@@ -6,6 +6,8 @@ import 'package:m_life_app/controller/postLike_controller.dart';
 import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/util/formatLikes.dart';
+import 'package:m_life_app/util/post_category.dart';
+import 'package:m_life_app/view/components/category_board_page.dart';
 import 'package:m_life_app/view/components/custom_text_form_field.dart';
 import 'package:m_life_app/view/pages/post/update_page.dart';
 import '../../components/buildBottomNavigationBar.dart';
@@ -16,7 +18,8 @@ import 'home_page.dart';
 
 class DetailPage extends StatelessWidget {
   final int? id;
-  const DetailPage(this.id);
+  final Category? category;
+  const DetailPage({required this.id, this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,12 @@ class DetailPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Get.back();
+            if(category != null){
+              Get.off(() => CategoryBoardPage(category: category!));
+            }
+            else{
+              Get.off(() => HomePage());
+            }
           },
           // onPressed: () => Get.off(() => HomePage()),
         ),
@@ -285,7 +293,7 @@ class DetailPage extends StatelessWidget {
                                                         this.id!, comment.id!);
                                                     Navigator.of(context).pop();
                                                     Get.off(() =>
-                                                        DetailPage(this.id));
+                                                        DetailPage(id:this.id));
                                                   },
                                                 ),
                                               );

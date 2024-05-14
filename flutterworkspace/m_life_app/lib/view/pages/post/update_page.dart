@@ -87,7 +87,7 @@ class _UpdatePageState extends State<UpdatePage> {
                                 // 게시글 수정 로직
                                 await p.postUpdate(
                                     _title.text, _content.text, _selectedCategory.id, p.post.value.id!);
-                                Get.off(() => DetailPage(p.post.value.id!));
+                                Get.off(() => DetailPage(category : _selectedCategory, id : p.post.value.id!));
                               },
                             ),
                       );

@@ -32,6 +32,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
   Widget build(BuildContext context) {
     final emoji = getCategoryEmoji(widget.category);
 
+    print("Hello My ${context}");
     return Scaffold(
       appBar: CustomAppBar(
         title: 'M-life',
@@ -76,7 +77,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           post: post,
           onTap: () async {
             await _postController.findByid(post.id!);
-            final result = await Get.to(() => DetailPage(post.id));
+            final result = await Get.to(() => DetailPage(category : widget.category, id: post.id));
             if (result != null && result) {
               _postController.getPostsByCategory(widget.category.id);
             }
