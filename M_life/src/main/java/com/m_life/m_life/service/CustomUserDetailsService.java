@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
         //DB에서 조회
         UserAccount userData = userRepository.findByUserid(userid);
-        System.out.println(userid);
+//        System.out.println(userid);
 
         if (userData == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");

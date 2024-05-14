@@ -7,6 +7,7 @@ import com.m_life.m_life.dto.request.PostRequest;
 import com.m_life.m_life.dto.response.PostResponse;
 import com.m_life.m_life.repository.PostCategoryRepository;
 import com.m_life.m_life.repository.PostRepository;
+import com.m_life.m_life.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final PostCategoryRepository postCategoryRepository;
+    private final UserAccountRepository userAccountRepository;
 
     public ResponseEntity<String>save(PostRequest postRequest, UserAccount userAccount, Long categoryId){
 
@@ -89,22 +91,25 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponse> getAllposts() {
-        return postRepository.findAllByOrderByCreateDateDesc().stream().map(PostResponse::from).collect(Collectors.toList());
+        return postRepository.findAllByOrderByCreateDateDesc().stream()
+                .map(post -> PostResponse.from(post, userAccountRepository))
+                .collect(Collectors.toList());
     }
 
     public PostResponse getMypost(Long id) {
         boolean isPost = postRepository.existsById(id);
-        if (isPost){
+        if (isPost) {
             Post post = postRepository.findById(id).orElseThrow();
-            return PostResponse.from(post);
-        }
-        else{
+            return PostResponse.from(post, userAccountRepository);
+        } else {
             return null;
         }
     }
 
     public List<PostResponse> getPostsByCategory(Long categoryId) {
-            return postRepository.findByCategoryId(categoryId).stream().map(PostResponse::from).collect(Collectors.toList());
+            return postRepository.findByCategoryId(categoryId).stream().map(post -> PostResponse.from(post, userAccountRepository))
+                    .collect(Collectors.toList());
+
     }
 
 
@@ -117,6 +122,6 @@ public class PostService {
         allPosts.sort(Comparator.comparingInt((Post post) -> post.getLikes().size()).reversed());
 
         // 3. 원하는 개수만큼 선택하여 반환
-        return allPosts.stream().map(PostResponse::from).limit(limit).collect(Collectors.toList());
+        return allPosts.stream().map(post -> PostResponse.from(post, userAccountRepository)).limit(limit).collect(Collectors.toList());
     }
 }

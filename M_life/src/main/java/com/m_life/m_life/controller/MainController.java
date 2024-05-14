@@ -29,10 +29,6 @@ public class MainController {
         return myUserService.joinProcess(signupRequest);
     }
 
-    @GetMapping("/user_likes/{user_nickname}")
-    public ResponseEntity<Integer> getLike(@PathVariable(name = "user_nickname") String userNickname) {
-        return myUserService.getLike(userNickname);
-    }
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<String> getCategoryName(@PathVariable(name = "categoryId") Long categoryId) {
         PostCategory postCategory = postCategoryRepository.findById(categoryId).orElseThrow(

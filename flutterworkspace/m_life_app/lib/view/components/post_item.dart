@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 
+import '../../util/formatLikes.dart';
+
 class PostItem extends StatelessWidget {
   final PostResDto post;
   final VoidCallback onTap;
@@ -18,7 +20,7 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserController _userController = Get.find();
-    
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -55,7 +57,7 @@ class PostItem extends StatelessWidget {
                   Container(
                     width: 80,
                     child: Text(
-                      "${post.authorName}",
+                      "${post.authorName} ${formatLikes(post.authorLikes!)}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -68,7 +70,9 @@ class PostItem extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16,),
+            SizedBox(
+              width: 16,
+            ),
             Expanded(
               flex: 4,
               child: Column(
@@ -107,7 +111,6 @@ class PostItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-
                         "댓글 ${post.commentList!.length}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

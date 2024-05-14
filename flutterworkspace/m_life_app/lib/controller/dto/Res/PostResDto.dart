@@ -1,4 +1,3 @@
-
 import 'package:intl/intl.dart';
 
 class PostResDto {
@@ -12,22 +11,23 @@ class PostResDto {
   final String? boardName;
   final String? description;
   final int? categoryId;
+  final int? authorLikes;
 
   // final
 
-  PostResDto(
-      {
-        this.id,
-        this.title,
-        this.content,
-        this.created,
-        this.likeCount,
-        this.authorName,
-        this.commentList,
-        this.boardName,
-        this.description,
-        this.categoryId
-      });
+  PostResDto({
+    this.id,
+    this.title,
+    this.content,
+    this.created,
+    this.likeCount,
+    this.authorName,
+    this.commentList,
+    this.boardName,
+    this.description,
+    this.categoryId,
+    this.authorLikes,
+  });
 
   // 통신을 위해서 Json 처럼 생긴 문자열
   PostResDto.fromJson(Map<String, dynamic> json)
@@ -41,5 +41,6 @@ class PostResDto {
         commentList = json["commentList"] ?? '',
         boardName = json["boardName"] ?? '',
         description = json["description"] ?? '',
-        categoryId = json["categoryId"] ?? '';
+        categoryId = json["categoryId"] ?? '',
+        authorLikes = json["authorLikes"];
 }

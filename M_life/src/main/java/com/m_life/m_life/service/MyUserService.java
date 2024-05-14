@@ -43,15 +43,4 @@ public class MyUserService {
         return ResponseEntity.ok().body("회원가입 되었습니다.");
     }
 
-    @Transactional(readOnly = true)
-
-    public ResponseEntity<Integer> getLike(String user_nickname) {
-        if(userRepository.existsByNickname(user_nickname)){
-            UserAccount userAccount = userRepository.findWithLikedPostsByNickname(user_nickname).orElseThrow(
-                    () -> new IllegalArgumentException("User not found with nickname : " + user_nickname)
-            );
-            return ResponseEntity.ok(userAccount.getLikedPosts().size());
-        }
-        return ResponseEntity.badRequest().body(-1);
-    }
 }
