@@ -25,8 +25,9 @@
 
  <div align="center">
 
- <img src="https://github.com/junyong1111/AlgorithmWithPython/assets/79856225/88d5a1ec-58e0-492c-8e09-139c6d14133b" width="600" height="1000"/>
- 
+ <img src="https://github.com/No-MLife/M-Life/assets/79856225/0fa96446-be4f-47a6-8300-d8e6061f21a5" width="540" height="1110"/>
+
+
 
 
 </div>
