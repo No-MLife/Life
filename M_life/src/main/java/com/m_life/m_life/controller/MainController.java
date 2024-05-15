@@ -1,15 +1,13 @@
 package com.m_life.m_life.controller;
 
 import com.m_life.m_life.domain.PostCategory;
-import com.m_life.m_life.domain.UserAccount;
 import com.m_life.m_life.dto.request.SignupRequest;
-import com.m_life.m_life.dto.response.PostResponse;
 import com.m_life.m_life.repository.PostCategoryRepository;
-import com.m_life.m_life.service.CustomUserDetails;
 import com.m_life.m_life.service.MyUserService;
+import com.m_life.m_life.service.S3Service;
+import com.m_life.m_life.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +17,7 @@ import java.util.List;
 public class MainController {
     private final MyUserService myUserService;
     private final PostCategoryRepository postCategoryRepository;
+
     @GetMapping(value = "/")
     public String get_main(){
         return "hello world";
@@ -36,7 +35,4 @@ public class MainController {
         );
         return ResponseEntity.ok().body(postCategory.getDescription());
     }
-
-
-
 }

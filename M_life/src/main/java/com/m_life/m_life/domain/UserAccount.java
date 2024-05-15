@@ -33,6 +33,9 @@ public class UserAccount {
     @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserProfile userProfile;
+
     public UserAccount(String nickname, String username, String password, String role) {
         this.nickname = nickname;
         this.userid = username;

@@ -101,11 +101,12 @@ public class DataInitializer implements CommandLineRunner {
 
 
             // 유저 2~3명 생성
+            UserAccount sample = UserAccount.of("메가커피", "sample", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user = UserAccount.of("허훈도령", "test", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user1 = UserAccount.of("콩쥐들쥐", "test1", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user2 = UserAccount.of("현모양초", "test2", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user3 = UserAccount.of("휴지필름", "test3", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
-            userAccountRepository.saveAll(Arrays.asList(user, user1, user2, user3));
+            userAccountRepository.saveAll(Arrays.asList(sample, user, user1, user2, user3));
 
             postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8, category9, category10));
             // 게시글
