@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:m_life_app/view/pages/post/home_page.dart';
 import '../../../util/getCareerText.dart';
 import '../../../util/getExperienceValue.dart';
 import '../../../util/showImageFullScreen.dart';
@@ -98,8 +99,9 @@ class _ProfileSettingsPageState extends State<UserInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        isHome: true,
         title: 'M-Life',
-        onBackPressed: () => Get.back(),
+        onBackPressed: () => Get.to(() => HomePage()),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),

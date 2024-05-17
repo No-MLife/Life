@@ -25,7 +25,8 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
   @override
   void initState() {
     super.initState();
-    _postController.getPostsByCategory(widget.category.id); // 페이지 초기화 시 해당 카테고리의 글 가져오기
+    _postController
+        .getPostsByCategory(widget.category.id); // 페이지 초기화 시 해당 카테고리의 글 가져오기
   }
 
   @override
@@ -35,10 +36,11 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
     print("Hello My ${context}");
     return Scaffold(
       appBar: CustomAppBar(
+        isHome: false,
         title: 'M-life',
       ),
       body: Obx(
-            () => RefreshIndicator(
+        () => RefreshIndicator(
           onRefresh: () async {
             await _postController.getPostsByCategory(widget.category.id);
           },
@@ -77,7 +79,8 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           post: post,
           onTap: () async {
             await _postController.findByid(post.id!);
-            final result = await Get.to(() => DetailPage(category : widget.category, id: post.id));
+            final result = await Get.to(
+                () => DetailPage(category: widget.category, id: post.id));
             if (result != null && result) {
               _postController.getPostsByCategory(widget.category.id);
             }
@@ -88,6 +91,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
       ],
     );
   }
+
   Widget _buildAdBanner() {
     return Container(
       height: 70,

@@ -25,6 +25,7 @@ class CategoryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
+        isHome: false,
         title: 'M-Life',
         onBackPressed: () => Get.offAll(() => HomePage()),
       ),

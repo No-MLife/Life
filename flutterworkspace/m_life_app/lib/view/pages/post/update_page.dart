@@ -27,7 +27,8 @@ class _UpdatePageState extends State<UpdatePage> {
     final PostController p = Get.find();
     _title.text = "${p.post.value.title}";
     _content.text = "${p.post.value.content}";
-    _selectedCategory = Category.values.firstWhere((category) => category.id == p.post.value.categoryId);
+    _selectedCategory = Category.values
+        .firstWhere((category) => category.id == p.post.value.categoryId);
   }
 
   @override
@@ -36,8 +37,8 @@ class _UpdatePageState extends State<UpdatePage> {
 
     return Scaffold(
       appBar: CustomAppBar(
+        isHome: false,
         title: 'M-Life',
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -78,18 +79,19 @@ class _UpdatePageState extends State<UpdatePage> {
                     if (_formKey.currentState!.validate()) {
                       showDialog(
                         context: context,
-                        builder: (context) =>
-                            ConfirmationDialog(
-                              title: "게시글 수정",
-                              content: "게시글을 수정하시겠습니까?",
-                              confirmText: "수정",
-                              onConfirm: () async {
-                                // 게시글 수정 로직
-                                await p.postUpdate(
-                                    _title.text, _content.text, _selectedCategory.id, p.post.value.id!);
-                                Get.off(() => DetailPage(category : _selectedCategory, id : p.post.value.id!));
-                              },
-                            ),
+                        builder: (context) => ConfirmationDialog(
+                          title: "게시글 수정",
+                          content: "게시글을 수정하시겠습니까?",
+                          confirmText: "수정",
+                          onConfirm: () async {
+                            // 게시글 수정 로직
+                            await p.postUpdate(_title.text, _content.text,
+                                _selectedCategory.id, p.post.value.id!);
+                            Get.off(() => DetailPage(
+                                category: _selectedCategory,
+                                id: p.post.value.id!));
+                          },
+                        ),
                       );
                     }
                   },

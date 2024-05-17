@@ -25,7 +25,7 @@ public class MLifeApplication {
 				registry.addMapping("/**")
 						.allowedMethods("*")
 //						.allowedOrigins("*")
-						.allowedOrigins("http://localhost:62829")
+						.allowedOrigins("http://localhost:54583")
 						.exposedHeaders("Authorization");
 			}
 		};
