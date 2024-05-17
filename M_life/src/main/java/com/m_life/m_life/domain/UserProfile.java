@@ -1,5 +1,6 @@
 package com.m_life.m_life.domain;
 
+import com.m_life.m_life.dto.Experience;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,13 +23,14 @@ public class UserProfile {
 
     private String jobName;
 
-    private int experience;
+    @Enumerated(EnumType.STRING)
+    private Experience experience;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account_id")
     private UserAccount userAccount;
 
-    public UserProfile(String profileImageUrl, String introduction, String jobName, int experience, UserAccount userAccount) {
+    public UserProfile(String profileImageUrl, String introduction, String jobName, Experience experience, UserAccount userAccount) {
         this.profileImageUrl = profileImageUrl;
         this.introduction = introduction;
         this.jobName = jobName;
@@ -37,7 +39,7 @@ public class UserProfile {
     }
 
     public static UserProfile of(String profileImageUrl, String introduction,
-                                 String jobName, int experience, UserAccount userAccount) {
+                                 String jobName, Experience experience, UserAccount userAccount) {
         return new UserProfile(profileImageUrl, introduction, jobName, experience, userAccount);
     }
 }

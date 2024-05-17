@@ -53,11 +53,59 @@ class LoginPage extends StatelessWidget {
               text: "로그인",
               destination: () async {
                 if (_formKey.currentState!.validate()) {
-                  String token =
-                  await u.login(_username.text.trim(), _password.text.trim());
+                  String token = await u.login(
+                      _username.text.trim(), _password.text.trim());
                   if (token != "-1") {
                     print("토큰을 정상적으로 받았습니다.");
-                    Get.off(() => HomePage());
+                    u.getProfile(u.principal.value.nickname!);
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "로그인 성공",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                "로그인 되었습니다.",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 24),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.amber,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "확인",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Get.off(() => HomePage());
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   } else {
                     showDialog(
                       context: context,

@@ -2,6 +2,7 @@ package com.m_life.m_life.service;
 
 import com.m_life.m_life.domain.UserAccount;
 import com.m_life.m_life.domain.UserProfile;
+import com.m_life.m_life.dto.Experience;
 import com.m_life.m_life.dto.request.SignupRequest;
 import com.m_life.m_life.repository.UserAccountRepository;
 import com.m_life.m_life.repository.UserProfileRepository;
@@ -47,7 +48,8 @@ public class MyUserService {
 
         // 회원 가입 시 프로필을 추가
         UserProfile userProfile = UserProfile.of(
-                "","","",0, userAccount
+                "https://mlifeapp.s3.ap-northeast-2.amazonaws.com/profile-images/63169b9f-9d5a-4473-969e-76904263a0dd_copy_logo+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%84%87%E1%85%A9%E1%86%AB.png",
+                "한 줄 자기소개","", Experience.ZERO_YEAR, userAccount
         );
         userProfileRepository.save(userProfile);
 

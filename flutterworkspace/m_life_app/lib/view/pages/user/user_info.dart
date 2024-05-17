@@ -1,7 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:m_life_app/controller/user_controller.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../util/getCareerText.dart';
+import '../../../util/getExperienceValue.dart';
+import '../../../util/showImageFullScreen.dart';
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/custom_header_navi.dart';
 
@@ -14,9 +19,10 @@ class _ProfileSettingsPageState extends State<UserInfo> {
   final UserController _userController = Get.find();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
-  String _selectedJob = ''; // 선택된 직업을 저장할 변수
-  String _selectedCareer = ''; // 선택된 경력을 저장할 변수
-  String _selectedPosition = ''; // 선택된 직책을 저장할 변수
+  String _selectedJob = '';
+  String _selectedCareer = '';
+  String _selectedPosition = '';
+  File? _selectedImage;
 
   List<String> _jobOptions = [
     '철근공',
@@ -26,14 +32,14 @@ class _ProfileSettingsPageState extends State<UserInfo> {
     '설비공',
     '전기공',
     '기타',
-  ]; // 건설현장 노동직 옵션 리스트
+  ];
 
   List<String> _careerOptions = [
     '0년',
     '1~2년 이하',
     '3~5년',
     '6년 이상',
-  ]; // 경력 옵션 리스트
+  ];
 
   void _updatePosition() {
     setState(() {
@@ -60,7 +66,32 @@ class _ProfileSettingsPageState extends State<UserInfo> {
   void initState() {
     super.initState();
     _nameController.text = _userController.principal.value.nickname ?? '';
-    _bioController.text = _userController.principal.value.memo ?? '';
+    _bioController.text = _userController.profile.value.introduction ?? '';
+    _selectedJob = _userController.profile.value.jobName ?? '';
+    _selectedCareer = getCareerText(_userController.profile.value.experience!);
+    _updatePosition();
+  }
+
+  Future<void> _selectImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      File imageFile = File(pickedImage.path);
+      int result = await _userController.updateProfileImage(
+        _userController.principal.value.nickname!,
+        imageFile,
+      );
+
+      if (result != -1) {
+        setState(() {
+          _selectedImage = imageFile;
+        });
+        print("프로필 이미지가 성공적으로 업로드되었습니다.");
+      } else {
+        print("프로필 이미지 업로드에 실패했습니다.");
+      }
+    }
   }
 
   @override
@@ -97,10 +128,7 @@ class _ProfileSettingsPageState extends State<UserInfo> {
             child: Stack(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    print("로직 추가");
-                    // 프로필 이미지 선택 또는 촬영 로직 추가
-                  },
+                  onTap: () => showImageFullScreen(context),
                   child: Container(
                     width: 200,
                     height: 200,
@@ -108,13 +136,30 @@ class _ProfileSettingsPageState extends State<UserInfo> {
                       shape: BoxShape.circle,
                       color: Colors.grey[200],
                     ),
-                    child: Image.asset(
-                      "assets/new_logo_p.png",
-                      color: Colors.amber,
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.contain,
-                    ),
+                    child: _selectedImage != null
+                        ? ClipOval(
+                            child: Image.file(
+                              _selectedImage!,
+                              height: 200,
+                              width: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : _userController.profile.value.profileImageUrl != ""
+                            ? ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: _userController
+                                      .profile.value.profileImageUrl!,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.person, size: 80),
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Icon(Icons.person, size: 80),
                   ),
                 ),
                 Positioned(
@@ -130,10 +175,7 @@ class _ProfileSettingsPageState extends State<UserInfo> {
                     child: IconButton(
                       icon: Icon(Icons.camera_alt),
                       color: Colors.white,
-                      onPressed: () {
-                        print("카메라 버튼 클릭");
-                        // 카메라 촬영 또는 이미지 선택 로직 추가
-                      },
+                      onPressed: _selectImage,
                     ),
                   ),
                 ),
@@ -213,9 +255,21 @@ class _ProfileSettingsPageState extends State<UserInfo> {
           ),
           SizedBox(height: 32),
           ElevatedButton(
-            onPressed: () {
-              // 프로필 설정 저장 로직 추가
-              print("유저 설정 변경 로직 추가");
+            onPressed: () async {
+              String experienceValue = getExperienceValue(_selectedCareer);
+              int result = await _userController.updateProfile(
+                _userController.principal.value.nickname!,
+                _bioController.text,
+                _selectedJob,
+                experienceValue,
+              );
+              if (result != -1) {
+                Get.snackbar("성공", "프로필 정보가 성공적으로 업데이트되었습니다.");
+                _userController
+                    .getProfile(_userController.principal.value.nickname!);
+              } else {
+                Get.snackbar("실패", "프로필 정보 업데이트에 실패했습니다.");
+              }
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
