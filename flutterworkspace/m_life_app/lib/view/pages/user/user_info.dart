@@ -101,7 +101,7 @@ class _ProfileSettingsPageState extends State<UserInfo> {
       appBar: CustomAppBar(
         isHome: true,
         title: 'M-Life',
-        onBackPressed: () => Get.to(() => HomePage()),
+        onBackPressed: () => Get.offAll(() => HomePage()),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),
