@@ -35,6 +35,9 @@ dependencies {
 
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 
+	// aws s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
+
 
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'

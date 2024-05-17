@@ -3,8 +3,9 @@ package com.m_life.m_life.config;
 import com.m_life.m_life.domain.Post;
 import com.m_life.m_life.domain.PostCategory;
 import com.m_life.m_life.domain.UserAccount;
+import com.m_life.m_life.domain.UserProfile;
+import com.m_life.m_life.dto.Experience;
 import com.m_life.m_life.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,18 +18,21 @@ import java.util.List;
 //@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
     private final PostCategoryRepository postCategoryRepository;
-    private final PostRepository postRepository;
+    private final UserProfileRepository userProfileRepository;
     private final UserAccountRepository userAccountRepository;
+    private final PostRepository postRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
 
-    public DataInitializer(PostCategoryRepository postCategoryRepository, PostRepository postRepository, UserAccountRepository userAccountRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+
+    public DataInitializer(PostCategoryRepository postCategoryRepository, PostRepository postRepository, UserAccountRepository userAccountRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserProfileRepository userProfileRepository) {
         this.postCategoryRepository = postCategoryRepository;
         this.postRepository = postRepository;
         this.userAccountRepository = userAccountRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userProfileRepository = userProfileRepository;
     }
 
     @Override
@@ -101,11 +105,39 @@ public class DataInitializer implements CommandLineRunner {
 
 
             // 유저 2~3명 생성
+            UserAccount sample = UserAccount.of("메가커피", "sample", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user = UserAccount.of("허훈도령", "test", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user1 = UserAccount.of("콩쥐들쥐", "test1", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user2 = UserAccount.of("현모양초", "test2", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
             UserAccount user3 = UserAccount.of("휴지필름", "test3", bCryptPasswordEncoder.encode("123123"), "ROLE_USER");
-            userAccountRepository.saveAll(Arrays.asList(user, user1, user2, user3));
+            userAccountRepository.saveAll(Arrays.asList(sample, user, user1, user2, user3));
+
+            UserProfile userProfile = UserProfile.of(
+                    "https://mlifeapp.s3.ap-northeast-2.amazonaws.com/profile-images/63169b9f-9d5a-4473-969e-76904263a0dd_copy_logo+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%84%87%E1%85%A9%E1%86%AB.png",
+                    "한 줄 자기소개","", Experience.ZERO_YEAR, sample
+            );
+            userProfileRepository.save(userProfile);
+            UserProfile userProfile1 = UserProfile.of(
+                    "https://mlifeapp.s3.ap-northeast-2.amazonaws.com/profile-images/63169b9f-9d5a-4473-969e-76904263a0dd_copy_logo+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%84%87%E1%85%A9%E1%86%AB.png",
+                    "한 줄 자기소개","",Experience.ZERO_YEAR, user
+            );
+            userProfileRepository.save(userProfile1);
+            UserProfile userProfile2 = UserProfile.of(
+                    "https://mlifeapp.s3.ap-northeast-2.amazonaws.com/profile-images/63169b9f-9d5a-4473-969e-76904263a0dd_copy_logo+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%84%87%E1%85%A9%E1%86%AB.png",
+                    "한 줄 자기소개","",Experience.ZERO_YEAR, user1
+            );
+            userProfileRepository.save(userProfile2);
+
+            UserProfile userProfile3 = UserProfile.of(
+                    "https://mlifeapp.s3.ap-northeast-2.amazonaws.com/profile-images/63169b9f-9d5a-4473-969e-76904263a0dd_copy_logo+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%84%87%E1%85%A9%E1%86%AB.png",
+                    "한 줄 자기소개","",Experience.ZERO_YEAR, user2
+            );
+            userProfileRepository.save(userProfile3);
+            UserProfile userProfile4 = UserProfile.of(
+                    "https://mlifeapp.s3.ap-northeast-2.amazonaws.com/profile-images/63169b9f-9d5a-4473-969e-76904263a0dd_copy_logo+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%84%87%E1%85%A9%E1%86%AB.png",
+                    "한 줄 자기소개","",Experience.ZERO_YEAR, user3
+            );
+            userProfileRepository.save(userProfile4);
 
             postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8, category9, category10));
             // 게시글

@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:m_life_app/controller/dto/Req/UserProfileReqDto.dart';
+import 'package:m_life_app/controller/dto/Res/UserPorfileResDto.dart';
 import 'package:m_life_app/domain/user/user_repository.dart';
 import 'package:m_life_app/util/jwt.dart';
 
@@ -11,12 +15,14 @@ class UserController extends GetxController {
   final RxBool isLogin = false.obs; // UI가 관찰 가능한 변수 => 변경이 되며 UI가 자동으로 업데이트
   final principal = User().obs;
   final RxInt totalLike = 0.obs;
+  final profile = UserProfileResDto().obs;
+  final Rx<ImageProvider> profileImage =
+      Rx<ImageProvider>(AssetImage('assets/new_logo_p.png'));
 
   @override
   void onInit() {
     super.onInit();
   }
-
 
   void logout() {
     isLogin.value = false;
@@ -48,15 +54,49 @@ class UserController extends GetxController {
     this.principal.value = User(nickname: decodedPayload["nickname"]);
   }
 
-
   Future<void> getLike(String nickname) async {
     int ret = await _userRepository.getLike(nickname);
-    if(ret != -1){
+    if (ret != -1) {
       this.totalLike.value = ret;
-    }
-    else{
+    } else {
       this.totalLike.value = 0;
     }
+  }
 
+  Future<void> getProfile(String nickname) async {
+    UserProfileResDto userProfileResDto =
+        await _userRepository.getProfile(nickname);
+    this.profile.value = userProfileResDto;
+
+    if (userProfileResDto.profileImageUrl != "") {
+      try {
+        final provider = NetworkImage(userProfileResDto.profileImageUrl!);
+        await precacheImage(provider, Get.context!);
+        profileImage.value = provider;
+      } catch (e) {
+        print('Failed to load profile image: $e');
+        // 기본 이미지 사용
+      }
+    } else {
+      profileImage.value = AssetImage('assets/new_logo_.png');
+    }
+  }
+
+  Future<int> updateProfileImage(String nickname, File imageFile) async {
+    int result = await _userRepository.updateProfileImage(nickname, imageFile);
+    return result;
+  }
+
+  Future<int> updateProfile(String nickname, String introduction,
+      String jobname, String experience) async {
+    int result = await _userRepository.updateProfile(
+        nickname, introduction, jobname, experience);
+    if (result == -1) {
+      print("프로필 업데이트 실패");
+      return -1;
+    } else {
+      print("프로필 업데이트 성공");
+      return 1;
+    }
   }
 }

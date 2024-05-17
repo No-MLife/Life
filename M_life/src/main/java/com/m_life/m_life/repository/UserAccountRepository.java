@@ -11,6 +11,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     Boolean existsByUserid(String userid);
     Boolean existsByNickname(String nickname);
     UserAccount findByUserid(String userid);
+    UserAccount findByNickname(String nickname);
 
     @Query("SELECT SUM(SIZE(p.likes)) FROM UserAccount u LEFT JOIN u.posts p WHERE u.nickname = :nickname")
     Long getTotalLikeCountByNickname(@Param("nickname") String nickname);

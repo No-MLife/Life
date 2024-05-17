@@ -1,7 +1,6 @@
 package com.m_life.m_life.dto.response;
 import com.m_life.m_life.domain.Post;
 import com.m_life.m_life.repository.UserAccountRepository;
-import com.m_life.m_life.service.MyUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
