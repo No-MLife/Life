@@ -2,6 +2,7 @@ package com.m_life.m_life.service;
 
 import com.m_life.m_life.domain.Post;
 import com.m_life.m_life.domain.PostCategory;
+import com.m_life.m_life.domain.PostImage;
 import com.m_life.m_life.domain.UserAccount;
 import com.m_life.m_life.dto.request.PostRequest;
 import com.m_life.m_life.dto.response.PostResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,52 +29,69 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostCategoryRepository postCategoryRepository;
     private final UserAccountRepository userAccountRepository;
+    private final S3Service s3service;
 
-    public ResponseEntity<String>save(PostRequest postRequest, UserAccount userAccount, Long categoryId){
+    public ResponseEntity<String> save(PostRequest postRequest, UserAccount userAccount, Long categoryId, List<MultipartFile> files) {
 
-        PostCategory postCategory = postCategoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
+        PostCategory postCategory = postCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
 
-        Post post = Post.of(
-                postRequest.title(), postRequest.content(), postCategory
-        );
+        Post post = Post.of(postRequest.title(), postRequest.content(), postCategory);
         post.setUserAccount(userAccount);
         postRepository.save(post);
+
+        if (files != null && !files.isEmpty()) { // 이미지가 있는 경우 이미지도 같이 저장
+            s3service.uploadPostImages(files, post.getId());
+        }
+
         return ResponseEntity.ok("게시글 작성이 완료되었습니다.");
     }
 
-    public ResponseEntity<String> update(PostRequest postRequest, Long id, Long categoryId, UserAccount userAccount) {
+
+
+    @Transactional
+    public ResponseEntity<String> update(PostRequest postRequest, Long id, Long categoryId, UserAccount userAccount, List<MultipartFile> files) {
         try {
-            Post post = postRepository.getReferenceById(id);
+            Post post = postRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+
             if (!post.getUserAccount().equals(userAccount)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("수정 권한이 없습니다.");
             }
+
             if (postRequest.title() != null) {
                 post.setTitle(postRequest.title());
             }
+
             if (postRequest.content() != null) {
                 post.setContent(postRequest.content());
             }
+            // 기존 이미지 삭제
+            if (!post.getImages().isEmpty()) {
+                for (PostImage image : post.getImages()) {
+                    s3service.deleteImage(image.getS3Url());
+                }
+                post.getImages().clear();
+            }
+            PostCategory postCategory = postCategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
+            post.setCategory(postCategory);
 
-            // 변경된 카테고리 정보 확인
-            String newCategoryName = postRequest.boardName();
-            if (newCategoryName != null && !newCategoryName.equals(post.getCategory().getBoardName())) {
-                // 변경된 카테고리가 존재하는지 확인
-                PostCategory newCategory = postCategoryRepository.findByBoardName(newCategoryName);
-                // 게시글의 카테고리 변경
-                post.setCategory(newCategory);
+            if (files != null && !files.isEmpty()) { // 이미지가 있는 경우 이미지도 같이 저장
+                s3service.uploadPostImages(files, post.getId());
             }
 
-            post.setUserAccount(userAccount);
             postRepository.save(post);
-            return ResponseEntity.ok("게시글 수정이 성공했습니다.");
+            return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
         } catch (EntityNotFoundException e) {
-            log.warn("게시글 정보를 찾지 못했습니다.");
             return ResponseEntity.badRequest().body("존재하지 않은 게시글입니다.");
         } catch (IllegalArgumentException e) {
-            log.warn("잘못된 카테고리 이름입니다: {}", postRequest.boardName());
-            return ResponseEntity.badRequest().body("잘못된 카테고리 이름입니다.");
+            return ResponseEntity.badRequest().body("잘못된 카테고리 ID입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 수정 중 오류가 발생했습니다.");
         }
     }
+
 
     public ResponseEntity<String> delete(Long id, UserAccount userAccount) {
         boolean isPost = postRepository.existsById(id);
@@ -112,8 +131,6 @@ public class PostService {
 
     }
 
-
-
     public List<PostResponse> getPopularPostsFromAllCategories(long limit) {
         // 1. 모든 게시글 조회
         List<Post> allPosts = postRepository.findAll();
@@ -124,4 +141,6 @@ public class PostService {
         // 3. 원하는 개수만큼 선택하여 반환
         return allPosts.stream().map(post -> PostResponse.from(post, userAccountRepository)).limit(limit).collect(Collectors.toList());
     }
+
+
 }

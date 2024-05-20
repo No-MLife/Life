@@ -51,6 +51,10 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private PostCategory category;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> images = new ArrayList<>();
+
+
 
     private Post(String title, String content, PostCategory category) {
         this.title = title;

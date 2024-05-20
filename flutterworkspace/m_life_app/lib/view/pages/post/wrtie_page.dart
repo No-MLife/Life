@@ -21,6 +21,7 @@ class _WritePageState extends State<WritePage> {
   final _title = TextEditingController();
   final _content = TextEditingController();
   Category _selectedCategory = Category.free; // 초기 선택된 카테고리
+  
 
   @override
   Widget build(BuildContext context) {
