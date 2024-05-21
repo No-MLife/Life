@@ -9,6 +9,7 @@ class Post {
   final DateTime? created;
   final DateTime? updated;
   final User? user;
+  final List<String>? postImageUrls;
 
   Post(
       {this.id,
@@ -16,7 +17,9 @@ class Post {
       this.content,
       this.created,
       this.updated,
-      this.user});
+      this.user,
+      this.postImageUrls
+      });
 
   // 통신을 위해서 Json 처럼 생긴 문자열
   Post.fromJson(Map<String, dynamic> json)
@@ -25,5 +28,8 @@ class Post {
         user = User.fromJson(json["user"]),
         content = json["content"],
         created = DateFormat("yyyy-mm-dd").parse(json["created"]),
-        updated = DateFormat("yyyy-mm-dd").parse(json["updated"]);
+        updated = DateFormat("yyyy-mm-dd").parse(json["updated"]),
+        postImageUrls =json["postImageUrls"];
+
+
 }

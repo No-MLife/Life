@@ -1,14 +1,15 @@
 package com.m_life.m_life.service;
-
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,20 +28,32 @@ public class S3Service {
         return uploadImage(file, s3Key);
     }
 
-    public String uploadPostImage(MultipartFile file, Long postId) {
-        String fileName = file.getOriginalFilename();
-        String s3Key = "post-images/" + postId + "/" + UUID.randomUUID() + "_" + fileName;
-        return uploadImage(file, s3Key);
+    public List<String> uploadPostImages(List<MultipartFile> files, Long postId) {
+        List<String> s3Urls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            String s3Key = "post-images/" + postId + "/" + UUID.randomUUID() + "_" + fileName;
+            String s3Url = uploadImage(file, s3Key);
+            s3Urls.add(s3Url);
+        }
+        return s3Urls;
     }
 
     private String uploadImage(MultipartFile file, String s3Key) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
+
             amazonS3.putObject(new PutObjectRequest(bucket, s3Key, file.getInputStream(), metadata));
         } catch (IOException e) {
-            // 예외 처리
+            throw new RuntimeException("Failed to upload image to S3", e);
         }
         return amazonS3.getUrl(bucket, s3Key).toString();
+    }
+
+    public void deleteImage(String imageUrl) {
+        String s3Key = imageUrl.substring(imageUrl.indexOf(".com/") + 5);
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, s3Key));
     }
 }

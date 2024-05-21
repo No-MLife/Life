@@ -12,6 +12,7 @@ class PostResDto {
   final String? description;
   final int? categoryId;
   final int? authorLikes;
+  final List<dynamic>? postImageUrls;
 
   // final
 
@@ -27,6 +28,7 @@ class PostResDto {
     this.description,
     this.categoryId,
     this.authorLikes,
+    this.postImageUrls,
   });
 
   // 통신을 위해서 Json 처럼 생긴 문자열
@@ -42,5 +44,7 @@ class PostResDto {
         boardName = json["boardName"] ?? '',
         description = json["description"] ?? '',
         categoryId = json["categoryId"] ?? '',
-        authorLikes = json["authorLikes"];
+        authorLikes = json["authorLikes"],
+        postImageUrls = json["postImageUrls"];
+
 }

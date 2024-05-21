@@ -1,5 +1,6 @@
 package com.m_life.m_life.dto.response;
 import com.m_life.m_life.domain.Post;
+import com.m_life.m_life.domain.PostImage;
 import com.m_life.m_life.repository.UserAccountRepository;
 
 import java.time.LocalDateTime;
@@ -17,18 +18,24 @@ public record PostResponse(
         String boardName,
         String description,
         Long categoryId,
-        Long authorLikes
+        Long authorLikes,
+        List<String> postImageUrls
 
 ) {
     public static PostResponse of(Long id, String title, String content, LocalDateTime localDateTime, List<CommentResponse> commentList, int likeCount,
-                                  String authorName, String boardName, String description, Long categoryId, Long authorLikes) {
+                                  String authorName, String boardName, String description, Long categoryId, Long authorLikes, List<String> postImageUrls) {
         return new PostResponse(id, title, content, localDateTime, commentList, likeCount,
-                                authorName, boardName, description, categoryId, authorLikes);
+                                authorName, boardName, description, categoryId, authorLikes, postImageUrls);
     }
 
     public static PostResponse from(Post post, UserAccountRepository userAccountRepository) {
         String authorNickname = post.getUserAccount().getNickname();
         Long authorLikes = userAccountRepository.getTotalLikeCountByNickname(authorNickname);
+
+        List<String> imageUrls = post.getImages().stream()
+                .map(PostImage::getS3Url)
+                .toList();
+
 
         return new PostResponse(
                 post.getId(),
@@ -41,7 +48,8 @@ public record PostResponse(
                 post.getCategory().getBoardName(),
                 post.getCategory().getDescription(),
                 post.getCategory().getId(),
-                authorLikes
+                authorLikes,
+                imageUrls
         );
     }
 }
