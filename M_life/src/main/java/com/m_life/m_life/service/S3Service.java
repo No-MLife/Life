@@ -1,5 +1,4 @@
 package com.m_life.m_life.service;
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -45,6 +44,7 @@ public class S3Service {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
+
             amazonS3.putObject(new PutObjectRequest(bucket, s3Key, file.getInputStream(), metadata));
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image to S3", e);
