@@ -61,7 +61,6 @@ public class PostController {
                                              @RequestPart("postRequest") String postRequestJson,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (categoryId != 1) {
-//            logger.info("postRequestJson is: " + postRequestJson);
             ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;
             try {
@@ -70,7 +69,6 @@ public class PostController {
                 return ResponseEntity.badRequest().body("Invalid JSON format");
             }
 
-//            logger.info("postRequest is: " + postRequest);
             UserAccount userAccount = userDetails.getUserAccount();
             return postService.save(postRequest, userAccount, categoryId, files);
         }
@@ -85,12 +83,12 @@ public class PostController {
         if (categoryId != 1) {
             ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;
+
             try {
                 postRequest = objectMapper.readValue(postRequestJson, PostRequest.class);
             } catch (JsonProcessingException e) {
                 return ResponseEntity.badRequest().body("Invalid JSON format");
             }
-
             UserAccount userAccount = userDetails.getUserAccount();
             return postService.update(postRequest, id, categoryId, userAccount, files);
         }

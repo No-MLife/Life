@@ -9,12 +9,14 @@ public record PostRequest(
         @JsonProperty("id") long id,
         @JsonProperty("title") String title,
         @JsonProperty("content") String content,
-        @JsonProperty("boardName") String boardName
+        @JsonProperty("boardName") String boardName,
+
+        @JsonProperty("postImageUrls") List<String>postImageUrls
 
 ) {
 
 
-    public static PostRequest of(long id, String title, String content, String boardName){
-        return new PostRequest(id, title, content, boardName);
+    public static PostRequest of(long id, String title, String content, String boardName, List<String>postImageUrls){
+        return new PostRequest(id, title, content, boardName, postImageUrls);
     }
 }

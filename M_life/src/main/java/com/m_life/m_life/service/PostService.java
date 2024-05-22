@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -72,20 +74,33 @@ public class PostService {
                     .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
             post.setCategory(postCategory);
 
-            // 기존 이미지 삭제
-            if (!post.getImages().isEmpty()) {
-                for (PostImage image : post.getImages()) {
-                    s3Service.deleteImage(image.getS3Url());
-                }
-                postImageRepository.deleteAll(post.getImages());
-                post.getImages().clear();
-            }
-
             // 새로운 이미지 업로드
-            if (files != null && !files.isEmpty()) { // 이미지가 있는 경우 이미지도 같이 저장
-                uploadImages(post, files);
+            List<String> newImageUrls = (files != null && !files.isEmpty()) ?
+                    s3Service.uploadPostImages(files, post.getId()) :
+                    List.of();
+
+            // 기존 URL 유지 및 새 URL 추가
+            Set<String> currentImageUrls = new HashSet<>(postRequest.postImageUrls());
+            currentImageUrls.addAll(newImageUrls);
+
+            // 기존 이미지 삭제 로직 - 새로운 URL에 포함되지 않은 기존 이미지 필터링
+            List<PostImage> imagesToDelete = post.getImages().stream()
+                    .filter(image -> !currentImageUrls.contains(image.getS3Url()))
+                    .collect(Collectors.toList());
+
+            for (PostImage image : imagesToDelete) {
+                s3Service.deleteImage(image.getS3Url());
             }
 
+            postImageRepository.deleteAll(imagesToDelete);
+            post.getImages().removeAll(imagesToDelete);
+
+            // 새 이미지를 포스트에 추가
+            List<PostImage> uploadedImages = newImageUrls.stream()
+                    .map(url -> new PostImage("generated-filename", url, post)) // 파일명을 관리하는 로직이 필요할 수 있음
+                    .toList();
+
+            post.getImages().addAll(uploadedImages);
             postRepository.save(post);
             return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
         } catch (Exception e) {
