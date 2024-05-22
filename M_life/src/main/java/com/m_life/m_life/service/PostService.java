@@ -72,18 +72,29 @@ public class PostService {
                     .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
             post.setCategory(postCategory);
 
-            // 기존 이미지 삭제
-            if (!post.getImages().isEmpty()) {
-                for (PostImage image : post.getImages()) {
-                    s3Service.deleteImage(image.getS3Url());
-                }
-                postImageRepository.deleteAll(post.getImages());
-                post.getImages().clear();
+            // 새로운 이미지 URL 수집
+            List<String> newImageUrls = (files != null && !files.isEmpty()) ?
+                    s3Service.uploadPostImages(files, post.getId()) :
+                    List.of();
+
+            // 기존 이미지와 새로운 이미지 비교하여 삭제된 이미지 식별
+            List<PostImage> imagesToDelete = post.getImages().stream()
+                    .filter(image -> !newImageUrls.contains(image.getS3Url())) // 새로운 URL에 포함되지 않은 기존 이미지 필터링
+                    .collect(Collectors.toList());
+
+            for (PostImage image : imagesToDelete) {
+                s3Service.deleteImage(image.getS3Url());
             }
 
-            // 새로운 이미지 업로드
-            if (files != null && !files.isEmpty()) { // 이미지가 있는 경우 이미지도 같이 저장
-                uploadImages(post, files);
+            postImageRepository.deleteAll(imagesToDelete);
+            post.getImages().removeAll(imagesToDelete);
+
+            // 새로운 이미지 업로드 및 포스트에 추가
+            if (files != null && !files.isEmpty()) {
+                List<PostImage> uploadedImages = IntStream.range(0, newImageUrls.size())
+                        .mapToObj(i -> PostImage.of(files.get(i).getOriginalFilename(), newImageUrls.get(i), post))
+                        .toList();
+                post.getImages().addAll(uploadedImages);
             }
 
             postRepository.save(post);

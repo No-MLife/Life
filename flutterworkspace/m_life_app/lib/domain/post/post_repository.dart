@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:m_life_app/controller/dto/Req/PostReqDto.dart';
 import 'package:m_life_app/domain/post/post_provider.dart';
@@ -13,7 +15,6 @@ class PostRepository {
     Response response = await _postProvider.findallpopular();
     dynamic body = response.body;
     dynamic convertBody = convertUtf8ToObject(body);
-
 
     List<PostResDto> posts = [];
 
@@ -56,9 +57,11 @@ class PostRepository {
     }
   }
 
-  Future<int> postUpdate(String title, String content, int categoryId, int id) async {
+  Future<int> postUpdate(String title, String content, int categoryId, int id,
+      List<File> images) async {
     PostReqDto postReqDto = PostReqDto(title, content);
-    Response response = await _postProvider.postUpdate(postReqDto.toJson(), categoryId, id);
+    Response response = await _postProvider.postUpdate(
+        postReqDto.toJson(), images, categoryId, id);
 
     if (response.statusCode == 200) {
       return 1;
@@ -66,9 +69,11 @@ class PostRepository {
     return -1;
   }
 
-  Future<int> postCreate(String title, String content, int categoryId) async {
+  Future<int> postCreate(
+      String title, String content, List<File> images, int categoryId) async {
     PostReqDto postReqDto = PostReqDto(title, content);
-    Response response = await _postProvider.postCreate(postReqDto.toJson(), categoryId);
+    Response response =
+        await _postProvider.postCreate(postReqDto.toJson(), images, categoryId);
     if (response.statusCode == 200) {
       return 1;
     }
