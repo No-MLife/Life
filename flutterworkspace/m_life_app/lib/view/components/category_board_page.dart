@@ -33,7 +33,6 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
   Widget build(BuildContext context) {
     final emoji = getCategoryEmoji(widget.category);
 
-    print("Hello My ${context}");
     return Scaffold(
       appBar: CustomAppBar(
         isHome: false,

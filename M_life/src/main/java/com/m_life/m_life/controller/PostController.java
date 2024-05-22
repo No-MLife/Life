@@ -83,6 +83,7 @@ public class PostController {
         if (categoryId != 1) {
             ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;
+
             try {
                 postRequest = objectMapper.readValue(postRequestJson, PostRequest.class);
             } catch (JsonProcessingException e) {

@@ -58,8 +58,8 @@ class PostRepository {
   }
 
   Future<int> postUpdate(String title, String content, int categoryId, int id,
-      List<File> images) async {
-    PostReqDto postReqDto = PostReqDto(title, content);
+      List<File> images, List<String> postImageUrls) async {
+    PostReqDto postReqDto = PostReqDto(title: title, content: content, postImageUrls: postImageUrls);
     Response response = await _postProvider.postUpdate(
         postReqDto.toJson(), images, categoryId, id);
 
@@ -71,7 +71,7 @@ class PostRepository {
 
   Future<int> postCreate(
       String title, String content, List<File> images, int categoryId) async {
-    PostReqDto postReqDto = PostReqDto(title, content);
+    PostReqDto postReqDto = PostReqDto(title: title, content: content);
     Response response =
         await _postProvider.postCreate(postReqDto.toJson(), images, categoryId);
     if (response.statusCode == 200) {

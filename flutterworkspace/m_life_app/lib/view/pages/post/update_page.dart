@@ -104,10 +104,17 @@ class _UpdatePageState extends State<UpdatePage> {
                 text: "Content",
                 funValidator: validate_content(),
               ),
-              IconButton(
-                icon: Icon(Icons.photo_library),
-                onPressed: _pickImages,
-              ),
+              GestureDetector(
+                onTap: _pickImages,
+                child: Row(
+                  children: [
+                    Icon(Icons.photo_library, color: Colors.amber),
+                    SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격을 조정
+                    Text('사진', style: TextStyle(color: Colors.amber)),
+                  ],
+                ),
+              )
+,
               SizedBox(height: 16),
               GridView.builder(
                 shrinkWrap: true,
@@ -196,14 +203,17 @@ class _UpdatePageState extends State<UpdatePage> {
                         onConfirm: () async {
                           // 게시글 수정 로직
                           print("postimage is : ${_postImageUrls}");
-                          print("_selectedImages is : ${_postImageUrls}");
+                          print("_selectedImages is : ${_selectedImages}");
+
+
 
                           await p.postUpdate(
                               _title.text,
                               _content.text,
                               _selectedCategory.id,
                               p.post.value.id!,
-                              _selectedImages);
+                              _selectedImages,
+                              _postImageUrls);
                           Get.off(() => DetailPage(
                               category: _selectedCategory,
                               id: p.post.value.id!));

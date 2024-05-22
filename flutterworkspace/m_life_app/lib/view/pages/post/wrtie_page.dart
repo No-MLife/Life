@@ -85,12 +85,17 @@ class _WritePageState extends State<WritePage> {
                 text: "내용",
                 funValidator: validate_content(),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.photo_library,
+              GestureDetector(
+                onTap: _pickImages,
+                child: Row(
+                  children: [
+                    Icon(Icons.photo_library, color: Colors.amber),
+                    SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격을 조정
+                    Text('사진', style: TextStyle(color: Colors.amber)),
+                  ],
                 ),
-                onPressed: _pickImages,
-              ),
+              )
+,
               SizedBox(height: 16),
               GridView.builder(
                 shrinkWrap: true,

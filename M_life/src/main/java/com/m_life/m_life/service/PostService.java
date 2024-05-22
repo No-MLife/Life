@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -72,14 +74,18 @@ public class PostService {
                     .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
             post.setCategory(postCategory);
 
-            // 새로운 이미지 URL 수집
+            // 새로운 이미지 업로드
             List<String> newImageUrls = (files != null && !files.isEmpty()) ?
                     s3Service.uploadPostImages(files, post.getId()) :
                     List.of();
 
-            // 기존 이미지와 새로운 이미지 비교하여 삭제된 이미지 식별
+            // 기존 URL 유지 및 새 URL 추가
+            Set<String> currentImageUrls = new HashSet<>(postRequest.postImageUrls());
+            currentImageUrls.addAll(newImageUrls);
+
+            // 기존 이미지 삭제 로직 - 새로운 URL에 포함되지 않은 기존 이미지 필터링
             List<PostImage> imagesToDelete = post.getImages().stream()
-                    .filter(image -> !newImageUrls.contains(image.getS3Url())) // 새로운 URL에 포함되지 않은 기존 이미지 필터링
+                    .filter(image -> !currentImageUrls.contains(image.getS3Url()))
                     .collect(Collectors.toList());
 
             for (PostImage image : imagesToDelete) {
@@ -89,14 +95,12 @@ public class PostService {
             postImageRepository.deleteAll(imagesToDelete);
             post.getImages().removeAll(imagesToDelete);
 
-            // 새로운 이미지 업로드 및 포스트에 추가
-            if (files != null && !files.isEmpty()) {
-                List<PostImage> uploadedImages = IntStream.range(0, newImageUrls.size())
-                        .mapToObj(i -> PostImage.of(files.get(i).getOriginalFilename(), newImageUrls.get(i), post))
-                        .toList();
-                post.getImages().addAll(uploadedImages);
-            }
+            // 새 이미지를 포스트에 추가
+            List<PostImage> uploadedImages = newImageUrls.stream()
+                    .map(url -> new PostImage("generated-filename", url, post)) // 파일명을 관리하는 로직이 필요할 수 있음
+                    .toList();
 
+            post.getImages().addAll(uploadedImages);
             postRepository.save(post);
             return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
         } catch (Exception e) {
