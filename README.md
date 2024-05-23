@@ -25,7 +25,9 @@
 
  <div align="center">
 
- <img src="https://github.com/No-MLife/M-Life/assets/79856225/0fa96446-be4f-47a6-8300-d8e6061f21a5" width="540" height="1110"/>
+ <img src="https://github.com/No-MLife/M-Life/assets/79856225/8f09857a-cc2c-4d1c-9fc8-b2d7b5f0106e"/>
+ <img src="https://github.com/No-MLife/M-Life/assets/79856225/723d2d6a-ce17-4bbf-aa95-9a9f01915cca"/>
+ 
 
 
 
