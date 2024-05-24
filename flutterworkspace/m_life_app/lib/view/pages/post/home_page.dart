@@ -7,6 +7,7 @@ import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 
 import '../../components/buildBottomNavigationBar.dart';
+import '../../components/buildFloatingActionButton.dart';
 import '../../components/confirmation_dialog.dart';
 import '../../components/post_item.dart';
 import '../../components/ad_banner.dart';
@@ -93,7 +94,8 @@ class HomePage extends StatelessWidget {
                     post: post,
                     onTap: () async {
                       await _postController.findByid(post.id!);
-                      Get.to(() => DetailPage(id:post.id), arguments: "매개변수 테스트용");
+                      Get.to(() => DetailPage(id: post.id),
+                          arguments: "매개변수 테스트용");
                     },
                     showCategory: true,
                   ),
@@ -104,13 +106,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() => WritePage());
-        },
-        child: Icon(Icons.edit),
-        backgroundColor: Colors.amber,
-      ),
+      floatingActionButton: buildFloatingActionButton(),
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
@@ -158,17 +154,16 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) =>
-                        ConfirmationDialog(
-                          title: "로그아웃",
-                          content: "로그아웃 하시겠습니까?",
-                          confirmText: "로그아웃",
-                          onConfirm: () async {
-                            // 게시글 수정 로직
-                            _userController.logout();
-                            Get.off(() => LoginPage());
-                          },
-                        ),
+                    builder: (context) => ConfirmationDialog(
+                      title: "로그아웃",
+                      content: "로그아웃 하시겠습니까?",
+                      confirmText: "로그아웃",
+                      onConfirm: () async {
+                        // 게시글 수정 로직
+                        _userController.logout();
+                        Get.off(() => LoginPage());
+                      },
+                    ),
                   );
                 },
                 child: Text(

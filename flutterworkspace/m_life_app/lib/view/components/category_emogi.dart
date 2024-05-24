@@ -8,14 +8,10 @@ String getCategoryEmoji(Category category) {
       return '📸';
     case Category.constructionMethod:
       return '🏗️';
-    case Category.graduationReview:
-      return '🎓';
     case Category.complaintDiscussion:
       return '😤';
     case Category.siteDebateDispute:
       return '🏢';
-    case Category.unionRelated:
-      return '🤝';
     case Category.equipmentRecommendation:
       return '🔧';
     case Category.restaurant:

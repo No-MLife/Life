@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/util/post_category.dart';
 import 'package:m_life_app/view/components/post_item.dart';
+import 'package:m_life_app/view/pages/post/category_page.dart';
 import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import '../pages/post/detail_page.dart';
 import 'ad_banner.dart';
 import 'buildBottomNavigationBar.dart';
+import 'buildFloatingActionButton.dart';
 import 'category_emogi.dart';
 import 'custom_header_navi.dart';
 
@@ -35,9 +37,9 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        isHome: false,
-        title: 'M-life',
-      ),
+          isHome: false,
+          title: 'M-life',
+          onBackPressed: () => Get.off(() => CategoryPage())),
       body: Obx(
         () => RefreshIndicator(
           onRefresh: () async {
@@ -49,13 +51,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() => WritePage());
-        },
-        child: Icon(Icons.edit),
-        backgroundColor: Colors.amber,
-      ),
+      floatingActionButton: buildFloatingActionButton(),
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }

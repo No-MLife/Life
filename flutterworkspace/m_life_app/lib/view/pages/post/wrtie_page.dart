@@ -94,8 +94,7 @@ class _WritePageState extends State<WritePage> {
                     Text('사진', style: TextStyle(color: Colors.amber)),
                   ],
                 ),
-              )
-,
+              ),
               SizedBox(height: 16),
               GridView.builder(
                 shrinkWrap: true,
@@ -165,10 +164,7 @@ class _WritePageState extends State<WritePage> {
                               Get.offAll(() => CategoryBoardPage(
                                   category: Category.constructionMethod));
                               break;
-                            case Category.graduationReview:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.graduationReview));
-                              break;
+
                             case Category.complaintDiscussion:
                               Get.offAll(() => CategoryBoardPage(
                                   category: Category.complaintDiscussion));
@@ -177,10 +173,7 @@ class _WritePageState extends State<WritePage> {
                               Get.offAll(() => CategoryBoardPage(
                                   category: Category.siteDebateDispute));
                               break;
-                            case Category.unionRelated:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.unionRelated));
-                              break;
+
                             case Category.equipmentRecommendation:
                               Get.offAll(() => CategoryBoardPage(
                                   category: Category.equipmentRecommendation));

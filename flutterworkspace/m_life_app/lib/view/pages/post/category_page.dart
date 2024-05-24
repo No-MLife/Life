@@ -13,10 +13,8 @@ import 'category/complaint_discussion_page.dart';
 import 'category/construction_method_page.dart';
 import 'category/daily_proof_page.dart';
 import 'category/equipment_recommendation_page.dart';
-import 'category/graduation_review_page.dart';
 import 'category/restaurant_page.dart';
 import 'category/site_debate_dispute_page.dart';
-import 'category/union_related_page.dart';
 
 class CategoryPage extends StatelessWidget {
   @override
@@ -25,7 +23,7 @@ class CategoryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        isHome: false,
+        isHome: true,
         title: 'M-Life',
         onBackPressed: () => Get.offAll(() => HomePage()),
       ),
@@ -75,17 +73,11 @@ class CategoryPage extends StatelessWidget {
                 case Category.constructionMethod:
                   Get.to(() => ConstructionMethodPage());
                   break;
-                case Category.graduationReview:
-                  Get.to(() => GraduationReviewPage());
-                  break;
                 case Category.complaintDiscussion:
                   Get.to(() => ComplaintDiscussionPage());
                   break;
                 case Category.siteDebateDispute:
                   Get.to(() => SiteDebateDisputePage());
-                  break;
-                case Category.unionRelated:
-                  Get.to(() => UnionRelatedPage());
                   break;
                 case Category.equipmentRecommendation:
                   Get.to(() => EquipmentRecommendationPage());

@@ -185,8 +185,9 @@ class _ProfileSettingsPageState extends State<UserInfo> {
             ),
           ),
           SizedBox(height: 20),
-          TextField(
+          TextFormField(
             controller: _nameController,
+            enabled: false, // 수정 불가능하도록 설정
             decoration: InputDecoration(
               labelText: '사용자 이름',
               labelStyle: TextStyle(color: Colors.black54),
