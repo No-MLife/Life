@@ -46,12 +46,14 @@ class PostItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/copy_logo.png",
-                    color: Colors.amber,
-                    height: 45,
-                    width: 45,
-                  ),
+                  post.postImageUrls!.length == 0
+                      ? Image.asset(
+                          "assets/copy_logo.png",
+                          color: Colors.amber,
+                          height: 45,
+                          width: 45,
+                        )
+                      : Image.network(post.postImageUrls![0]),
                   SizedBox(height: 8),
                   Container(
                     width: 80,
@@ -102,7 +104,7 @@ class PostItem extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -136,6 +138,9 @@ class PostItem extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
+                      SizedBox(width: 6),
+                      if (post.postImageUrls!.length != 0)
+                        Icon(Icons.image_outlined),
                       Spacer(),
                       Icon(
                         Icons.access_time,
