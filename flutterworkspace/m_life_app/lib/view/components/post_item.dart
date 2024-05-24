@@ -141,6 +141,15 @@ class PostItem extends StatelessWidget {
                       SizedBox(width: 6),
                       if (post.postImageUrls!.length != 0)
                         Icon(Icons.image_outlined),
+                      SizedBox(width: 4),
+                      if (post.postImageUrls!.length != 0)
+                        Text(
+                          "${post.postImageUrls!.length}",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
                       Spacer(),
                       Icon(
                         Icons.access_time,
