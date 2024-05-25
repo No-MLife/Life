@@ -1,8 +1,10 @@
 import 'package:intl/intl.dart';
 
 String formatDateTime(DateTime dateTime) {
-  final now = DateTime.now().add(Duration(hours: 9));
-  final difference = now.difference(dateTime) * -1;
+  // final now = DateTime.now().add(Duration(hours: 9));
+  dateTime = dateTime.add(Duration(minutes: -9, seconds: -22)); // 나중에 수정해야함
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
 
   // print("now is : ${now}");
   // print("dateTime is : ${dateTime}");
@@ -18,4 +20,3 @@ String formatDateTime(DateTime dateTime) {
     return '방금 전';
   }
 }
-
