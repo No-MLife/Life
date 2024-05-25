@@ -46,5 +46,4 @@ class PostResDto {
         categoryId = json["categoryId"] ?? '',
         authorLikes = json["authorLikes"],
         postImageUrls = json["postImageUrls"];
-
 }

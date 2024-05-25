@@ -160,6 +160,7 @@ class HomePage extends StatelessWidget {
                       confirmText: "로그아웃",
                       onConfirm: () async {
                         // 게시글 수정 로직
+
                         _userController.logout();
                         Get.off(() => LoginPage());
                       },

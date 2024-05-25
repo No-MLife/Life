@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/controller/dto/Req/UserProfileReqDto.dart';
 import 'package:m_life_app/controller/dto/Res/UserPorfileResDto.dart';
@@ -18,6 +19,7 @@ class UserController extends GetxController {
   final profile = UserProfileResDto().obs;
   final Rx<ImageProvider> profileImage =
       Rx<ImageProvider>(AssetImage('assets/new_logo_p.png'));
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   @override
   void onInit() {
@@ -26,6 +28,7 @@ class UserController extends GetxController {
 
   void logout() {
     isLogin.value = false;
+    secureStorage.deleteAll(); // 기존 정보 삭제
     jwtToken = null;
   }
 
@@ -37,7 +40,12 @@ class UserController extends GetxController {
       jwtToken = token;
       // jwt을 해독해서 로그인한 유저 정보만 빼오기
       _JwtEncoder(token);
-    }
+      secureStorage.deleteAll(); // 기존 정보 삭제
+      await secureStorage.write(key: 'isLoggedIn', value: 'true');
+      await secureStorage.write(key: 'username', value: username);
+      await secureStorage.write(key: 'password', value: password);
+    } else
+      secureStorage.deleteAll(); // 기존 정보 삭제
     return token;
   }
 

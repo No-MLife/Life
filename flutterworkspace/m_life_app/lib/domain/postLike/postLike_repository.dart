@@ -7,14 +7,29 @@ class PostLikeRepository {
   final PostLikeProvider _postLikeProvider = PostLikeProvider();
 
   Future<bool> isLikedByCurrentUser(int postId) async {
-    Response response = await _postLikeProvider.isLikedByCurrentUser(postId);
-    dynamic body = response.body;
-    return body;
+    try {
+      Response response = await _postLikeProvider.isLikedByCurrentUser(postId);
+      dynamic body = response.body;
+      // null이 반환될 경우 false 반환
+      if (body == null) {
+        return false;
+      }
+      // body가 bool 타입이 아닐 경우 처리
+      if (body is bool) {
+        return body;
+      } else {
+        throw Exception("Unexpected response type: ${body.runtimeType}");
+      }
+    } catch (e) {
+      // 예외 처리
+      print("Error in isLikedByCurrentUser: $e");
+      return false;
+    }
   }
 
   Future<bool> likePost(int postId) async {
     Response response = await _postLikeProvider.likePost(postId);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       return true;
     }
     return false;
@@ -22,7 +37,7 @@ class PostLikeRepository {
 
   Future<bool> unlikePost(int postId) async {
     Response response = await _postLikeProvider.unlikePost(postId);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       return true;
     }
     return false;

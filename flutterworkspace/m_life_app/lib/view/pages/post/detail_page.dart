@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -364,14 +365,29 @@ class DetailPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 6),
-                    ElevatedButton(
-                      onPressed: () {
-                        c.commentCreate(_comment.text, p.post.value.id!);
-                        _comment.clear();
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Text("등록"),
-                    ),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 15),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.amber[500],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {
+                              c.commentCreate(_comment.text, p.post.value.id!);
+                              _comment.clear();
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              child: Text('등록', style: TextStyle(fontSize: 16)),
+                            ),
+                          ),
+                        ]),
                   ],
                 ),
             ],

@@ -15,6 +15,7 @@ class PostController extends GetxController {
   }
 
   Future<void> findallpopular() async {
+    this.posts.value.clear();
     List<PostResDto> posts = await _postRepository.findallpopular();
     this.posts.value = posts;
   }
@@ -42,8 +43,14 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> postUpdate(String title, String content, int categoryId, int id,
-      List<File> images, List<String> postImageUrls,) async {
+  Future<void> postUpdate(
+    String title,
+    String content,
+    int categoryId,
+    int id,
+    List<File> images,
+    List<String> postImageUrls,
+  ) async {
     int result = await _postRepository.postUpdate(
         title, content, categoryId, id, images, postImageUrls);
     if (result == 1) {

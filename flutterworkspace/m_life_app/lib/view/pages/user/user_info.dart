@@ -17,7 +17,8 @@ class UserInfo extends StatefulWidget {
 }
 
 class _ProfileSettingsPageState extends State<UserInfo> {
-  final UserController _userController = Get.find();
+  final UserController _userController = Get.put(UserController());
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
   String _selectedJob = '';
@@ -66,10 +67,12 @@ class _ProfileSettingsPageState extends State<UserInfo> {
   @override
   void initState() {
     super.initState();
+    final profile = _userController.profile.value;
     _nameController.text = _userController.principal.value.nickname ?? '';
-    _bioController.text = _userController.profile.value.introduction ?? '';
-    _selectedJob = _userController.profile.value.jobName ?? '';
-    _selectedCareer = getCareerText(_userController.profile.value.experience!);
+    _bioController.text = profile.introduction ?? '';
+    _selectedJob = profile.jobName ?? '';
+    _selectedCareer =
+        getCareerText(profile.experience?.toString() ?? '0'); // 타입 변환 추가
     _updatePosition();
   }
 
