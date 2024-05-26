@@ -22,7 +22,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
 
-    public ResponseEntity<String> save(CommentRequest commentRequest, Long postid, UserAccount userAccount) {
+    public ResponseEntity<CommentResponse> save(CommentRequest commentRequest, Long postid, UserAccount userAccount) {
         boolean isPost = postRepository.existsById(postid);
         if (isPost) {
             Post post = postRepository.findById(postid).orElseThrow();
@@ -32,9 +32,10 @@ public class CommentService {
                     userAccount
             );
             commentRepository.save(comment);
-            return ResponseEntity.ok("댓글 작성이 완료되었습니다.");
+
+            return ResponseEntity.ok(CommentResponse.from(comment));
         } else {
-            return ResponseEntity.badRequest().body("게시글이 존재하지 않습니다.");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

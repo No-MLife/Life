@@ -62,12 +62,6 @@ class PostController extends GetxController {
 
   Future<void> postCreate(
       String title, String content, int categoryId, List<File> images) async {
-    int result =
-        await _postRepository.postCreate(title, content, images, categoryId);
-    if (result == 1) {
-      // 현재 불필요하게 전체 갱신을 하고 있다. 추가적으로 단순히 리스트 뒤에 add 하는 방법을 상객해야함
-      // 대표적으로는 스프링부트에서 post를 리턴해주는 방법이 있을듯
-      // getPostsByCategory(categoryId);
-    }
+    await _postRepository.postCreate(title, content, images, categoryId);
   }
 }

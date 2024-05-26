@@ -29,8 +29,8 @@ class UserRepository {
   }
 
   Future<Map<String, dynamic>?> signup(
-      String username, String password, String nickname) async {
-    SignupDto signupDto = SignupDto(username, password, nickname);
+      String username, String password, String nickname, String email) async {
+    SignupDto signupDto = SignupDto(username, password, nickname, email);
     Response response = await _userProvider.signup(signupDto.toJson());
     print(response.statusCode);
     if (response.statusCode == 200) {

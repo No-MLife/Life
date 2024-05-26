@@ -10,10 +10,13 @@ import java.util.Optional;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
     Boolean existsByUserid(String userid);
     Boolean existsByNickname(String nickname);
+    Boolean existsByEmail(String email);
     UserAccount findByUserid(String userid);
     UserAccount findByNickname(String nickname);
 
+
     @Query("SELECT SUM(SIZE(p.likes)) FROM UserAccount u LEFT JOIN u.posts p WHERE u.nickname = :nickname")
     Long getTotalLikeCountByNickname(@Param("nickname") String nickname);
+
 
 }

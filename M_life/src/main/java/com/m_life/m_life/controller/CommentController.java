@@ -21,7 +21,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
     @PostMapping("/{postid}/comment")
-    public ResponseEntity<String> createComment(@RequestBody CommentRequest commentRequest,
+    public ResponseEntity<CommentResponse> createComment(@RequestBody CommentRequest commentRequest,
                                                 @PathVariable(name = "postid") Long postid,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
         UserAccount userAccount = userDetails.getUserAccount();

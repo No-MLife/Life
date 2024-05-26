@@ -27,9 +27,10 @@ class CommentController extends GetxController {
   }
 
   Future<void> commentCreate(String content, int postId) async {
-    int result = await _commentRepository.commentCreate(content, postId);
-    if (result == 1) {
-      findAllComment(postId);
+    CommentResDto? comment =
+        await _commentRepository.commentCreate(content, postId);
+    if (comment != null) {
+      comments.add(comment);
     }
   }
 
@@ -50,8 +51,8 @@ class CommentController extends GetxController {
       CommentResDto comment =
           await _commentRepository.findByid(postId, commentId);
       this.comment.value = comment;
-      this.comments.value =
-          this.comments.map((e) => e.id == commentId ? comment : e).toList();
+      comments.value =
+          comments.map((e) => e.id == commentId ? comment : e).toList();
     }
   }
 
