@@ -150,7 +150,10 @@ class _ProfileSettingsPageState extends State<UserInfo> {
                               fit: BoxFit.cover,
                             ),
                           )
-                        : _userController.profile.value.profileImageUrl != ""
+                        : (_userController.profile.value.profileImageUrl !=
+                                    null &&
+                                _userController
+                                    .profile.value.profileImageUrl!.isNotEmpty)
                             ? ClipOval(
                                 child: CachedNetworkImage(
                                   imageUrl: _userController
