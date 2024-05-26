@@ -66,6 +66,10 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
     }
 
     final reversedIndex = _postController.posts.length - 1 - (index - 3);
+    if (reversedIndex < 0 || reversedIndex >= _postController.posts.length) {
+      return Container(); // 유효하지 않은 인덱스일 경우 빈 컨테이너 반환
+    }
+
     final post = _postController.posts[reversedIndex];
 
     return Column(

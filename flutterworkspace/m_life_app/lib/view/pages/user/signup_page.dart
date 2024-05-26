@@ -15,6 +15,7 @@ class SignupPage extends StatelessWidget {
   final _username = TextEditingController();
   final _password = TextEditingController();
   final _nickname = TextEditingController();
+  final _email = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +52,7 @@ class SignupPage extends StatelessWidget {
               funValidator: validate_nickname(),
             ),
             CustomTextFormField(
+              controller: _email,
               text: "이메일",
               funValidator: validate_email(),
             ),
@@ -60,8 +62,11 @@ class SignupPage extends StatelessWidget {
               destination: () async {
                 if (_formKey.currentState!.validate()) {
                   UserRepository u = UserRepository();
-                  var response = await u.signup(_username.text.trim(),
-                      _password.text.trim(), _nickname.text.trim());
+                  var response = await u.signup(
+                      _username.text.trim(),
+                      _password.text.trim(),
+                      _nickname.text.trim(),
+                      _email.text.trim());
                   if (response!['success'] == true) {
                     showDialog(
                       context: context,
@@ -171,19 +176,19 @@ class SignupPage extends StatelessWidget {
               },
               child: RichText(
                   text: TextSpan(children: [
-                    TextSpan(
-                      text: "이미 ",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    TextSpan(
-                      text: "회원가입",
-                      style: TextStyle(color: Colors.amber),
-                    ),
-                    TextSpan(
-                      text: "이 되어 있나요? ",
-                      style: TextStyle(color: Colors.black),
-                    )
-                  ])),
+                TextSpan(
+                  text: "이미 ",
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: "회원가입",
+                  style: TextStyle(color: Colors.amber),
+                ),
+                TextSpan(
+                  text: "이 되어 있나요? ",
+                  style: TextStyle(color: Colors.black),
+                )
+              ])),
             )
           ],
         ),

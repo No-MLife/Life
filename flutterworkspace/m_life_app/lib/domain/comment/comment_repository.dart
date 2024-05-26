@@ -23,14 +23,19 @@ class CommentRepository {
     return comments;
   }
 
-  Future<int> commentCreate(String content, int postID) async {
+  Future<CommentResDto?> commentCreate(String content, int postID) async {
     CommentReqDto commentReqDto = CommentReqDto(content);
     Response response =
         await _commentProvider.commentCreate(commentReqDto.toJson(), postID);
+
+    CommentResDto commentResDto;
     if (response.statusCode == 200) {
-      return 1;
+      dynamic body = response.body;
+      dynamic convertBody = convertUtf8ToObject(body);
+      commentResDto = CommentResDto.fromJson(convertBody);
+      return commentResDto;
     }
-    return -1;
+    return null;
   }
 
   Future<int> deleteByid(int postId, int commentId) async {

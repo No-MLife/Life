@@ -21,6 +21,7 @@ public class UserAccount {
     @Setter @Column(length = 100, unique = true) private String userid;
     @Setter @Column(nullable = false) private String userPassword;
     @Setter @Column(length = 100, unique = true) private String nickname;
+    @Setter @Column(length = 200, unique = true) private String email;
     @Setter @Column(length = 100) private String role;
 
 
@@ -36,14 +37,15 @@ public class UserAccount {
     @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserProfile userProfile;
 
-    public UserAccount(String nickname, String username, String password, String role) {
+    public UserAccount(String nickname, String username, String password, String email, String role) {
         this.nickname = nickname;
         this.userid = username;
+        this.email = email;
         this.userPassword = password;
         this.role= role;
     }
-    public static UserAccount of(String nickname, String username, String password, String role){
-        return new UserAccount(nickname, username, password, role);
+    public static UserAccount of(String nickname, String username, String password, String email, String role){
+        return new UserAccount(nickname, username, password, email, role);
     }
 
 
