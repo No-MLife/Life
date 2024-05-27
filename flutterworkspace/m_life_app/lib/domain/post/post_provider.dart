@@ -7,7 +7,7 @@ import 'package:m_life_app/util/jwt.dart';
 import '../../util/host.dart';
 
 const RequestURL = "api/v1/category";
-const limit = 10;
+const limit = 100;
 
 class PostProvider extends GetConnect {
   // 인기 게시글 조회

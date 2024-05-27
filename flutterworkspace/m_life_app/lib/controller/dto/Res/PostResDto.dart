@@ -36,8 +36,7 @@ class PostResDto {
       : id = json["id"],
         title = json["title"] ?? '',
         content = json["content"] ?? '',
-        created =
-            DateFormat("yyyy-MM-ddTHH:mm:ss.SSSSSS").parse(json["createAt"]),
+        created = DateFormat("yyyy-MM-ddTHH:mm").parse(json["createAt"]),
         likeCount = json["likeCount"],
         authorName = json["authorName"] ?? '',
         commentList = json["commentList"] ?? '',
