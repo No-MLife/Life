@@ -13,8 +13,6 @@ public class CustomUserDetails implements UserDetails {
 
     private final UserAccount userEntity;
 
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

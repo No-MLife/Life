@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:m_life_app/controller/dto/Req/UserProfileReqDto.dart';
 import 'package:m_life_app/controller/dto/Res/UserPorfileResDto.dart';
 import 'package:m_life_app/domain/user/user_repository.dart';
 import 'package:m_life_app/util/jwt.dart';

@@ -19,13 +19,17 @@ class UserRepository {
     LoginReqDto loginReqDto = LoginReqDto(username, password);
     Response response = await _userProvider.login(loginReqDto.toJson());
     dynamic headers = response.headers;
-
-    if (headers["authorization"] == null) {
+    if (response.headers == null)
       return "-1";
-    } else {
-      String token = headers["authorization"];
-      return token;
+
+    String? setCookie = headers['set-cookie'];
+    String? access = headers['access'];
+
+    if (setCookie == null || access == null) {
+      return "-1";
     }
+
+    return access;
   }
 
   Future<Map<String, dynamic>?> signup(

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m_life.m_life.jwt.JWTUtil;
 import com.m_life.m_life.service.CustomUserDetails;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -73,8 +76,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, nickname, role, 30*600*10000L);
-        response.addHeader("Authorization", "Bearer " + token);
+        //토큰 생성
+        String access = jwtUtil.createJwt("access", username,nickname, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", username, nickname, role, 86400000L);
+
+        //응답 설정
+        response.setHeader("access", access); // 헤더에 접근 토큰 
+        response.addCookie(createCookie("refresh", refresh)); // 쿠키에 리프레쉬 토큰
+        response.setStatus(HttpStatus.OK.value());
+
         logger.info("로그인을 성공했습니다.");
     }
 
@@ -86,17 +96,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     private static class LoginRequest {
+        // getter와 setter는 Lombok의 @Data 어노테이션을 사용하여 자동 생성 가능
+        @Getter
         private String username;
+        @Getter
         private String password;
         private String nickname;
 
-        // getter와 setter는 Lombok의 @Data 어노테이션을 사용하여 자동 생성 가능
-        public String getUsername() {
-            return username;
-        }
+    }
+    private Cookie createCookie(String key, String value) {
 
-        public String getPassword() {
-            return password;
-        }
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+        //cookie.setSecure(true); // https 에서 사용
+        //cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 }

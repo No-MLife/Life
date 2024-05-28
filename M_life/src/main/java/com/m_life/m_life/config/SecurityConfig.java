@@ -82,6 +82,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/signup", "/").permitAll()
+                        .requestMatchers("/reissue").permitAll()
                         .requestMatchers("/api/v1/category/popular-posts/**").permitAll() // 인기 게시글 조회 URL 패턴
                         .requestMatchers("/api/v1/category/**").permitAll() // 카테고리별 게시글 조회 URL 패턴
                         .requestMatchers("/api/v1/category/post/**").permitAll() // 전체 게시글 조회 URL 패턴

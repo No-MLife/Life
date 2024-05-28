@@ -13,20 +13,20 @@ class PostProvider extends GetConnect {
   // 인기 게시글 조회
   Future<Response> findallpopular() =>
       get("$host/$RequestURL/popular-posts/$limit",
-          headers: {"Authorization": jwtToken ?? ""});
+          headers: {"access": jwtToken ?? ""});
 
   // 모든 게시글 조회(카테고리별 게시판 조회로 바꿔야 함)
   Future<Response> getPostsByCategory(int categoryId) =>
       get("$host/$RequestURL/$categoryId",
-          headers: {"Authorization": jwtToken ?? ""});
+          headers: {"access": jwtToken ?? ""});
 
   // 각각의 게시글 조회
   Future<Response> findByid(int id) => get("$host/$RequestURL/post/$id",
-      headers: {"Authorization": jwtToken ?? ""});
+      headers: {"access": jwtToken ?? ""});
 
   // 게시글 삭제
   Future<Response> deleteByid(int id) => delete("$host/$RequestURL/post/$id",
-      headers: {"Authorization": jwtToken ?? ""});
+      headers: {"access": jwtToken ?? ""});
 
   // 게시글 업데이트
   Future<Response> postUpdate(
@@ -48,7 +48,7 @@ class PostProvider extends GetConnect {
     }
 
     var headers = {
-      "Authorization": jwtToken ?? "",
+      "access": jwtToken ?? "",
       "Content-Type": "multipart/form-data; boundary=${formData.boundary}",
     };
 
@@ -75,7 +75,7 @@ class PostProvider extends GetConnect {
     }
 
     var headers = {
-      "Authorization": jwtToken ?? "",
+      "access": jwtToken ?? "",
       "Content-Type": "multipart/form-data; boundary=${formData.boundary}",
     };
 

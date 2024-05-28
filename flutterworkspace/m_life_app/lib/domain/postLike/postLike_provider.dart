@@ -5,13 +5,13 @@ import '../../util/host.dart';
 class PostLikeProvider extends GetConnect {
   Future<Response> isLikedByCurrentUser(int postId) =>
       get("$host/api/v1/post/$postId/like/liked",
-          headers: {"Authorization": jwtToken ?? ""});
+          headers: {"access": jwtToken ?? ""});
 
   Future<Response> likePost(int postId) =>
       post("$host/api/v1/post/$postId/like", "",
-          headers: {"Authorization": jwtToken ?? ""});
+          headers: {"access": jwtToken ?? ""});
 
   Future<Response> unlikePost(int postId) =>
       delete("$host/api/v1/post/$postId/like",
-          headers: {"Authorization": jwtToken ?? ""});
+          headers: {"access": jwtToken ?? ""});
 }
