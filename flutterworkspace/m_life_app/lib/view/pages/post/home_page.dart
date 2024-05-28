@@ -22,12 +22,15 @@ class _HomePageState extends State<HomePage> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   final UserController _userController = Get.put(UserController());
   final PostController _postController = Get.put(PostController());
+  final CustomBottomNavBarController _customBottomNavBarController = Get.put(CustomBottomNavBarController());
 
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postController.findallpopular();
+      _customBottomNavBarController.updateColor(0);
     });
   }
 
