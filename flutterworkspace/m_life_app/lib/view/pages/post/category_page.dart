@@ -125,11 +125,11 @@ class CategoryPage extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            SizedBox(height: 2),
                             Text(
                               category.description,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.grey[700],
                               ),
                             ),
