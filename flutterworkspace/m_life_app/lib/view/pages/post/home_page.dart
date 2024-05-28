@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
             await _postController.findallpopular();
           },
           child: ListView.builder(
-            itemCount: _postController.posts.length + 3, // 구분선 개수 조정
+            itemCount: _postController.popularPosts.length + 3, // 구분선 개수 조정
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Container(
@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(1.0),
                   color: Colors.white,
                   child: Text(
-                    '🔥 인기 게시글',
+                    '🔥 인기 게시글 100',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
               }
 
               final itemIndex = index - 3; // 구분선을 고려하여 인덱스 조정
-              final post = _postController.posts[itemIndex];
+              final post = _postController.popularPosts[itemIndex];
 
               return Column(
                 children: [
@@ -99,7 +99,8 @@ class HomePage extends StatelessWidget {
                     },
                     showCategory: true,
                   ),
-                  if (itemIndex < _postController.posts.length - 1) Divider(),
+                  if (itemIndex < _postController.popularPosts.length - 1)
+                    Divider(),
                 ],
               );
             },

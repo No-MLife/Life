@@ -4,7 +4,6 @@ import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/util/post_category.dart';
 import 'package:m_life_app/view/components/post_item.dart';
 import 'package:m_life_app/view/pages/post/category_page.dart';
-import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import '../pages/post/detail_page.dart';
 import 'ad_banner.dart';
 import 'buildBottomNavigationBar.dart';
@@ -27,8 +26,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
   @override
   void initState() {
     super.initState();
-    _postController
-        .getPostsByCategory(widget.category.id); // 페이지 초기화 시 해당 카테고리의 글 가져오기
+    _postController.getPostsByCategory(widget.category.id);
   }
 
   @override
@@ -41,15 +39,23 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           title: 'M-life',
           onBackPressed: () => Get.off(() => CategoryPage())),
       body: Obx(
-        () => RefreshIndicator(
-          onRefresh: () async {
-            await _postController.getPostsByCategory(widget.category.id);
-          },
-          child: ListView.builder(
-            itemCount: _postController.posts.length + 3,
-            itemBuilder: (context, index) => _buildListItem(index, emoji),
-          ),
-        ),
+        () {
+          if (_postController.isLoading.value) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await _postController.getPostsByCategory(widget.category.id);
+              },
+              child: ListView.builder(
+                itemCount: _postController.posts.length + 3,
+                itemBuilder: (context, index) => _buildListItem(index, emoji),
+              ),
+            );
+          }
+        },
       ),
       floatingActionButton: buildFloatingActionButton(),
       bottomNavigationBar: buildBottomNavigationBar(),
@@ -93,11 +99,11 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
 
   Widget _buildAdBanner() {
     return Container(
-      height: 70,
-      margin: EdgeInsets.all(16.0),
+      height: 50, // 높이 조정
+      margin: EdgeInsets.all(8.0), // 마진 조정
       decoration: BoxDecoration(
         color: Colors.amber[200],
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(12.0), // Border radius 조정
       ),
       child: AdBanner(
         imagePaths: [
@@ -112,12 +118,12 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
 
   Widget _buildCategoryTitle(String emoji) {
     return Container(
-      padding: EdgeInsets.all(1.0),
+      padding: EdgeInsets.all(8.0), // 패딩 조정
       color: Colors.white,
       child: Text(
         '$emoji ${widget.category.name}',
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20, // 폰트 크기 조정
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -127,7 +133,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
 
   Widget _buildDivider() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Divider(
         color: Colors.grey[400],
         thickness: 1.0,

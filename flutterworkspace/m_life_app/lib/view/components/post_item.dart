@@ -22,11 +22,11 @@ class PostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5), // Margin 조정
+      padding: EdgeInsets.all(8), // Padding 조정
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(35),
+        borderRadius: BorderRadius.circular(20), // Border radius 조정
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.3),
@@ -46,23 +46,29 @@ class PostItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  post.postImageUrls!.length == 0
-                      ? Image.asset(
-                          "assets/copy_logo.png",
-                          color: Colors.amber,
-                          height: 45,
-                          width: 45,
-                        )
-                      : Image.network(post.postImageUrls![0]),
-                  SizedBox(height: 8),
                   Container(
-                    width: 80,
+                    height: 40, // Height 조정
+                    width: 40, // Width 조정
+                    child: post.postImageUrls!.isEmpty
+                        ? Image.asset(
+                            "assets/copy_logo.png",
+                            color: Colors.amber,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            post.postImageUrls![0],
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                  SizedBox(height: 4), // Spacing 조정
+                  Container(
+                    width: 70, // Width 조정
                     child: Text(
                       "${post.authorName} ${formatLikes(post.authorLikes!)}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 10, // Font size 조정
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -71,9 +77,7 @@ class PostItem extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              width: 16,
-            ),
+            SizedBox(width: 10), // Width 조정
             Expanded(
               flex: 4,
               child: Column(
@@ -84,7 +88,7 @@ class PostItem extends StatelessWidget {
                       "[${post.boardName}]",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 12, // Font size 조정
                         color: Colors.blueAccent,
                       ),
                     ),
@@ -92,76 +96,76 @@ class PostItem extends StatelessWidget {
                     "${post.title}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 12, // Font size 조정
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 2), // Spacing 조정
                   if (!showCategory)
                     Container(
                       width: double.infinity,
                       child: Text(
                         "${post.content}",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12, // Font size 조정
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 4), // Spacing 조정
                   Row(
                     children: [
                       Icon(
                         Icons.comment,
-                        size: 16,
+                        size: 14, // Icon size 조정
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 4),
+                      SizedBox(width: 2), // Spacing 조정
                       Text(
                         "${post.commentList!.length}",
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 12,
+                          fontSize: 10, // Font size 조정
                         ),
                       ),
-                      SizedBox(width: 12),
+                      SizedBox(width: 8), // Spacing 조정
                       Icon(
                         Icons.favorite,
-                        size: 16,
+                        size: 14, // Icon size 조정
                         color: Colors.red,
                       ),
-                      SizedBox(width: 4),
+                      SizedBox(width: 2), // Spacing 조정
                       Text(
                         "${post.likeCount}",
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 12,
+                          fontSize: 10, // Font size 조정
                         ),
                       ),
-                      SizedBox(width: 6),
-                      if (post.postImageUrls!.length != 0)
-                        Icon(Icons.image_outlined),
-                      SizedBox(width: 4),
-                      if (post.postImageUrls!.length != 0)
+                      SizedBox(width: 4), // Spacing 조정
+                      if (post.postImageUrls!.isNotEmpty)
+                        Icon(Icons.image_outlined, size: 14), // Icon size 조정
+                      SizedBox(width: 2), // Spacing 조정
+                      if (post.postImageUrls!.isNotEmpty)
                         Text(
                           "${post.postImageUrls!.length}",
                           style: TextStyle(
                             color: Colors.grey,
-                            fontSize: 12,
+                            fontSize: 10, // Font size 조정
                           ),
                         ),
                       Spacer(),
                       Icon(
                         Icons.access_time,
-                        size: 16,
+                        size: 14, // Icon size 조정
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 4),
+                      SizedBox(width: 2), // Spacing 조정
                       Text(
                         formatDateTime(post.created!),
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 12,
+                          fontSize: 10, // Font size 조정
                         ),
                       ),
                     ],

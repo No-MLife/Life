@@ -116,7 +116,7 @@ class DetailPage extends StatelessWidget {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "${createdPostDateTime} ",
+                        "${createdPostDateTime}",
                         style: TextStyle(color: Colors.grey),
                       ),
                       Row(
