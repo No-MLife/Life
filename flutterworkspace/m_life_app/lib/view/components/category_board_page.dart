@@ -4,6 +4,7 @@ import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/util/post_category.dart';
 import 'package:m_life_app/view/components/post_item.dart';
 import 'package:m_life_app/view/pages/post/category_page.dart';
+import '../../controller/dto/Res/PostResDto.dart';
 import '../pages/post/detail_page.dart';
 import 'ad_banner.dart';
 import 'buildBottomNavigationBar.dart';
@@ -37,26 +38,26 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-          isHome: false,
-          title: 'M-life',
-          onBackPressed: () => Get.off(() => CategoryPage())),
+        isHome: false,
+        title: 'M-life',
+        onBackPressed: () => Get.off(() => CategoryPage()),
+      ),
       body: Obx(
             () {
-          if (_postController.isLoading.value) {
-            return Center(
+          return RefreshIndicator(
+            onRefresh: () async {
+              await _postController.getPostsByCategory(widget.category.id);
+            },
+            child: _postController.isLoading.value
+                ? Center(
               child: CircularProgressIndicator(),
-            );
-          } else {
-            return RefreshIndicator(
-              onRefresh: () async {
-                await _postController.getPostsByCategory(widget.category.id);
-              },
-              child: ListView.builder(
-                itemCount: _postController.posts.length + 3,
-                itemBuilder: (context, index) => _buildListItem(index, emoji),
-              ),
-            );
-          }
+            )
+                : ListView.builder(
+              itemCount: (_postController.categoryPosts[widget.category.id]?.length ?? 0) + 3,
+              itemBuilder: (context, index) =>
+                  _buildListItem(index, emoji),
+            ),
+          );
         },
       ),
       floatingActionButton: buildFloatingActionButton(),
@@ -65,6 +66,8 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
   }
 
   Widget _buildListItem(int index, String emoji) {
+    final posts = _postController.categoryPosts[widget.category.id] ?? [];
+
     if (index == 0) {
       return _buildAdBanner();
     } else if (index == 1) {
@@ -73,30 +76,38 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
       return _buildDivider();
     }
 
-    final reversedIndex = _postController.posts.length - 1 - (index - 3);
-    if (reversedIndex < 0 || reversedIndex >= _postController.posts.length) {
+    final reversedIndex = posts.length - 1 - (index - 3);
+    if (reversedIndex < 0 || reversedIndex >= posts.length) {
       return Container(); // 유효하지 않은 인덱스일 경우 빈 컨테이너 반환
     }
 
-    final post = _postController.posts[reversedIndex];
+    final post = posts[reversedIndex];
 
     return Column(
       children: [
         PostItem(
           post: post,
           onTap: () async {
-            await _postController.findByid(post.id!);
-            final result = await Get.to(
-                    () => DetailPage(category: widget.category, id: post.id));
-            if (result != null && result) {
-              WidgetsBinding.instance?.addPostFrameCallback((_) {
-                _postController.getPostsByCategory(widget.category.id);
-              });
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            );
+
+            final result = await _postController.findByid(post.id!);
+            Navigator.pop(context); // 로딩 Dialog 닫기
+
+            if (result != null) {
+              Get.to(() => DetailPage(category: widget.category, id: post.id));
             }
           },
           showCategory: false,
         ),
-        if (index < _postController.posts.length + 2) _buildDivider(),
+        if (index < posts.length + 2) _buildDivider(),
       ],
     );
   }

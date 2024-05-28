@@ -6,9 +6,10 @@ import 'package:m_life_app/domain/post/post_repository.dart';
 class PostController extends GetxController {
   final PostRepository _postRepository = PostRepository();
   final popularPosts = <PostResDto>[].obs;
-  final posts = <PostResDto>[].obs;
+  final categoryPosts = <int, List<PostResDto>>{}.obs;
   final post = PostResDto().obs;
   final isLoading = false.obs;
+  final isDetailLoading = false.obs; // 추가된 상태 관리
 
   @override
   void onInit() {
@@ -16,23 +17,28 @@ class PostController extends GetxController {
   }
 
   Future<void> findallpopular() async {
+    isLoading.value = true;
     List<PostResDto> posts = await _postRepository.findallpopular();
     this.popularPosts.value = posts;
+    isLoading.value = false;
   }
 
   Future<void> getPostsByCategory(int categoryId) async {
     isLoading.value = true;
-    List<PostResDto> posts =
-    await _postRepository.getPostsByCategory(categoryId);
-    this.posts.value = posts;
+    List<PostResDto> posts = await _postRepository.getPostsByCategory(categoryId);
+    this.categoryPosts[categoryId] = posts;
     isLoading.value = false;
   }
 
-  Future<void> findByid(int id) async {
-    isLoading.value = true;
-    PostResDto post = await _postRepository.findByid(id);
-    this.post.value = post;
-    isLoading.value = false;
+  Future<PostResDto?> findByid(int id) async {
+    isDetailLoading.value = true;
+    try {
+      PostResDto post = await _postRepository.findByid(id);
+      this.post.value = post;
+      return post;
+    } finally {
+      isDetailLoading.value = false;
+    }
   }
 
   Future<void> deleteByid(int id) async {
@@ -40,10 +46,11 @@ class PostController extends GetxController {
     int result = await _postRepository.deleteByid(id);
 
     if (result == 1) {
-      List<PostResDto> reslut =
-      posts.value.where((post) => post.id != id).toList();
-
-      posts.value = reslut;
+      for (int categoryId in categoryPosts.keys) {
+        categoryPosts[categoryId] = categoryPosts[categoryId]!
+            .where((post) => post.id != id)
+            .toList();
+      }
     }
     isLoading.value = false;
   }
@@ -62,7 +69,9 @@ class PostController extends GetxController {
     if (result == 1) {
       PostResDto post = await _postRepository.findByid(id);
       this.post.value = post;
-      this.posts.value = this.posts.map((e) => e.id == id ? post : e).toList();
+      this.categoryPosts[categoryId] = this.categoryPosts[categoryId]!
+          .map((e) => e.id == id ? post : e)
+          .toList();
     }
     isLoading.value = false;
   }

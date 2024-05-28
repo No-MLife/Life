@@ -5,7 +5,6 @@ import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/size.dart';
 import 'package:m_life_app/view/pages/post/wrtie_page.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
-
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/buildFloatingActionButton.dart';
 import '../../components/confirmation_dialog.dart';
@@ -14,14 +13,26 @@ import '../../components/ad_banner.dart';
 import '../user/user_info.dart';
 import 'detail_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  UserController _userController = Get.put(UserController());
-  PostController _postController = Get.put(PostController());
+  final UserController _userController = Get.put(UserController());
+  final PostController _postController = Get.put(PostController());
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _postController.findallpopular();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _postController.findallpopular();
     return Scaffold(
       drawer: _navigation(context),
       appBar: AppBar(
@@ -37,13 +48,17 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.amber,
       ),
       body: Obx(
-        () => RefreshIndicator(
+            () => _postController.isLoading.value
+            ? Center(
+          child: CircularProgressIndicator(),
+        )
+            : RefreshIndicator(
           key: refreshKey,
           onRefresh: () async {
             await _postController.findallpopular();
           },
           child: ListView.builder(
-            itemCount: _postController.popularPosts.length + 3, // 구분선 개수 조정
+            itemCount: _postController.popularPosts.length + 3,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Container(
@@ -85,7 +100,7 @@ class HomePage extends StatelessWidget {
                 );
               }
 
-              final itemIndex = index - 3; // 구분선을 고려하여 인덱스 조정
+              final itemIndex = index - 3;
               final post = _postController.popularPosts[itemIndex];
 
               return Column(
@@ -160,8 +175,6 @@ class HomePage extends StatelessWidget {
                       content: "로그아웃 하시겠습니까?",
                       confirmText: "로그아웃",
                       onConfirm: () async {
-                        // 게시글 수정 로직
-
                         _userController.logout();
                         Get.off(() => LoginPage());
                       },
