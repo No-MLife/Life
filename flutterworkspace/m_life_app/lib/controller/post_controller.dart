@@ -23,7 +23,7 @@ class PostController extends GetxController {
   Future<void> getPostsByCategory(int categoryId) async {
     isLoading.value = true;
     List<PostResDto> posts =
-        await _postRepository.getPostsByCategory(categoryId);
+    await _postRepository.getPostsByCategory(categoryId);
     this.posts.value = posts;
     isLoading.value = false;
   }
@@ -41,7 +41,7 @@ class PostController extends GetxController {
 
     if (result == 1) {
       List<PostResDto> reslut =
-          posts.value.where((post) => post.id != id).toList();
+      posts.value.where((post) => post.id != id).toList();
 
       posts.value = reslut;
     }
@@ -49,13 +49,13 @@ class PostController extends GetxController {
   }
 
   Future<void> postUpdate(
-    String title,
-    String content,
-    int categoryId,
-    int id,
-    List<File> images,
-    List<String> postImageUrls,
-  ) async {
+      String title,
+      String content,
+      int categoryId,
+      int id,
+      List<File> images,
+      List<String> postImageUrls,
+      ) async {
     isLoading.value = true;
     int result = await _postRepository.postUpdate(
         title, content, categoryId, id, images, postImageUrls);

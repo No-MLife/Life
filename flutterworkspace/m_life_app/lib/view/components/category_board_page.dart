@@ -26,7 +26,9 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
   @override
   void initState() {
     super.initState();
-    _postController.getPostsByCategory(widget.category.id);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _postController.getPostsByCategory(widget.category.id);
+    });
   }
 
   @override
@@ -39,7 +41,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           title: 'M-life',
           onBackPressed: () => Get.off(() => CategoryPage())),
       body: Obx(
-        () {
+            () {
           if (_postController.isLoading.value) {
             return Center(
               child: CircularProgressIndicator(),
@@ -85,9 +87,11 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
           onTap: () async {
             await _postController.findByid(post.id!);
             final result = await Get.to(
-                () => DetailPage(category: widget.category, id: post.id));
+                    () => DetailPage(category: widget.category, id: post.id));
             if (result != null && result) {
-              _postController.getPostsByCategory(widget.category.id);
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                _postController.getPostsByCategory(widget.category.id);
+              });
             }
           },
           showCategory: false,

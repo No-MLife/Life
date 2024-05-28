@@ -62,30 +62,33 @@ class CategoryPage extends StatelessWidget {
 
           return InkWell(
             onTap: () {
-              _postController.getPostsByCategory(category.id);
-              switch (category) {
-                case Category.free:
-                  Get.to(() => FreePage());
-                  break;
-                case Category.dailyProof:
-                  Get.to(() => DailyProofPage());
-                  break;
-                case Category.constructionMethod:
-                  Get.to(() => ConstructionMethodPage());
-                  break;
-                case Category.complaintDiscussion:
-                  Get.to(() => ComplaintDiscussionPage());
-                  break;
-                case Category.siteDebateDispute:
-                  Get.to(() => SiteDebateDisputePage());
-                  break;
-                case Category.equipmentRecommendation:
-                  Get.to(() => EquipmentRecommendationPage());
-                  break;
-                case Category.restaurant:
-                  Get.to(() => RestaurantPage());
-                  break;
-              }
+              // 빌드 완료 후 상태 변경 수행
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _postController.getPostsByCategory(category.id);
+                switch (category) {
+                  case Category.free:
+                    Get.to(() => FreePage());
+                    break;
+                  case Category.dailyProof:
+                    Get.to(() => DailyProofPage());
+                    break;
+                  case Category.constructionMethod:
+                    Get.to(() => ConstructionMethodPage());
+                    break;
+                  case Category.complaintDiscussion:
+                    Get.to(() => ComplaintDiscussionPage());
+                    break;
+                  case Category.siteDebateDispute:
+                    Get.to(() => SiteDebateDisputePage());
+                    break;
+                  case Category.equipmentRecommendation:
+                    Get.to(() => EquipmentRecommendationPage());
+                    break;
+                  case Category.restaurant:
+                    Get.to(() => RestaurantPage());
+                    break;
+                }
+              });
             },
             child: Container(
               padding: const EdgeInsets.all(16.0),
