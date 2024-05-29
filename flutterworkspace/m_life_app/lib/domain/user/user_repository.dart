@@ -8,6 +8,7 @@ import 'package:m_life_app/controller/dto/Req/SignupReqDto.dart';
 import 'package:m_life_app/controller/dto/Res/UserPorfileResDto.dart';
 
 import 'package:m_life_app/domain/user/user_provider.dart';
+import 'package:m_life_app/util/storeTokens.dart';
 
 import '../../controller/dto/Req/UserProfileReqDto.dart';
 import '../../util/convert_utf8.dart';
@@ -19,17 +20,22 @@ class UserRepository {
     LoginReqDto loginReqDto = LoginReqDto(username, password);
     Response response = await _userProvider.login(loginReqDto.toJson());
     dynamic headers = response.headers;
-    if (response.headers == null)
-      return "-1";
 
-    String? setCookie = headers['set-cookie'];
-    String? access = headers['access'];
+    // 헤더가 널이 아니라면 헤더에서 리프레쉬 토큰과 액세스 토큰 가져옴
+    if (response.headers == null) return "-1";
 
-    if (setCookie == null || access == null) {
+    String? refreshToken = headers['set-cookie'];
+    String? accessToken = headers['access'];
+
+    if (refreshToken == null || accessToken == null) {
       return "-1";
     }
+    await storeTokens(accessToken, refreshToken);
+    return accessToken;
+  }
 
-    return access;
+  Future<void> logout() async {
+    Response response = await _userProvider.logout();
   }
 
   Future<Map<String, dynamic>?> signup(

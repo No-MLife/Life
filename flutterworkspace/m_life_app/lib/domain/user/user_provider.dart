@@ -3,10 +3,14 @@ import '../../util/host.dart';
 import '../../util/jwt.dart';
 
 class UserProvider extends GetConnect {
+  @override
+  void onInit() {}
   Future<Response> signup(Map data) => post("$host/signup", data);
+  Future<Response> logout() => post("$host/logout", {});
+
   Future<Response> login(Map data) => post("$host/login", data);
-  Future<Response> getLike(String nickname) => get("$host/user_likes/$nickname",
-      headers: {"access": jwtToken ?? ""});
+  Future<Response> getLike(String nickname) =>
+      get("$host/user_likes/$nickname", headers: {"access": jwtToken ?? ""});
 
   // 프로필 관련 API
   Future<Response> getProfile(String nickname) =>

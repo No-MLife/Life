@@ -25,20 +25,23 @@ class UserController extends GetxController {
     super.onInit();
   }
 
-  void logout() {
+  void logout() async {
     isLogin.value = false;
     secureStorage.deleteAll(); // 기존 정보 삭제
     jwtToken = null;
+    await _userRepository.logout();
   }
 
   Future<String> login(String username, String password) async {
     String token = await _userRepository.login(username, password);
 
     if (token != "-1") {
+      // 정상적으로 토큰을 받았다면
       isLogin.value = true;
       jwtToken = token;
       // jwt을 해독해서 로그인한 유저 정보만 빼오기
       _JwtEncoder(token);
+
       secureStorage.deleteAll(); // 기존 정보 삭제
       await secureStorage.write(key: 'isLoggedIn', value: 'true');
       await secureStorage.write(key: 'username', value: username);
