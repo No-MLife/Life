@@ -1,7 +1,9 @@
 package com.m_life.m_life.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.m_life.m_life.domain.RefreshEntity;
 import com.m_life.m_life.jwt.JWTUtil;
+import com.m_life.m_life.repository.RefreshRepository;
 import com.m_life.m_life.service.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -23,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
     private final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
     
     @Override
@@ -80,12 +84,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", username,nickname, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh", username, nickname, role, 86400000L);
 
+        //Refresh 토큰 저장
+        addRefreshEntity(username, refresh, 86400000L);
+
         //응답 설정
         response.setHeader("access", access); // 헤더에 접근 토큰 
         response.addCookie(createCookie("refresh", refresh)); // 쿠키에 리프레쉬 토큰
         response.setStatus(HttpStatus.OK.value());
 
         logger.info("로그인을 성공했습니다.");
+    }
+
+    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshEntity refreshEntity = new RefreshEntity();
+        refreshEntity.setUsername(username);
+        refreshEntity.setRefresh(refresh);
+        refreshEntity.setExpiration(date.toString());
+
+        refreshRepository.save(refreshEntity);
     }
 
     @Override
