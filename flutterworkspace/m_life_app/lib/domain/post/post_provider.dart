@@ -1,32 +1,31 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:get/get.dart';
-import 'package:m_life_app/util/jwt.dart';
-
-import '../../util/host.dart';
+import 'package:m_life_app/view/components/TokenManager.dart';
 
 const RequestURL = "api/v1/category";
 const limit = 100;
 
-class PostProvider extends GetConnect {
+class PostProvider extends GetConnect with TokenManager {
   // 인기 게시글 조회
-  Future<Response> findallpopular() =>
-      get("$host/$RequestURL/popular-posts/$limit",
-          headers: {"Authorization": jwtToken ?? ""});
+  Future<Response> findallpopular() => get(
+        "/$RequestURL/popular-posts/$limit",
+      );
 
   // 모든 게시글 조회(카테고리별 게시판 조회로 바꿔야 함)
-  Future<Response> getPostsByCategory(int categoryId) =>
-      get("$host/$RequestURL/$categoryId",
-          headers: {"Authorization": jwtToken ?? ""});
+  Future<Response> getPostsByCategory(int categoryId) => get(
+        "/$RequestURL/$categoryId",
+      );
 
   // 각각의 게시글 조회
-  Future<Response> findByid(int id) => get("$host/$RequestURL/post/$id",
-      headers: {"Authorization": jwtToken ?? ""});
+  Future<Response> findByid(int id) => get(
+        "/$RequestURL/post/$id",
+      );
 
   // 게시글 삭제
-  Future<Response> deleteByid(int id) => delete("$host/$RequestURL/post/$id",
-      headers: {"Authorization": jwtToken ?? ""});
+  Future<Response> deleteByid(int id) => delete(
+        "/$RequestURL/post/$id",
+      );
 
   // 게시글 업데이트
   Future<Response> postUpdate(
@@ -48,12 +47,11 @@ class PostProvider extends GetConnect {
     }
 
     var headers = {
-      "Authorization": jwtToken ?? "",
       "Content-Type": "multipart/form-data; boundary=${formData.boundary}",
     };
 
     return put(
-      "$host/$RequestURL/$categoryId/post/$id",
+      "/$RequestURL/$categoryId/post/$id",
       formData,
       headers: headers,
     );
@@ -75,12 +73,11 @@ class PostProvider extends GetConnect {
     }
 
     var headers = {
-      "Authorization": jwtToken ?? "",
       "Content-Type": "multipart/form-data; boundary=${formData.boundary}",
     };
 
     return post(
-      "$host/$RequestURL/$categoryId/post",
+      "/$RequestURL/$categoryId/post",
       formData,
       headers: headers,
     );

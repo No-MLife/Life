@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:m_life_app/controller/dto/Req/CommentReqDto.dart';
 import 'package:m_life_app/controller/dto/Res/CommentResDto.dart';
@@ -6,7 +7,7 @@ import 'package:m_life_app/util/convert_utf8.dart';
 
 // Json -> Dart
 class CommentRepository {
-  final CommentProvider _commentProvider = CommentProvider();
+  final CommentProvider _commentProvider = Get.put(CommentProvider());
 
   Future<List<CommentResDto>> findAllComment(int postId) async {
     Response response = await _commentProvider.findAllComment(postId);

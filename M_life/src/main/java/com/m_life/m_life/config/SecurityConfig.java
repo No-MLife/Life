@@ -1,7 +1,9 @@
 package com.m_life.m_life.config;
 
+import com.m_life.m_life.jwt.CustomLogoutFilter;
 import com.m_life.m_life.jwt.JWTFilter;
 import com.m_life.m_life.jwt.JWTUtil;
+import com.m_life.m_life.repository.RefreshRepository;
 import com.m_life.m_life.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -43,6 +46,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
 
     @Bean
@@ -82,6 +86,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/signup", "/").permitAll()
+                        .requestMatchers("/reissue").permitAll()
                         .requestMatchers("/api/v1/category/popular-posts/**").permitAll() // 인기 게시글 조회 URL 패턴
                         .requestMatchers("/api/v1/category/**").permitAll() // 카테고리별 게시글 조회 URL 패턴
                         .requestMatchers("/api/v1/category/post/**").permitAll() // 전체 게시글 조회 URL 패턴
@@ -95,7 +100,9 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil, customUserDetailsService), LoginFilter.class);
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         http
                 .sessionManagement((session) -> session

@@ -36,6 +36,7 @@ public class PostController {
     // 게시판 카테고리별 게시글 조회
     @GetMapping("/{categoryId}")
     public ResponseEntity<List<PostResponse>> getPostsByCategory(@PathVariable(name = "categoryId") Long categoryId) {
+
         if (categoryId != 1) {
             List<PostResponse> posts = postService.getPostsByCategory(categoryId);
             return ResponseEntity.ok(posts);

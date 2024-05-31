@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:m_life_app/controller/dto/Req/UserProfileReqDto.dart';
 import 'package:m_life_app/controller/dto/Res/UserPorfileResDto.dart';
 import 'package:m_life_app/domain/user/user_repository.dart';
 import 'package:m_life_app/util/jwt.dart';
@@ -12,7 +11,7 @@ import 'package:m_life_app/util/jwt.dart';
 import '../domain/user/user.dart';
 
 class UserController extends GetxController {
-  final UserRepository _userRepository = UserRepository();
+  final UserRepository _userRepository = Get.put(UserRepository());
   final RxBool isLogin = false.obs; // UI가 관찰 가능한 변수 => 변경이 되며 UI가 자동으로 업데이트
   final principal = User().obs;
   final RxInt totalLike = 0.obs;
@@ -26,21 +25,20 @@ class UserController extends GetxController {
     super.onInit();
   }
 
-  void logout() {
+  void logout() async {
     isLogin.value = false;
     secureStorage.deleteAll(); // 기존 정보 삭제
-    jwtToken = null;
+    await _userRepository.logout();
   }
 
   Future<String> login(String username, String password) async {
     String token = await _userRepository.login(username, password);
 
     if (token != "-1") {
+      // 정상적으로 토큰을 받았다면
       isLogin.value = true;
-      jwtToken = token;
       // jwt을 해독해서 로그인한 유저 정보만 빼오기
       _JwtEncoder(token);
-      secureStorage.deleteAll(); // 기존 정보 삭제
       await secureStorage.write(key: 'isLoggedIn', value: 'true');
       await secureStorage.write(key: 'username', value: username);
       await secureStorage.write(key: 'password', value: password);
