@@ -93,9 +93,9 @@ class UserRepository {
   }
 
   Future<int> updateProfile(String nickname, String introduction,
-      String jobname, String experience) async {
+      String jobName, String experience) async {
     UserProfileReqDto userProfileReqDto =
-        UserProfileReqDto(introduction, jobname, experience);
+        UserProfileReqDto(introduction, jobName, experience);
 
     Response response =
         await _userProvider.updateProfile(nickname, userProfileReqDto.toJson());

@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 import 'package:m_life_app/view/pages/post/home_page.dart'; // 로그인이 되었을 때 이동할 홈 페이지
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // FlutterSecureStorage 추가
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
   runApp(MyApp());
 }
 
@@ -25,8 +30,10 @@ class MyApp extends StatelessWidget {
             return Center(child: CircularProgressIndicator()); // 로딩 스피너
           } else {
             if (snapshot.hasData && snapshot.data == true) {
+              print("로그인 확인");
               return HomePage(); // 로그인이 되어 있을 경우 홈 페이지로 이동
             } else {
+              print("로그인 필요");
               return LoginPage(); // 로그인 페이지로 이동
             }
           }

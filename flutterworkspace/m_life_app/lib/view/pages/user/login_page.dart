@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/util/validator_util.dart';
+import 'package:m_life_app/view/components/myBannerAdWidget.dart';
 import 'package:m_life_app/view/pages/post/home_page.dart';
 import 'package:m_life_app/view/pages/user/signup_page.dart';
 import '../../../controller/user_controller.dart';
-import '../../components/Logo.dart';
+import '../../components/logo.dart';
 import '../../components/custom_elevated_button.dart';
 import '../../components/custom_text_form_field.dart';
 import 'package:m_life_app/size.dart';

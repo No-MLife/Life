@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:m_life_app/view/components/TokenManager.dart';
+import 'package:m_life_app/view/components/token_manager.dart';
 
 class CommentProvider extends GetConnect with TokenManager {
   Future<Response> findAllComment(int postId) => get(

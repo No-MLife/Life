@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:m_life_app/util/jwt.dart';
-import 'package:m_life_app/view/components/TokenManager.dart';
+import 'package:m_life_app/view/components/token_manager.dart';
 import '../../util/host.dart';
 
 class PostLikeProvider extends GetConnect with TokenManager {

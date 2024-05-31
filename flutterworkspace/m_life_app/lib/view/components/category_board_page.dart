@@ -43,20 +43,23 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
         onBackPressed: () => Get.off(() => CategoryPage()),
       ),
       body: Obx(
-            () {
+        () {
           return RefreshIndicator(
             onRefresh: () async {
               await _postController.getPostsByCategory(widget.category.id);
             },
             child: _postController.isLoading.value
                 ? Center(
-              child: CircularProgressIndicator(),
-            )
+                    child: CircularProgressIndicator(),
+                  )
                 : ListView.builder(
-              itemCount: (_postController.categoryPosts[widget.category.id]?.length ?? 0) + 3,
-              itemBuilder: (context, index) =>
-                  _buildListItem(index, emoji),
-            ),
+                    itemCount: (_postController
+                                .categoryPosts[widget.category.id]?.length ??
+                            0) +
+                        3,
+                    itemBuilder: (context, index) =>
+                        _buildListItem(index, emoji),
+                  ),
           );
         },
       ),
@@ -114,7 +117,7 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
 
   Widget _buildAdBanner() {
     return Container(
-      height: 50, // 높이 조정
+      height: 0, // 광고로 바꿔야함
       margin: EdgeInsets.all(8.0), // 마진 조정
       decoration: BoxDecoration(
         color: Colors.amber[200],

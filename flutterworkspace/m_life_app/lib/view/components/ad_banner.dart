@@ -8,7 +8,7 @@ class AdBanner extends StatefulWidget {
   const AdBanner({
     Key? key,
     required this.imagePaths,
-    this.height = 70,
+    this.height = 0,
   }) : super(key: key);
 
   @override

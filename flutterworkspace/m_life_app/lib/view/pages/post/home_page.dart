@@ -22,7 +22,8 @@ class _HomePageState extends State<HomePage> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   final UserController _userController = Get.put(UserController());
   final PostController _postController = Get.put(PostController());
-  final CustomBottomNavBarController _customBottomNavBarController = Get.put(CustomBottomNavBarController());
+  final CustomBottomNavBarController _customBottomNavBarController =
+      Get.put(CustomBottomNavBarController());
 
   @override
   void initState() {
@@ -51,79 +52,79 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.amber,
       ),
       body: Obx(
-            () => _postController.isLoading.value
+        () => _postController.isLoading.value
             ? Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : RefreshIndicator(
-          key: refreshKey,
-          onRefresh: () async {
-            await _postController.findallpopular();
-          },
-          child: ListView.builder(
-            itemCount: _postController.popularPosts.length + 3,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Container(
-                  height: 70,
-                  margin: EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.amber[200],
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: AdBanner(
-                    imagePaths: [
-                      'assets/ad1.png',
-                      'assets/ad2.png',
-                      'assets/ad3.png',
-                      'assets/ad4.png',
-                    ],
-                  ),
-                );
-              } else if (index == 1) {
-                return Container(
-                  padding: EdgeInsets.all(1.0),
-                  color: Colors.white,
-                  child: Text(
-                    '🔥 인기 게시글 100',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                );
-              } else if (index == 2) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Divider(
-                    color: Colors.grey[400],
-                    thickness: 1.0,
-                  ),
-                );
-              }
+                key: refreshKey,
+                onRefresh: () async {
+                  await _postController.findallpopular();
+                },
+                child: ListView.builder(
+                  itemCount: _postController.popularPosts.length + 3,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Container(
+                        height: 0, // 광고로 바꿔야함
+                        margin: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.amber[200],
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: AdBanner(
+                          imagePaths: [
+                            'assets/ad1.png',
+                            'assets/ad2.png',
+                            'assets/ad3.png',
+                            'assets/ad4.png',
+                          ],
+                        ),
+                      );
+                    } else if (index == 1) {
+                      return Container(
+                        padding: EdgeInsets.all(1.0),
+                        color: Colors.white,
+                        child: Text(
+                          '🔥 인기 게시글 100',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    } else if (index == 2) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Divider(
+                          color: Colors.grey[400],
+                          thickness: 1.0,
+                        ),
+                      );
+                    }
 
-              final itemIndex = index - 3;
-              final post = _postController.popularPosts[itemIndex];
+                    final itemIndex = index - 3;
+                    final post = _postController.popularPosts[itemIndex];
 
-              return Column(
-                children: [
-                  PostItem(
-                    post: post,
-                    onTap: () async {
-                      await _postController.findByid(post.id!);
-                      Get.to(() => DetailPage(id: post.id),
-                          arguments: "매개변수 테스트용");
-                    },
-                    showCategory: true,
-                  ),
-                  if (itemIndex < _postController.popularPosts.length - 1)
-                    Divider(),
-                ],
-              );
-            },
-          ),
-        ),
+                    return Column(
+                      children: [
+                        PostItem(
+                          post: post,
+                          onTap: () async {
+                            await _postController.findByid(post.id!);
+                            Get.to(() => DetailPage(id: post.id),
+                                arguments: "매개변수 테스트용");
+                          },
+                          showCategory: true,
+                        ),
+                        if (itemIndex < _postController.popularPosts.length - 1)
+                          Divider(),
+                      ],
+                    );
+                  },
+                ),
+              ),
       ),
       floatingActionButton: buildFloatingActionButton(),
       bottomNavigationBar: buildBottomNavigationBar(),
