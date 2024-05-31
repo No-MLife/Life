@@ -35,4 +35,14 @@ public class MainController {
         );
         return ResponseEntity.ok().body(postCategory.getDescription());
     }
+
+    @DeleteMapping("/{nickname}")
+    public ResponseEntity<Void> deleteUser(@PathVariable(name="nickname") String nickname) {
+        try {
+            myUserService.deleteUser(nickname);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
