@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
-import 'package:m_life_app/view/components/TokenManager.dart';
+import 'package:m_life_app/view/components/token_manager.dart';
 
 const RequestURL = "api/v1/category";
 const limit = 100;

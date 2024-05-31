@@ -32,7 +32,7 @@ class CategoryPage extends StatelessWidget {
         itemBuilder: (context, index) {
           if (index == 0) {
             return Container(
-              height: 70,
+              height: 0, // 광고로 바꿔야함
               margin: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.amber[200],

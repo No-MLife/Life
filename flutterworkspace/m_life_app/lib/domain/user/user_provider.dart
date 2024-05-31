@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
-import 'package:m_life_app/view/components/TokenManager.dart';
+import 'package:m_life_app/view/components/token_manager.dart';
 
 class UserProvider extends GetConnect with TokenManager {
   Future<Response> signup(Map data) => post("/signup", data);
   Future<Response> logout() => post("/logout", {});
-  Future<Response> refresh() => post("/reissue", {});
 
   Future<Response> login(Map data) => post("/login", data);
   Future<Response> getLike(String nickname) => get(

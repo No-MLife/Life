@@ -4,7 +4,7 @@ import 'package:m_life_app/domain/user/user_repository.dart';
 import 'package:m_life_app/util/validator_util.dart';
 import 'package:m_life_app/view/components/responsive_container.dart';
 import '../../../size.dart';
-import '../../components/Logo.dart';
+import '../../components/logo.dart';
 import '../../components/custom_elevated_button.dart';
 import '../../components/custom_text_form_field.dart';
 import 'login_page.dart';

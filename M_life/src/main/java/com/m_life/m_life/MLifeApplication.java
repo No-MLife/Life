@@ -24,7 +24,6 @@ public class MLifeApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedMethods("*")
-//						.allowedOrigins("*")
 						.allowedOrigins("http://localhost:54583")
 						.exposedHeaders("Authorization");
 			}
