@@ -1,37 +1,36 @@
 import 'package:get/get.dart';
-import '../../util/host.dart';
-import '../../util/jwt.dart';
+import 'package:m_life_app/view/components/TokenManager.dart';
 
-class UserProvider extends GetConnect {
-  @override
-  void onInit() {}
-  Future<Response> signup(Map data) => post("$host/signup", data);
-  Future<Response> logout() => post("$host/logout", {});
+class UserProvider extends GetConnect with TokenManager {
+  Future<Response> signup(Map data) => post("/signup", data);
+  Future<Response> logout() => post("/logout", {});
+  Future<Response> refresh() => post("/reissue", {});
 
-  Future<Response> login(Map data) => post("$host/login", data);
-  Future<Response> getLike(String nickname) =>
-      get("$host/user_likes/$nickname", headers: {"access": jwtToken ?? ""});
+  Future<Response> login(Map data) => post("/login", data);
+  Future<Response> getLike(String nickname) => get(
+        "/user_likes/$nickname",
+      );
 
   // 프로필 관련 API
-  Future<Response> getProfile(String nickname) =>
-      get("$host/api/v1/users/profile/$nickname",
-          headers: {"access": jwtToken ?? ""});
+  Future<Response> getProfile(String nickname) => get(
+        "/api/v1/users/profile/$nickname",
+      );
 
-  Future<Response> updateProfile(String nickname, Map data) =>
-      put("$host/api/v1/users/profile/$nickname", data,
-          headers: {"access": jwtToken ?? ""});
+  Future<Response> updateProfile(String nickname, Map data) => put(
+        "/api/v1/users/profile/$nickname",
+        data,
+      );
 
   Future<Response> updateProfileImage(
     String nickname,
     FormData formData,
   ) {
     var headers = {
-      "access": jwtToken ?? "",
       "Content-Type": "multipart/form-data; boundary=${formData.boundary}",
     };
 
     return put(
-      "$host/api/v1/users/profile/$nickname/image",
+      "/api/v1/users/profile/$nickname/image",
       formData,
       headers: headers,
     );

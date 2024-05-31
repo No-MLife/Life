@@ -4,7 +4,7 @@ import 'package:m_life_app/controller/dto/Res/CommentResDto.dart';
 import 'package:m_life_app/domain/comment/comment_repository.dart';
 
 class CommentController extends GetxController {
-  final CommentRepository _commentRepository = CommentRepository();
+  final CommentRepository _commentRepository = Get.put(CommentRepository());
   final comments = <CommentResDto>[].obs;
   final comment = CommentResDto().obs;
   final int postId;

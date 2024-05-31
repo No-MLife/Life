@@ -4,7 +4,7 @@ import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
 import 'package:m_life_app/domain/post/post_repository.dart';
 
 class PostController extends GetxController {
-  final PostRepository _postRepository = PostRepository();
+  final PostRepository _postRepository = Get.put(PostRepository());
   final popularPosts = <PostResDto>[].obs;
   final categoryPosts = <int, List<PostResDto>>{}.obs;
   final post = PostResDto().obs;
@@ -25,7 +25,8 @@ class PostController extends GetxController {
 
   Future<void> getPostsByCategory(int categoryId) async {
     isLoading.value = true;
-    List<PostResDto> posts = await _postRepository.getPostsByCategory(categoryId);
+    List<PostResDto> posts =
+        await _postRepository.getPostsByCategory(categoryId);
     this.categoryPosts[categoryId] = posts;
     isLoading.value = false;
   }
@@ -47,29 +48,29 @@ class PostController extends GetxController {
 
     if (result == 1) {
       for (int categoryId in categoryPosts.keys) {
-        categoryPosts[categoryId] = categoryPosts[categoryId]!
-            .where((post) => post.id != id)
-            .toList();
+        categoryPosts[categoryId] =
+            categoryPosts[categoryId]!.where((post) => post.id != id).toList();
       }
     }
     isLoading.value = false;
   }
 
   Future<void> postUpdate(
-      String title,
-      String content,
-      int categoryId,
-      int id,
-      List<File> images,
-      List<String> postImageUrls,
-      ) async {
+    String title,
+    String content,
+    int categoryId,
+    int id,
+    List<File> images,
+    List<String> postImageUrls,
+  ) async {
     isLoading.value = true;
     int result = await _postRepository.postUpdate(
         title, content, categoryId, id, images, postImageUrls);
     if (result == 1) {
       PostResDto post = await _postRepository.findByid(id);
       this.post.value = post;
-      this.categoryPosts[categoryId] = this.categoryPosts[categoryId]!
+      this.categoryPosts[categoryId] = this
+          .categoryPosts[categoryId]!
           .map((e) => e.id == id ? post : e)
           .toList();
     }

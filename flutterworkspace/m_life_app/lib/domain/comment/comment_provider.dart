@@ -1,29 +1,25 @@
 import 'package:get/get.dart';
-import 'package:m_life_app/util/jwt.dart';
+import 'package:m_life_app/view/components/TokenManager.dart';
 
-import '../../util/host.dart';
-
-class CommentProvider extends GetConnect {
-  Future<Response> findAllComment(int postId) =>
-      get("$host/api/v1/post/$postId/comment",
-          headers: {"access": jwtToken ?? ""});
+class CommentProvider extends GetConnect with TokenManager {
+  Future<Response> findAllComment(int postId) => get(
+        "/api/v1/post/$postId/comment",
+      );
 
   Future<Response> commentCreate(Map data, int postId) => post(
-        "$host/api/v1/post/$postId/comment",
+        "/api/v1/post/$postId/comment",
         data,
-        headers: {"access": jwtToken ?? ""},
       );
 
-  Future<Response> deleteByid(int postId, int commentId) =>
-      delete("$host/api/v1/post/$postId/comment/$commentId",
-          headers: {"access": jwtToken ?? ""});
+  Future<Response> deleteByid(int postId, int commentId) => delete(
+        "/api/v1/post/$postId/comment/$commentId",
+      );
 
   Future<Response> commentUpdate(Map data, int postId, int commentId) => put(
-        "$host/api/v1/post/$postId/comment/$commentId",
+        "/api/v1/post/$postId/comment/$commentId",
         data,
-        headers: {"access": jwtToken ?? ""},
       );
-  Future<Response> findByid(int postId, commentId) =>
-      get("$host/api/v1/post/$postId/comment/$commentId",
-          headers: {"access": jwtToken ?? ""});
+  Future<Response> findByid(int postId, commentId) => get(
+        "/api/v1/post/$postId/comment/$commentId",
+      );
 }

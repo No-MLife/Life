@@ -14,7 +14,7 @@ import '../../controller/dto/Req/UserProfileReqDto.dart';
 import '../../util/convert_utf8.dart';
 
 class UserRepository {
-  final UserProvider _userProvider = UserProvider();
+  final UserProvider _userProvider = Get.put(UserProvider());
 
   Future<String> login(String username, String password) async {
     LoginReqDto loginReqDto = LoginReqDto(username, password);

@@ -1,10 +1,11 @@
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:m_life_app/domain/postLike/postLike_provider.dart';
 import 'package:m_life_app/util/convert_utf8.dart';
 
 // Json -> Dart
 class PostLikeRepository {
-  final PostLikeProvider _postLikeProvider = PostLikeProvider();
+  final PostLikeProvider _postLikeProvider = Get.put(PostLikeProvider());
 
   Future<bool> isLikedByCurrentUser(int postId) async {
     try {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:m_life_app/controller/dto/Req/PostReqDto.dart';
 import 'package:m_life_app/domain/post/post_provider.dart';
@@ -9,7 +10,7 @@ import '../../controller/dto/Res/PostResDto.dart';
 
 // Json -> Dart
 class PostRepository {
-  final PostProvider _postProvider = PostProvider();
+  final PostProvider _postProvider = Get.put(PostProvider());
 
   Future<List<PostResDto>> findallpopular() async {
     Response response = await _postProvider.findallpopular();
@@ -59,7 +60,8 @@ class PostRepository {
 
   Future<int> postUpdate(String title, String content, int categoryId, int id,
       List<File> images, List<String> postImageUrls) async {
-    PostReqDto postReqDto = PostReqDto(title: title, content: content, postImageUrls: postImageUrls);
+    PostReqDto postReqDto = PostReqDto(
+        title: title, content: content, postImageUrls: postImageUrls);
     Response response = await _postProvider.postUpdate(
         postReqDto.toJson(), images, categoryId, id);
 

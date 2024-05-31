@@ -11,7 +11,7 @@ import 'package:m_life_app/util/jwt.dart';
 import '../domain/user/user.dart';
 
 class UserController extends GetxController {
-  final UserRepository _userRepository = UserRepository();
+  final UserRepository _userRepository = Get.put(UserRepository());
   final RxBool isLogin = false.obs; // UI가 관찰 가능한 변수 => 변경이 되며 UI가 자동으로 업데이트
   final principal = User().obs;
   final RxInt totalLike = 0.obs;
@@ -28,7 +28,6 @@ class UserController extends GetxController {
   void logout() async {
     isLogin.value = false;
     secureStorage.deleteAll(); // 기존 정보 삭제
-    jwtToken = null;
     await _userRepository.logout();
   }
 
@@ -38,11 +37,8 @@ class UserController extends GetxController {
     if (token != "-1") {
       // 정상적으로 토큰을 받았다면
       isLogin.value = true;
-      jwtToken = token;
       // jwt을 해독해서 로그인한 유저 정보만 빼오기
       _JwtEncoder(token);
-
-      secureStorage.deleteAll(); // 기존 정보 삭제
       await secureStorage.write(key: 'isLoggedIn', value: 'true');
       await secureStorage.write(key: 'username', value: username);
       await secureStorage.write(key: 'password', value: password);
