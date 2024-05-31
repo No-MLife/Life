@@ -63,4 +63,12 @@ public class MyUserService {
         return ResponseEntity.ok().body("회원가입 되었습니다.");
     }
 
+    public void deleteUser(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
+            Long userId = userRepository.findByNickname(nickname).getId();
+            userRepository.deleteById(userId);
+        } else {
+            throw new IllegalArgumentException("User not found with nickname: " + nickname);
+        }
+    }
 }

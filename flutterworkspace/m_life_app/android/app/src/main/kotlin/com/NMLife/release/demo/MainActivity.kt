@@ -1,4 +1,4 @@
-package com.example.m_life_app
+package com.NMLife.release.demo
 
 import io.flutter.embedding.android.FlutterActivity
 
