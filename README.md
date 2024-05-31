@@ -23,10 +23,18 @@
 
 ## 💻애플리케이션
 
- <div align="center">
 
- <img src="https://github.com/No-MLife/M-Life/assets/79856225/8f09857a-cc2c-4d1c-9fc8-b2d7b5f0106e"/>
- <img src="https://github.com/No-MLife/M-Life/assets/79856225/723d2d6a-ce17-4bbf-aa95-9a9f01915cca"/>
+ <div align="center">
+ <img src="https://github.com/No-MLife/Life/assets/79856225/2c99bb1f-fb82-4fa5-896b-988c40aa22a4", height=430 width=200/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/8034cac8-fd98-474f-befa-c7cd70d33c2f", height=430 width=200/>
+  <img src="https://github.com/No-MLife/Life/assets/79856225/dab5bfb1-9ecc-42da-bbc7-092a1d78290d", height=430 width=200/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/4c6e9208-c697-4073-a138-90c23e7ab4e9", height=430 width=200/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/6ebb70ef-22ec-4716-89e8-a3a866f60043", height=430 width=200/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/12b1693f-54aa-49dc-93c9-97f341c9a123", height=430 width=200/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/4451b1c3-00c8-4443-b2ac-6c4df244050d", height=430 width=200/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/fab0d426-4b5c-42dc-8674-4df9ff4f5c64", height=430 width=200/>
+ 
+ 
  
 
 
