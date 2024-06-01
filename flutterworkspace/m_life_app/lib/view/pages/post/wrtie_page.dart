@@ -44,6 +44,74 @@ class _WritePageState extends State<WritePage> {
     });
   }
 
+  Future<void> _submitPost(PostController p) async {
+    if (_formKey.currentState!.validate()) {
+      // 로딩 스피너 표시
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text("업로드 중..."),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+
+      // 게시글 등록 로직
+      await p.postCreate(
+        _title.text,
+        _content.text,
+        _selectedCategory.id,
+        _selectedImages,
+      );
+
+      // 로딩 스피너 닫기
+      Navigator.of(context).pop();
+
+      // 리다이렉트
+      switch (_selectedCategory) {
+        case Category.free:
+          Get.offAll(() => CategoryBoardPage(category: Category.free));
+          break;
+        case Category.dailyProof:
+          Get.offAll(() => CategoryBoardPage(category: Category.dailyProof));
+          break;
+        case Category.constructionMethod:
+          Get.offAll(
+              () => CategoryBoardPage(category: Category.constructionMethod));
+          break;
+        case Category.complaintDiscussion:
+          Get.offAll(
+              () => CategoryBoardPage(category: Category.complaintDiscussion));
+          break;
+        case Category.siteDebateDispute:
+          Get.offAll(
+              () => CategoryBoardPage(category: Category.siteDebateDispute));
+          break;
+        case Category.equipmentRecommendation:
+          Get.offAll(() =>
+              CategoryBoardPage(category: Category.equipmentRecommendation));
+          break;
+        case Category.restaurant:
+          Get.offAll(() => CategoryBoardPage(category: Category.restaurant));
+          break;
+      }
+      CustomBottomNavBarController bottomNavBarController =
+          Get.put(CustomBottomNavBarController());
+      bottomNavBarController.updateColor(1); // 카테고리 탭 인덱스로 설정
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     PostController p = Get.find();
@@ -139,59 +207,7 @@ class _WritePageState extends State<WritePage> {
               ),
               CustomElevatedButton(
                 text: "글쓰기",
-                destination: () async {
-                  if (_formKey.currentState!.validate()) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => ConfirmationDialog(
-                        title: "게시글 등록",
-                        content: "게시글을 등록하시겠습니까?",
-                        confirmText: "등록",
-                        onConfirm: () async {
-                          // 게시글 등록 로직
-                          await p.postCreate(_title.text, _content.text,
-                              _selectedCategory.id, _selectedImages);
-                          switch (_selectedCategory) {
-                            case Category.free:
-                              Get.offAll(() =>
-                                  CategoryBoardPage(category: Category.free));
-                              break;
-                            case Category.dailyProof:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.dailyProof));
-                              break;
-                            case Category.constructionMethod:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.constructionMethod));
-                              break;
-
-                            case Category.complaintDiscussion:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.complaintDiscussion));
-                              break;
-                            case Category.siteDebateDispute:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.siteDebateDispute));
-                              break;
-
-                            case Category.equipmentRecommendation:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.equipmentRecommendation));
-                              break;
-                            case Category.restaurant:
-                              Get.offAll(() => CategoryBoardPage(
-                                  category: Category.restaurant));
-                              break;
-                          }
-                          CustomBottomNavBarController bottomNavBarController =
-                              Get.put(CustomBottomNavBarController());
-                          bottomNavBarController
-                              .updateColor(1); // 카테고리 탭 인덱스로 설정
-                        },
-                      ),
-                    );
-                  }
-                },
+                destination: () => _submitPost(p),
               ),
             ],
           ),

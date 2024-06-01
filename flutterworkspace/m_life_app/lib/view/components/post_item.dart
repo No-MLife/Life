@@ -1,7 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
-import 'package:m_life_app/controller/user_controller.dart';
 
 import '../../util/formatLikes.dart';
 import '../../util/format_date_time.dart';
@@ -55,8 +54,12 @@ class PostItem extends StatelessWidget {
                             color: Colors.amber,
                             fit: BoxFit.cover,
                           )
-                        : Image.network(
-                            post.postImageUrls![0],
+                        : CachedNetworkImage(
+                            imageUrl: post.postImageUrls![0],
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                             fit: BoxFit.cover,
                           ),
                   ),
