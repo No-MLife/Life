@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import logo from '../../assets/logo.png';
+import { useAuth } from '../../security/AuthContext';
 
 const Container = styled.div`
   display: flex;
@@ -81,14 +82,33 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const auth = useAuth();
+  // const auth = useAuth(); // 가정: useAuth()는 현재 로그인한 사용자의 정보를 반환
 
+  
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     // 여기에 실제 로그인 로직 추가
-    if (username === 'test' && password === 'password') {
-      alert('로그인 성공');
-    } else {
-      setError('아이디 또는 비밀번호를 확인해주세요.');
+
+    const userReqdto = {
+      "username": username,
+      "password": password
+    }
+
+
+    try {
+      const success = await auth.login(userReqdto)
+      
+      if(success){
+        console.log(auth.username, auth.token)
+        navigate("articles")
+      }
+      else{
+        window.alert("아이디 또는 비밀번호가 일치하지 않습니다!!")
+      }
+    } catch (error) {
+      window.alert("아이디 또는 비밀번호가 일치하지 않습니다.")
     }
   };
 
