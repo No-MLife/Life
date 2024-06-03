@@ -54,7 +54,10 @@ class _HomePageState extends State<HomePage> {
       body: Obx(
         () => _postController.isLoading.value
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                  strokeWidth: 5.0,
+                ),
               )
             : RefreshIndicator(
                 key: refreshKey,

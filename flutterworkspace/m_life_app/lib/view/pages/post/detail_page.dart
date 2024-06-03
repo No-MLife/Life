@@ -8,10 +8,12 @@ import 'package:m_life_app/controller/post_controller.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/util/formatLikes.dart';
 import 'package:m_life_app/util/post_category.dart';
+import 'package:m_life_app/view/components/CustomLoadingSpinner.dart';
 import 'package:m_life_app/view/components/category_board_page.dart';
 import 'package:m_life_app/view/components/custom_text_form_field.dart';
 import 'package:m_life_app/view/pages/post/update_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart'; // DefaultCacheManager를 사용하기 위해 import
 import '../../components/buildBottomNavigationBar.dart';
 import '../../components/confirmation_dialog.dart';
 import '../../../util/validator_util.dart';
@@ -203,7 +205,7 @@ class DetailPage extends StatelessWidget {
                                 child: CachedNetworkImage(
                                   imageUrl: imageUrl,
                                   placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
+                                      CustomLoadingSpinner(),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
                                   fit: BoxFit.cover,
@@ -211,6 +213,7 @@ class DetailPage extends StatelessWidget {
                                       MediaQuery.of(context).size.width * 0.7,
                                   height:
                                       MediaQuery.of(context).size.height * 0.7,
+                                  cacheManager: DefaultCacheManager(),
                                 ),
                               ),
                             );

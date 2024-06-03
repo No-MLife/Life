@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:m_life_app/controller/dto/Res/PostResDto.dart';
+import 'package:m_life_app/view/components/CustomLoadingSpinner.dart';
 
 import '../../util/formatLikes.dart';
 import '../../util/format_date_time.dart';
@@ -19,6 +20,10 @@ class PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle greyTextStyle = TextStyle(color: Colors.grey, fontSize: 10);
+    final TextStyle boldTextStyle =
+        TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5), // Margin 조정
@@ -57,7 +62,7 @@ class PostItem extends StatelessWidget {
                         : CachedNetworkImage(
                             imageUrl: post.postImageUrls![0],
                             placeholder: (context, url) =>
-                                CircularProgressIndicator(),
+                                CustomLoadingSpinner(),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
                             fit: BoxFit.cover,
@@ -89,18 +94,11 @@ class PostItem extends StatelessWidget {
                   if (showCategory)
                     Text(
                       "[${post.boardName}]",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12, // Font size 조정
-                        color: Colors.blueAccent,
-                      ),
+                      style: boldTextStyle.copyWith(color: Colors.blueAccent),
                     ),
                   Text(
                     "${post.title}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12, // Font size 조정
-                    ),
+                    style: boldTextStyle,
                   ),
                   SizedBox(height: 2), // Spacing 조정
                   if (!showCategory)
@@ -126,10 +124,7 @@ class PostItem extends StatelessWidget {
                       SizedBox(width: 2), // Spacing 조정
                       Text(
                         "${post.commentList!.length}",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 10, // Font size 조정
-                        ),
+                        style: greyTextStyle,
                       ),
                       SizedBox(width: 8), // Spacing 조정
                       Icon(
@@ -140,10 +135,7 @@ class PostItem extends StatelessWidget {
                       SizedBox(width: 2), // Spacing 조정
                       Text(
                         "${post.likeCount}",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 10, // Font size 조정
-                        ),
+                        style: greyTextStyle,
                       ),
                       SizedBox(width: 4), // Spacing 조정
                       if (post.postImageUrls!.isNotEmpty)
@@ -152,10 +144,7 @@ class PostItem extends StatelessWidget {
                       if (post.postImageUrls!.isNotEmpty)
                         Text(
                           "${post.postImageUrls!.length}",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 10, // Font size 조정
-                          ),
+                          style: greyTextStyle,
                         ),
                       Spacer(),
                       Icon(
@@ -166,10 +155,7 @@ class PostItem extends StatelessWidget {
                       SizedBox(width: 2), // Spacing 조정
                       Text(
                         formatDateTime(post.created!),
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 10, // Font size 조정
-                        ),
+                        style: greyTextStyle,
                       ),
                     ],
                   ),
