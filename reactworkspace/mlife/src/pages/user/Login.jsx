@@ -79,33 +79,30 @@ const ErrorMessage = styled.div`
 `;
 
 const LoginPage = () => {
+  const authContext = useAuth()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const auth = useAuth();
-  // const auth = useAuth(); // 가정: useAuth()는 현재 로그인한 사용자의 정보를 반환
-
-  
   
   const handleLogin = async (e) => {
     e.preventDefault();
     // 여기에 실제 로그인 로직 추가
 
-    const userReqdto = {
+    const UserReqDto = {
       "username": username,
       "password": password
     }
-
-
     try {
-      const success = await auth.login(userReqdto)
+      console.log("로그인 요청")
       
+      const success = await authContext.login(UserReqDto)
       if(success){
         console.log(auth.username, auth.token)
-        navigate("articles")
+        window.alert("로그인 되었습니다.");
       }
       else{
-        window.alert("아이디 또는 비밀번호가 일치하지 않습니다!!")
+        window.alert("아이디 또는 비밀번호가 일치하지 않습니다.")
       }
     } catch (error) {
       window.alert("아이디 또는 비밀번호가 일치하지 않습니다.")
