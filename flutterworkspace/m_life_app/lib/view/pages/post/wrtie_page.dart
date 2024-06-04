@@ -57,7 +57,10 @@ class _WritePageState extends State<WritePage> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                    strokeWidth: 5.0,
+                  ),
                   SizedBox(width: 16),
                   Text("업로드 중..."),
                 ],

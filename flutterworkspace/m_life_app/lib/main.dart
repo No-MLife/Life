@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
     if (isLoggedIn == 'true') {
       String? username = await secureStorage.read(key: 'username');
       String? password = await secureStorage.read(key: 'password');
-      _userController.login(username!, password!);
+      await _userController.login(username!, password!);
     }
     return isLoggedIn == 'true';
   }

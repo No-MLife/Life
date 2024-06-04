@@ -159,7 +159,11 @@ class _ProfileSettingsPageState extends State<UserInfo> {
                                   imageUrl: _userController
                                       .profile.value.profileImageUrl!,
                                   placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
+                                      CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.amber),
+                                    strokeWidth: 5.0,
+                                  ),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.person, size: 80),
                                   width: 200,

@@ -96,7 +96,10 @@ class _CategoryBoardPageState extends State<CategoryBoardPage> {
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                    strokeWidth: 5.0,
+                  ),
                 );
               },
             );
