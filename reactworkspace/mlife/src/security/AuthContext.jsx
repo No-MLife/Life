@@ -1,11 +1,18 @@
 import { createContext, useContext, useState } from "react"
-import { AuthLoginApi } from "../api/UserApi"
+import { postAuthLoginApi } from "../api/UserApi"
 import {apiClient} from '../api/ApiClient'
 import Cookies from 'js-cookie';
 
 //1: 문맥 생성
 export const AuthContext = createContext()
 export const useAuth = () => useContext(AuthContext)
+
+const getCookieValue = () => {
+    const cookieValue = Cookies.get('refresh');
+    console.log(cookieValue);
+    return cookieValue;
+};
+
 
 //2: 다른 컴포넌트와 공유할 문맥 셋팅
 export default function AuthProvider({ children }) {
@@ -15,23 +22,19 @@ export default function AuthProvider({ children }) {
     const [username, setUsername] = useState(null)
     const [token, setToken] = useState(null)
     const [refreshToken, setRefreshToken] = useState(null)
+    const [cookie, setCookie] = useState(null)
 
    async function login(UserReqDto){
     try{
-        const response = await AuthLoginApi(UserReqDto)
+        const response = await postAuthLoginApi(UserReqDto)
             if (response.status ===200){
                 console.log("로그인 성공")
                 const token = response.headers['access'];
-                console.log(response.headers)
-                const refresh = Cookies.get("refresh")
-
-                console.log(refresh)
-
-
-
-                if (token && refresh) {
+                // const refresh = getCookieValue()
+                // console.log(refresh)
+                if (token) {
                     setToken(token)
-                    setRefreshToken(refreshToken)
+                    // setRefreshToken(refreshToken)
                     setAuthenticated(true)
                     setUsername(UserReqDto.username)
                     apiClient.interceptors.request.use((config) => {

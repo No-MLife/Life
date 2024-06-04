@@ -1,6 +1,6 @@
 import {apiClient} from './ApiClient'
 
-export const AuthLoginApi = 
+export const postAuthLoginApi = 
 (UserReqDto) => apiClient.post("/login", UserReqDto)
 
 export  const postSignupApi = 
