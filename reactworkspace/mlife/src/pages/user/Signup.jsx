@@ -97,19 +97,24 @@ const SignupPage = () => {
         "nickname": nickname,
         "email": email
       }
-    const response = await postSignupApi(UserReqDto);
-    // UserRepository의 signup 메소드를 호출하여 회원가입 요청 보내기
-    if (response.status == 200) {
-      window.alert("성공적으로 회원가입 되었습니다.");
-      navigate('/login');
-    } else if(response.status == 400) {
-      window.alert("이미 존재한 회원입니다.");
+
+    try {
+      const response = await postSignupApi(UserReqDto);  
+      // UserRepository의 signup 메소드를 호출하여 회원가입 요청 보내기
+      console.log(response.status)
+      if (response.status == 200) {
+        window.alert("성공적으로 회원가입 되었습니다.");
+        navigate('/login');
+    } 
+    } catch (error) {
+      console.log(error)
+      if(error.response.status == 400)
+        window.alert(error.response.data);
+      else
+        window.alert("회원가입에 실패하였습니다. 다시 확인해주세요.");
+    }
+
       
-    }
-    else{
-      setError(response.message);
-      window.alert(error)
-    }
   };
 
   return (
