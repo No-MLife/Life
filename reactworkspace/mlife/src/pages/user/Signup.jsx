@@ -4,81 +4,6 @@ import logo from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import {postSignupApi} from '../../api/UserApi'
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 100px;
-  background-color: #f7f9fc;
-  height: 100%;
-  margin: 0 100px;
-`;
-
-const Logo = styled.img`
-  width: 200px; // 로고 크기 증가
-  height: auto;
-  margin-bottom: 20px;
-  background-color: white;
-  padding: 10px;
-  border-radius: 50%;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 400px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 20px; // 입력란 라운드 추가
-  color: #333;
-  background-color: #fff;
-  font-size: 16px;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  margin-top: 20px;
-  background-color: #ffca28;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #ffb300;
-  }
-`;
-
-const TextButton = styled.button`
-  background: none;
-  border: none;
-  color: #ffca28;
-  cursor: pointer;
-  margin-top: 10px;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  margin-top: 10px;
-`;
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -157,3 +82,80 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+  background-color: #f7f9fc;
+  height: 100%;
+  margin: 0 100px;
+`;
+
+const Logo = styled.img`
+  width: 200px; // 로고 크기 증가
+  height: auto;
+  margin-bottom: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 50%;
+`;
+
+const Title = styled.h1`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 20px; // 입력란 라운드 추가
+  color: #333;
+  background-color: #fff;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #ffca28;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ffb300;
+  }
+`;
+
+const TextButton = styled.button`
+  background: none;
+  border: none;
+  color: #ffca28;
+  cursor: pointer;
+  margin-top: 10px;
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  margin-top: 10px;
+`;
