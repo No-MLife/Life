@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:m_life_app/util/validator_util.dart';
-import 'package:m_life_app/view/components/myBannerAdWidget.dart';
 import 'package:m_life_app/view/pages/post/home_page.dart';
 import 'package:m_life_app/view/pages/user/signup_page.dart';
 import '../../../controller/user_controller.dart';

@@ -4,6 +4,70 @@ import logo from '../../assets/logo.png';
 import { useAuth } from '../../security/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+
+
+const LoginPage = () => {
+  const authContext = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // 여기에 실제 로그인 로직 추가
+
+    const UserReqDto = {
+      "username": username,
+      "password": password
+    }
+    try {
+      console.log("로그인 요청");
+      const success = await authContext.login(UserReqDto);
+      if (success) {
+        console.log(auth.username, auth.token);
+        window.alert("로그인 되었습니다.");
+        navigate('/');
+      } else {
+        window.alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      setError(error)
+      window.alert(error);
+    }
+  };
+
+  return (
+    <Container>
+      <Logo src={logo} alt="Logo" />
+      <Title>로그인</Title>
+      <Form onSubmit={handleLogin}>
+        <Input
+          type="text"
+          placeholder="아이디 입력란"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input
+          type="password"
+          placeholder="비밀번호 입력란"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit">로그인</Button>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        <TextButton onClick={() => navigate('/signup')}>
+          아직 <span style={{ color: '#ffca28' }}>회원가입</span>이 되어 있지 않나요?
+        </TextButton>
+      </Form>
+    </Container>
+  );
+};
+
+export default LoginPage;
+
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -79,64 +143,3 @@ const ErrorMessage = styled.div`
   color: red;
   margin-top: 10px;
 `;
-
-const LoginPage = () => {
-  const authContext = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const auth = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    // 여기에 실제 로그인 로직 추가
-
-    const UserReqDto = {
-      "username": username,
-      "password": password
-    }
-    try {
-      console.log("로그인 요청");
-      const success = await authContext.login(UserReqDto);
-      if (success) {
-        console.log(auth.username, auth.token);
-        window.alert("로그인 되었습니다.");
-        navigate('/');
-      } else {
-        window.alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-      }
-    } catch (error) {
-      setError(error)
-      window.alert(error);
-    }
-  };
-
-  return (
-    <Container>
-      <Logo src={logo} alt="Logo" />
-      <Title>로그인</Title>
-      <Form onSubmit={handleLogin}>
-        <Input
-          type="text"
-          placeholder="아이디 입력란"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <Input
-          type="password"
-          placeholder="비밀번호 입력란"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button type="submit">로그인</Button>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <TextButton onClick={() => navigate('/signup')}>
-          아직 <span style={{ color: '#ffca28' }}>회원가입</span>이 되어 있지 않나요?
-        </TextButton>
-      </Form>
-    </Container>
-  );
-};
-
-export default LoginPage;

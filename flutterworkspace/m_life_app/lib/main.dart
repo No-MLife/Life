@@ -2,15 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_life_app/controller/user_controller.dart';
 import 'package:m_life_app/view/pages/user/login_page.dart';
 import 'package:m_life_app/view/pages/post/home_page.dart'; // 로그인이 되었을 때 이동할 홈 페이지
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // FlutterSecureStorage 추가
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  unawaited(MobileAds.instance.initialize());
   runApp(MyApp());
 }
 
