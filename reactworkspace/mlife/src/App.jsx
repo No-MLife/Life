@@ -1,9 +1,11 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import HomePage from './pages/post/Home'
+import HomePage from './pages/post/HomePage'
 import LoginPage from './pages/user/Login'
 import SignupPage from './pages/user/Signup'
 import './App.css'
 import AuthProvider, {useAuth} from "./security/AuthContext"
+import CategoryPage from './pages/post/CategoryPage'
+import PostDetailPage from './pages/post/PostDetailPage'
 
 function AuthenticateRoute({children}){
   const authContext = useAuth(); // useAuth를 통해 유저 정보를 공통적으로 접근 가능하다.
@@ -20,6 +22,9 @@ const router = createBrowserRouter([
   { path :'/', element : <HomePage/> },
   { path :'/login', element : <LoginPage/> },
   { path :'/signup', element : <SignupPage/> },
+  { path :'/:categoryId', element : <CategoryPage/> },
+  { path : '/post/:postId', element : <PostDetailPage />},
+  
 
 ]);
 
