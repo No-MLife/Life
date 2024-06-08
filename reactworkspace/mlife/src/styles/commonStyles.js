@@ -126,7 +126,6 @@ export const ContentWrapper = styled.div`
   flex-direction: column; // 자식 요소들을 세로로 정렬
   align-items: center; // 자식 요소들을 중앙으로 정렬
   width: 100%; // 너비를 100%로 설정
-  padding: 20px; // 패딩을 20px로 설정
   overflow-y: auto; // 세로로 넘치는 콘텐츠는 스크롤 가능하도록 설정
 `;
 

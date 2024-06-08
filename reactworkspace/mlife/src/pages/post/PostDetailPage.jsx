@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPostByIdApi } from '../../api/PostApi';
-import {getPostLikeApi, postPostLikeApi, deletePostLikeApi} from '../../api/PostLike'
+import { getPostByIdApi, deletePostApi, putPostApi } from '../../api/PostApi';
+import { getPostLikeApi, postPostLikeApi, deletePostLikeApi } from '../../api/PostLikeApi';
+import { postCommentApi, putCommentApi, deleteCommentApi } from '../../api/CommentApi';
 import styled from 'styled-components';
+import Modal from '../../components/Modal'; // 모달 컴포넌트 가져오기
 import {
   GlobalStyle,
   PageContainer,
   MainContent,
-  Header,
   SubHeader,
   SubTitle,
-  TopNav,
-  NavButton,
-  LogoImage,
   ContentWrapper,
-  NavBar,
-  NavItem,
-  Emoji,
   LoadingMessage
 } from '../../styles/commonStyles';
 import logo from '../../assets/logo.png';
-import { Category, getCategoryEmoji } from '../../components/category';
+import { Category, getCategoryEmoji } from '../../components/Category';
+import { useAuth } from '../../security/AuthContext'; // AuthContext 사용
 
 const PostDetailPage = () => {
   const { postId } = useParams();
+  const { isAuthenticated, username } = useAuth(); // 현재 로그인한 사용자 정보 가져오기
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [likeCount, setLikeCount] = useState(0);
@@ -32,6 +29,9 @@ const PostDetailPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [editContent, setEditContent] = useState('');
   const [editCommentId, setEditCommentId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalAction, setModalAction] = useState(() => () => {});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,14 +54,19 @@ const PostDetailPage = () => {
 
   const checkIfLiked = async (postId) => {
     try {
-      const isLiked = await getPostLikeApi(postId);
-      setIsLiked(isLiked);
+      const data = await getPostLikeApi(postId);
+      setIsLiked(data);
     } catch (error) {
       console.error('Failed to check if the post is liked:', error);
     }
   };
 
   const handleLikeToggle = async () => {
+    if (!isAuthenticated) {
+      window.alert('로그인이 필요합니다.');
+      return;
+    }
+
     try {
       if (isLiked) {
         await deletePostLikeApi(postId);
@@ -70,7 +75,6 @@ const PostDetailPage = () => {
       }
       const data = await getPostByIdApi(postId);
       setLikeCount(data.likeCount);
-      
       setIsLiked(!isLiked);
     } catch (error) {
       console.error('Failed to toggle like:', error);
@@ -82,8 +86,33 @@ const PostDetailPage = () => {
   };
 
   const handleCommentSubmit = () => {
-    console.log('댓글 제출:', comment);
-    setComment('');
+    if (!isAuthenticated) {
+      window.alert('로그인이 필요합니다.');
+      return;
+    }
+
+    setModalMessage('댓글을 등록하시겠습니까?');
+    setModalAction(() => async () => {
+      const CommentReqDto = {
+        content: comment,
+      };
+      try {
+        const response = await postCommentApi(postId, CommentReqDto);
+        if (response.status === 200) {
+          window.alert('댓글이 정상적으로 등록되었습니다.');
+          const updatedPost = await getPostByIdApi(postId);
+          setPost(updatedPost);
+        } else {
+          window.alert('다시 확인해주세요');
+        }
+      } catch (error) {
+        console.error('Failed to submit comment:', error);
+        window.alert('다시 확인해주세요');
+      }
+      setComment('');
+      setShowModal(false);
+    });
+    setShowModal(true);
   };
 
   const handleEditPost = () => {
@@ -92,27 +121,93 @@ const PostDetailPage = () => {
   };
 
   const handleDeletePost = () => {
-    console.log('포스트 삭제');
+    setModalMessage('포스트를 삭제하시겠습니까?');
+    setModalAction(() => async () => {
+      try {
+        const response = await deletePostApi(postId);
+        if (response.status === 200) {
+          window.alert('포스트가 삭제되었습니다.');
+          navigate('/');
+        }
+      } catch (error) {
+        window.alert('다시 시도해주세요.');
+      } finally {
+        setShowModal(false);
+      }
+    });
+    setShowModal(true);
   };
 
-  const handleEditComment = (commentId, content) => {
+  // 댓글 수정
+  const handleEditComment = async (commentId, content) => {
     setEditCommentId(commentId);
     setEditContent(content);
+    console.log(content)
+    
   };
 
+  // 댓글 삭제
   const handleDeleteComment = (commentId) => {
-    console.log('댓글 삭제', commentId);
+    setModalMessage('댓글을 삭제하시겠습니까?');
+    setModalAction(() => async () => {
+      try {
+        const response = await deleteCommentApi(postId, commentId);
+        if (response.status === 200) {
+          window.alert('댓글이 삭제되었습니다.');
+          const updatedPost = await getPostByIdApi(postId);
+          setPost(updatedPost);
+        }
+      } catch (error) {
+        window.alert('다시 시도해주세요.');
+      } finally {
+        setShowModal(false);
+      }
+    });
+    setShowModal(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editCommentId !== null) {
-      console.log('댓글 수정', editCommentId, editContent);
-      setEditCommentId(null);
+      setModalMessage('댓글을 수정하시겠습니까?');
+      console.log(editContent)
+      const CommentReqDto = {
+        content: editContent,
+      };
+      setModalAction(() => async () => {
+        try {
+          const response = await putCommentApi(postId, editCommentId,CommentReqDto);
+          if (response.status === 200) {
+            window.alert('댓글이 수정되었습니다.');
+            const updatedPost = await getPostByIdApi(postId);
+            setPost(updatedPost);
+            setEditCommentId(null);
+          }
+        } catch (error) {
+          window.alert('다시 시도해주세요.');
+        }
+        setEditContent('');
+        setShowModal(false);
+      });
+      setShowModal(true);
     } else {
-      console.log('포스트 수정', editContent);
-      setEditMode(false);
+      setModalMessage('포스트를 수정하시겠습니까?');
+      setModalAction(() => async () => {
+        try {
+          const response = await putPostApi(postId, { content: editContent });
+          if (response.status === 200) {
+            window.alert('포스트가 수정되었습니다.');
+            const updatedPost = await getPostByIdApi(postId);
+            setPost(updatedPost);
+            setEditMode(false);
+          }
+        } catch (error) {
+          window.alert('다시 시도해주세요.');
+        }
+        setEditContent('');
+        setShowModal(false);
+      });
+      setShowModal(true);
     }
-    setEditContent('');
   };
 
   const handleCancelEdit = () => {
@@ -129,7 +224,7 @@ const PostDetailPage = () => {
     return <LoadingMessage>포스트를 불러오지 못했습니다.</LoadingMessage>;
   }
 
-  const category = Object.values(Category).find(cat => cat.id === post.categoryId);
+  const category = Object.values(Category).find((cat) => cat.id === post.categoryId);
 
   const getAuthorAvatar = (avatarUrl) => (avatarUrl ? avatarUrl : logo);
 
@@ -138,24 +233,12 @@ const PostDetailPage = () => {
       <GlobalStyle />
       <PageContainer>
         <MainContent>
-          <Header>
-            <LogoImage src={logo} alt="M-Life Logo" onClick={() => navigate('/')} />
-            <TopNav>
-              <NavButton onClick={() => navigate('/login')}>로그인</NavButton>
-              <NavButton onClick={() => navigate('/signup')}>회원가입</NavButton>
-            </TopNav>
-            <NavBar>
-              {Object.values(Category).map((category) => (
-                <NavItem key={category.id} onClick={() => navigate(`/${category.id}`)}>
-                  <Emoji>{getCategoryEmoji(category)}</Emoji> {category.name}
-                </NavItem>
-              ))}
-            </NavBar>
-          </Header>
           <SubHeader>
-            <SubTitle>{getCategoryEmoji(category)} {category.name}</SubTitle>
+            <StyledSubTitle>
+              {getCategoryEmoji(category)} {category.name}
+            </StyledSubTitle>
           </SubHeader>
-          <ContentWrapper>
+          <StyledContentWrapper>
             <PostContainer>
               <PostHeader>
                 <PostAuthorAvatar src={getAuthorAvatar(post.authorAvatarUrl)} alt="author avatar" />
@@ -177,7 +260,7 @@ const PostDetailPage = () => {
                 <>
                   <PostTitle>
                     {post.title}
-                    <LikeButton onClick={handleLikeToggle} isLiked={isLiked}>
+                    <LikeButton $isLiked={isLiked.toString()} onClick={handleLikeToggle}>
                       {isLiked ? '❤️' : '🤍'} {likeCount}
                     </LikeButton>
                   </PostTitle>
@@ -187,18 +270,16 @@ const PostDetailPage = () => {
                     ))}
                   </PostImages>
                   <PostContent>{post.content}</PostContent>
-                  <ButtonWrapper>
-                    <EditButton onClick={handleEditPost}>✏️</EditButton>
-                    <EditButton onClick={handleDeletePost}>🗑️</EditButton>
-                  </ButtonWrapper>
+                  {username === post.authorName && (
+                    <ButtonWrapper>
+                      <EditButton onClick={handleEditPost}>✏️</EditButton>
+                      <EditButton onClick={handleDeletePost}>🗑️</EditButton>
+                    </ButtonWrapper>
+                  )}
                 </>
               )}
               <CommentSection>
-                <CommentInput 
-                  value={comment}
-                  onChange={handleCommentChange}
-                  placeholder="댓글을 입력하세요..."
-                />
+                <CommentInput value={comment} onChange={handleCommentChange} placeholder="댓글을 입력하세요..." />
                 <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
               </CommentSection>
               <CommentList>
@@ -219,10 +300,12 @@ const PostDetailPage = () => {
                       ) : (
                         <>
                           <CommentText>{comment.content}</CommentText>
-                          <ButtonWrapper>
-                            <EditButton onClick={() => handleEditComment(comment.id, comment.content)}>✏️</EditButton>
-                            <EditButton onClick={() => handleDeleteComment(comment.id)}>🗑️</EditButton>
-                          </ButtonWrapper>
+                          {username === comment.commentAuthor && (
+                            <ButtonWrapper>
+                              <EditButton onClick={() => handleEditComment(comment.id, comment.content)}>✏️</EditButton>
+                              <EditButton onClick={() => handleDeleteComment(comment.id)}>🗑️</EditButton>
+                            </ButtonWrapper>
+                          )}
                         </>
                       )}
                     </CommentContentWrapper>
@@ -230,9 +313,15 @@ const PostDetailPage = () => {
                 ))}
               </CommentList>
             </PostContainer>
-          </ContentWrapper>
+          </StyledContentWrapper>
         </MainContent>
       </PageContainer>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={modalAction}
+        message={modalMessage}
+      />
     </>
   );
 };
@@ -294,12 +383,14 @@ const PostTitle = styled.h1`
   align-items: center;
 `;
 
-const LikeButton = styled.button`
+const LikeButton = styled.button.attrs((props) => ({
+  $isLiked: props.$isLiked
+}))`
   background: none;
   border: none;
   font-size: 24px;
   margin-left: 10px;
-  color: ${props => (props.isLiked ? 'red' : 'gray')};
+  color: ${(props) => (props.$isLiked === 'true' ? 'red' : 'gray')};
   cursor: pointer;
 `;
 
@@ -341,6 +432,13 @@ const CommentInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-right: 10px;
+  background-color: white; /* 배경색을 흰색으로 설정 */
+  color: #000; /* 텍스트 색상을 검은색으로 설정 */
+
+  &:focus {
+    border-color: #ffca28; /* 포커스 상태에서 테두리 색상을 노란색으로 설정 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+  }
 `;
 
 const CommentButton = styled.button`
@@ -437,4 +535,19 @@ const EditTextArea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-top: 10px;
+  background-color: white; /* 배경색을 흰색으로 설정 */
+  color: #000; /* 텍스트 색상을 검은색으로 설정 */
+
+  &:focus {
+    border-color: #ffca28; /* 포커스 상태에서 테두리 색상을 노란색으로 설정 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+  }
+`;
+
+const StyledSubTitle = styled(SubTitle)`
+  margin-bottom: 10px; /* 조정한 마진 값 */
+`;
+
+const StyledContentWrapper = styled(ContentWrapper)`
+  margin-top: 0; /* 조정한 마진 값 */
 `;

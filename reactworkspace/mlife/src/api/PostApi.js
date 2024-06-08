@@ -15,3 +15,11 @@ export const getPostByIdApi = async (postid) => {
   return response.data;
   };
 
+export const deletePostApi = async (postid) => {
+  return await apiClient.delete(`/api/v1/category/post/${postid}`);
+  };
+
+
+export const putPostApi = async (postid, post) => {
+  return await apiClient.put(`/api/v1/category/post/${postid}`, post);
+  };
