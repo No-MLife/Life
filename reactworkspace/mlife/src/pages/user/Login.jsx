@@ -113,6 +113,11 @@ const Input = styled.input`
   color: #333;
   background-color: #fff;
   font-size: 16px;
+
+  &:focus {
+    border-color: #ffca28; /* 포커스 상태에서 테두리 색상을 노란색으로 설정 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+  }
 `;
 
 const Button = styled.button`

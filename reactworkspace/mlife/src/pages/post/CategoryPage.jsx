@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import { Category, getCategoryEmoji } from '../../components/category';
+import { Category, getCategoryEmoji } from '../../components/Category';
 import {
   GlobalStyle,
   PageContainer,
   MainContent,
-  Header,
   SubHeader,
   SubTitle,
-  TopNav,
-  NavButton,
-  LogoImage,
   ContentWrapper,
-  NavBar,
-  NavItem,
-  Emoji,
   PostCard,
   Thumbnail,
   PostContent,
@@ -67,20 +60,6 @@ const CategoryPage = () => {
       <GlobalStyle />
       <PageContainer>
         <MainContent>
-          <Header>
-             <LogoImage src={logo} alt="M-Life Logo" onClick={() => navigate('/')} />
-            <TopNav>
-              <NavButton onClick={() => navigate('/login')}>로그인</NavButton>
-              <NavButton onClick={() => navigate('/signup')}>회원가입</NavButton>
-            </TopNav>
-            <NavBar>
-              {Object.values(Category).map((category) => (
-                <NavItem key={category.id} onClick={() => navigate(`/${category.id}`)}>
-                  <Emoji>{getCategoryEmoji(category)}</Emoji> {category.name}
-                </NavItem>
-              ))}
-            </NavBar>
-          </Header>
           <ContentWrapper>
             <SubHeader>
               <SubTitle>{getCategoryEmoji(category)} {category.name}</SubTitle>
