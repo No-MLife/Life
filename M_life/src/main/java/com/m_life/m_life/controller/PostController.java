@@ -61,6 +61,8 @@ public class PostController {
                                              @RequestPart(value = "images", required = false) List<MultipartFile> files,
                                              @RequestPart("postRequest") String postRequestJson,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        logger.info(files.toString());
         if (categoryId != 1) {
             ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;

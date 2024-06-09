@@ -116,8 +116,7 @@ const PostDetailPage = () => {
   };
 
   const handleEditPost = () => {
-    setEditMode(true);
-    setEditContent(post.content);
+    navigate(`/post/${postId}/edit`);
   };
 
   const handleDeletePost = () => {
@@ -278,10 +277,7 @@ const PostDetailPage = () => {
                   )}
                 </>
               )}
-              <CommentSection>
-                <CommentInput value={comment} onChange={handleCommentChange} placeholder="댓글을 입력하세요..." />
-                <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
-              </CommentSection>
+              
               <CommentList>
                 {post.commentList.map((comment) => (
                   <Comment key={comment.id}>
@@ -312,6 +308,10 @@ const PostDetailPage = () => {
                   </Comment>
                 ))}
               </CommentList>
+              <CommentSection>
+                <CommentInput value={comment} onChange={handleCommentChange} placeholder="댓글을 입력하세요..." />
+                <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
+              </CommentSection>
             </PostContainer>
           </StyledContentWrapper>
         </MainContent>

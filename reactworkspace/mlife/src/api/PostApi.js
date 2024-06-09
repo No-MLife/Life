@@ -20,6 +20,20 @@ export const deletePostApi = async (postid) => {
   };
 
 
+  export const postPostApi = async (categoryId, formData) => {
+    try {
+      const response = await apiClient.post(`/api/v1/category/${categoryId}/post`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response;
+    } catch (error) {
+      console.error('Failed to create post:', error);
+      throw error;
+    }
+  };
+
 export const putPostApi = async (postid, post) => {
   return await apiClient.put(`/api/v1/category/post/${postid}`, post);
   };

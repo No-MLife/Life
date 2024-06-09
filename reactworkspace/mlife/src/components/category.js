@@ -13,8 +13,8 @@ export const Category = {
     switch (category) {
       case Category.free:
         return '📝️';
-      case Category.dailyProof:
-        return '📸';
+        case Category.restaurant:
+          return '🍽️';
       case Category.constructionMethod:
         return '🏗️';
       case Category.complaintDiscussion:
@@ -23,8 +23,8 @@ export const Category = {
         return '🏢';
       case Category.equipmentRecommendation:
         return '🔧';
-      case Category.restaurant:
-        return '🍽️';
+        case Category.dailyProof:
+          return '📸';
       default:
         return '📜';
     }

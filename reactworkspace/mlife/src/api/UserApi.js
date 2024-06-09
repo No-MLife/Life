@@ -1,11 +1,16 @@
-import {apiClient} from './ApiClient'
+import { apiClient } from './ApiClient';
 
-export const postAuthLoginApi = 
-(UserReqDto) => apiClient.post("/login", UserReqDto)
+export const postAuthLoginApi = (UserReqDto) => {
+  return apiClient.post('/login', UserReqDto);
+};
 
-export  const postSignupApi = 
-(UserReqDto) => apiClient.post("/signup", UserReqDto)
+export const postSignupApi = (UserReqDto) => {
+  return apiClient.post('/signup', UserReqDto);
+};
 
-// export const AuthSignupApi = 
-// (userAccount: { userId: string; userPassword: string; email: string; nickname: string; memo: string; }) =>
-//     apiClinet.post("/api/sign-up", userAccount)
+// 서버로 새로운 액세스 토큰을 요청하는 API
+export const postRefreshTokenApi = () => {
+  return apiClient.post('/reissue', {}, {
+    withCredentials: true // 리프레시 토큰이 HttpOnly 쿠키에 있으므로 반드시 필요
+  });
+};

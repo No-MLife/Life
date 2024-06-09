@@ -56,8 +56,9 @@ public class DataInitializer implements CommandLineRunner {
             postCategoryRepository.save(category2);
 
             PostCategory category3 = PostCategory.of(
-                    "일당 인증",
-                    "작업 완료 후 받은 일당을 인증하는 게시판입니다."
+                    "맛집",
+                    "건설 현장 주변의 맛집 정보를 공유하는 게시판입니다."
+
             );
             postCategoryRepository.save(category3);
 
@@ -74,21 +75,23 @@ public class DataInitializer implements CommandLineRunner {
             postCategoryRepository.save(category5);
 
             PostCategory category6 = PostCategory.of(
-                    "현장 논쟁 분쟁",
-                    "현장에서 발생하는 다양한 논쟁과 분쟁 사례를 공유하고 해결방안을 논의하는 게시판입니다."
-            );
-            postCategoryRepository.save(category6);
-
-
-            PostCategory category7 = PostCategory.of(
                     "장비 추천",
                     "건설 현장에서 사용되는 각종 장비, 공구 등에 대한 추천과 사용 팁을 공유하는 게시판입니다."
             );
+            postCategoryRepository.save(category6);
+
+            PostCategory category7 = PostCategory.of(
+                    "현장 논쟁 분쟁",
+                    "현장에서 발생하는 다양한 논쟁과 분쟁 사례를 공유하고 해결방안을 논의하는 게시판입니다."
+            );
             postCategoryRepository.save(category7);
 
+
+
+
             PostCategory category8 = PostCategory.of(
-                    "맛집",
-                    "건설 현장 주변의 맛집 정보를 공유하는 게시판입니다."
+                    "일당 인증",
+                    "작업 완료 후 받은 일당을 인증하는 게시판입니다."
             );
             postCategoryRepository.save(category8);
 
