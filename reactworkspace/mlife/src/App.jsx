@@ -6,6 +6,8 @@ import './App.css';
 import AuthProvider from "./security/AuthContext";
 import CategoryPage from './pages/post/CategoryPage';
 import PostDetailPage from './pages/post/PostDetailPage';
+import PostWrtiePage from './pages/post/PostWritePage'
+import PostEditPage from './pages/post/PostEditPage'
 // import ProfilePage from './pages/user/Profile';
 // import AuthenticateRoute from './AuthenticateRoute';
 import Layout from './components/Layout';  // 새로 만든 Layout 컴포넌트
@@ -19,6 +21,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/:categoryId" element={<CategoryPage />} />
             <Route path="/post/:postId" element={<PostDetailPage />} />
+            <Route path="/write" element={< PostWrtiePage/>} />
+            <Route path="/post/:postId/edit" element={< PostEditPage/>} />
             {/* <Route path="/profile" element={<AuthenticateRoute><ProfilePage /></AuthenticateRoute>} /> */}
           </Route>
           <Route path="/login" element={<LoginPage />} />

@@ -21,11 +21,13 @@ import {
 } from '../../styles/commonStyles';
 import styled from 'styled-components';
 import { getPopulaPostsApi } from '../../api/PostApi';
+import { useAuth } from '../../security/AuthContext'; // AuthContext 사용
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth(); // 현재 로그인 여부 확인
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -47,6 +49,15 @@ const Home = () => {
     loadPosts();
   }, []);
 
+  const handleWriteButtonClick = () => {
+    if (!isAuthenticated) {
+      window.alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login');
+    } else {
+      navigate('/write');
+    }
+  };
+
   if (loading) {
     return <LoadingMessage>로딩 중...</LoadingMessage>;
   }
@@ -58,8 +69,8 @@ const Home = () => {
         <MainContent>
           <ContentWrapper>
             <SubHeader>
-              <FireIcon>🔥</FireIcon>
-              <SubTitle>Popular Posts 100</SubTitle>
+              <SubTitle><FireIcon>🔥</FireIcon> 인기 게시글 100</SubTitle>
+              <WriteButton onClick={handleWriteButtonClick}>✏️ 글쓰기</WriteButton>
             </SubHeader>
             <PostList>
               {posts.map((post, index) => (
@@ -92,7 +103,6 @@ export default Home;
 
 // 홈 페이지에만 적용되는 스타일드 컴포넌트
 
-
 // 서브타이틀 옆의 불꽃 아이콘
 const FireIcon = styled.span`
   font-size: 34px;
@@ -109,4 +119,21 @@ const PostScore = styled.div`
   font-size: 24px;
   font-weight: bold;
   color: #ffca28;
+`;
+
+// 글쓰기 버튼
+const WriteButton = styled.button`
+  background-color: #ffca28;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: auto;
+
+  &:hover {
+    background-color: #ffb300;
+  }
 `;

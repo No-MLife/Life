@@ -101,17 +101,24 @@ export const SubHeader = styled.div`
   align-items: center; // 자식 요소들을 중앙으로 정렬
   background-color: #ffca28; // 배경색을 노란색으로 설정
   width: 100%; // 너비를 100%로 설정
-  padding: 15px; // 패딩을 15px로 설정
+  padding: 5px; // 패딩을 15px로 설정
   border-bottom: 1px solid #ddd; // 아래 테두리를 회색 실선으로 설정
   justify-content: center; // 자식 요소들을 중앙으로 정렬
-  margin-bottom: 20px; // 아래 여백을 20px로 설정
-  border-radius: 20px; // 테두리를 둥글게 설정
+  margin-bottom: 10px; // 아래 여백을 20px로 설정
+  border-radius: 10px; // 테두리를 둥글게 설정
+
+  
 `;
 
 // 서브타이틀
 export const SubTitle = styled.h2`
+  
   font-size: 25px; // 글자 크기를 25px로 설정
   color: #fff; // 글자 색상을 흰색으로 설정
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+  
 `;
 
 // 카테고리 이름 옆에 표시되는 이모지
