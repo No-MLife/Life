@@ -12,7 +12,7 @@ import {
   NavItem,
   Emoji
 } from '../styles/commonStyles';
-import { Category, getCategoryEmoji } from '../components/Category';
+import { Category, getCategoryEmoji } from './Category';
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -30,7 +30,7 @@ const Header = () => {
         {isAuthenticated ? (
           <>
             <NavButton onClick={handleLogout}>로그아웃</NavButton>
-            <NavButton onClick={() => navigate('/profile')}>내정보</NavButton>
+            <NavButton onClick={() => navigate('/user/profile')}>내정보</NavButton>
           </>
         ) : (
           <>

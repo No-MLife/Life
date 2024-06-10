@@ -62,7 +62,6 @@ public class PostController {
                                              @RequestPart("postRequest") String postRequestJson,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        logger.info(files.toString());
         if (categoryId != 1) {
             ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;
