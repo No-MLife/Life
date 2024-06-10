@@ -56,6 +56,11 @@ export default function PostWritePage() {
     try {
       const response = await postPostApi(category, formData);
       if (response.status === 200) {
+        window.alert('게시글이 작성되었습니다.');
+        // if(category == 1)
+        //   navigate('/')
+        // else
+        //   navigate(`/post/${category}`);
         navigate('/');
       } else {
         window.alert('게시글 작성에 실패했습니다.');
@@ -143,13 +148,17 @@ const Form = styled.form`
 const FormItem = styled.div`
   display: flex;
   flex-direction: column;
+  
   margin-bottom: 15px;
+  
+  
 `;
 
 const Label = styled.label`
   margin-bottom: 5px;
   font-weight: bold;
   color: #333;
+  
 `;
 
 const Input = styled.input`

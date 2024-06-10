@@ -14,3 +14,19 @@ export const postRefreshTokenApi = () => {
     withCredentials: true // 리프레시 토큰이 HttpOnly 쿠키에 있으므로 반드시 필요
   });
 };
+
+export const getUserProfileApi = (nickname) => {
+  return apiClient.get(`/api/v1/users/profile/${nickname}`);
+};
+
+export const updateUserProfileApi = (nickname, userProfileRequest) => {
+  return apiClient.put(`/api/v1/users/profile/${nickname}`, userProfileRequest);
+};
+
+export const uploadProfileImageApi = (nickname, formData) => {
+  return apiClient.put(`/api/v1/users/profile/${nickname}/image`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

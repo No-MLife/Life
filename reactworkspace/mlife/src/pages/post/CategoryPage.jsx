@@ -88,6 +88,9 @@ const CategoryPage = () => {
                       <PostDetails>
                         <DetailItem>💬 {post.commentList.length}</DetailItem>
                         <DetailItem>❤️ {post.likeCount}</DetailItem>
+                        {post.postImageUrls && post.postImageUrls.length > 0 && (
+                          <DetailItem>📸 {post.postImageUrls.length}</DetailItem>
+                        )}
                         <DetailItem>🕒 {new Date(post.createAt).toLocaleDateString()}</DetailItem>
                       </PostDetails>
                     </PostInfo>
