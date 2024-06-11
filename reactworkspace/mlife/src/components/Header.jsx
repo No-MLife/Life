@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../security/AuthContext';
 import styled from 'styled-components';
@@ -13,14 +13,25 @@ import {
   Emoji
 } from '../styles/commonStyles';
 import { Category, getCategoryEmoji } from './Category';
+import Modal from './Modal'; // 모달 컴포넌트 가져오기
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
     logout();
+    setShowLogoutModal(false);
     navigate('/');
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   return (
@@ -46,6 +57,12 @@ const Header = () => {
           </NavItem>
         ))}
       </NavBar>
+      <Modal
+        show={showLogoutModal}
+        onClose={cancelLogout}
+        onConfirm={confirmLogout}
+        message="로그아웃 하시겠습니까?"
+      />
     </StyledHeader>
   );
 };

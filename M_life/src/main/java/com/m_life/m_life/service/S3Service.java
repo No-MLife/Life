@@ -1,4 +1,5 @@
 package com.m_life.m_life.service;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -23,16 +24,18 @@ public class S3Service {
     }
 
     public String uploadProfileImage(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        String s3Key = "profile-images/" + UUID.randomUUID() + "_" + fileName;
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        String fileName = UUID.randomUUID().toString() + fileExtension;
+        String s3Key = "profile-images/" + fileName;
         return uploadImage(file, s3Key);
     }
 
     public List<String> uploadPostImages(List<MultipartFile> files, Long postId) {
         List<String> s3Urls = new ArrayList<>();
         for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            String s3Key = "post-images/" + postId + "/" + UUID.randomUUID() + "_" + fileName;
+            String fileExtension = getFileExtension(file.getOriginalFilename());
+            String fileName = UUID.randomUUID().toString() + fileExtension;
+            String s3Key = "post-images/" + postId + "/" + fileName;
             String s3Url = uploadImage(file, s3Key);
             s3Urls.add(s3Url);
         }
@@ -55,5 +58,12 @@ public class S3Service {
     public void deleteImage(String imageUrl) {
         String s3Key = imageUrl.substring(imageUrl.indexOf(".com/") + 5);
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, s3Key));
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName != null && fileName.contains(".")) {
+            return fileName.substring(fileName.lastIndexOf("."));
+        }
+        return "";
     }
 }

@@ -62,7 +62,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
                         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
                         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "access"));
+                        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "access", "refresh"));
                         configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "access"));
                         configuration.setAllowCredentials(true);
                         configuration.setMaxAge(3600L);
@@ -80,8 +80,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/signup", "/").permitAll()
-                        .requestMatchers("/reissue").permitAll()
+                        .requestMatchers("/reissue", "/login", "/signup", "/").permitAll()
                         .requestMatchers("/api/v1/category/popular-posts/**").permitAll() // 인기 게시글 조회 URL 패턴
                         .requestMatchers("/api/v1/category/**").permitAll() // 카테고리별 게시글 조회 URL 패턴
                         .requestMatchers("/api/v1/category/post/**").permitAll() // 전체 게시글 조회 URL 패턴

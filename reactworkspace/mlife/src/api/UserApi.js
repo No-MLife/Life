@@ -4,6 +4,10 @@ export const postAuthLoginApi = (UserReqDto) => {
   return apiClient.post('/login', UserReqDto);
 };
 
+export const postAuthLogoutApi = () => {
+  return apiClient.post('/logout');
+};
+
 export const postSignupApi = (UserReqDto) => {
   return apiClient.post('/signup', UserReqDto);
 };
