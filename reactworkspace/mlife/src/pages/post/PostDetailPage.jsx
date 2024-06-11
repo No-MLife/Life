@@ -5,7 +5,8 @@ import { getPostLikeApi, postPostLikeApi, deletePostLikeApi } from '../../api/Po
 import { postCommentApi, putCommentApi, deleteCommentApi } from '../../api/CommentApi';
 import { getUserProfileApi } from '../../api/UserApi'; // 프로필 API 가져오기
 import styled from 'styled-components';
-import Modal from '../../components/Modal'; // 모달 컴포넌트 가져오기
+import Modal from '../../components/Modal';
+import ProfileModal from '../../components/ProfileModal'; // 프로필 모달 컴포넌트 가져오기
 import {
   GlobalStyle,
   PageContainer,
@@ -17,11 +18,11 @@ import {
 } from '../../styles/commonStyles';
 import logo from '../../assets/logo.png';
 import { Category, getCategoryEmoji } from '../../components/Category';
-import { useAuth } from '../../security/AuthContext'; // AuthContext 사용
+import { useAuth } from '../../security/AuthContext';
 
 const PostDetailPage = () => {
   const { postId } = useParams();
-  const { isAuthenticated, username } = useAuth(); // 현재 로그인한 사용자 정보 가져오기
+  const { isAuthenticated, username } = useAuth();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [likeCount, setLikeCount] = useState(0);
@@ -35,6 +36,8 @@ const PostDetailPage = () => {
   const [modalAction, setModalAction] = useState(() => () => {});
   const [authorAvatar, setAuthorAvatar] = useState(logo);
   const [commentAvatars, setCommentAvatars] = useState({});
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileData, setProfileData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const PostDetailPage = () => {
         const data = await getPostByIdApi(postId);
         setPost(data);
         setLikeCount(data.likeCount);
-        checkIfLiked(postId); // 좋아요 여부 확인
+        checkIfLiked(postId);
         loadAuthorAvatar(data.authorName);
         loadCommentAvatars(data.commentList);
       } catch (error) {
@@ -133,7 +136,7 @@ const PostDetailPage = () => {
           window.alert('댓글이 정상적으로 등록되었습니다.');
           const updatedPost = await getPostByIdApi(postId);
           setPost(updatedPost);
-          await loadCommentAvatars(updatedPost.commentList); // 새로운 댓글에 대한 아바타 로드
+          await loadCommentAvatars(updatedPost.commentList);
         } else {
           window.alert('다시 확인해주세요');
         }
@@ -169,14 +172,12 @@ const PostDetailPage = () => {
     setShowModal(true);
   };
 
-  // 댓글 수정
   const handleEditComment = async (commentId, content) => {
     setEditCommentId(commentId);
     setEditContent(content);
     console.log(content);
   };
 
-  // 댓글 삭제
   const handleDeleteComment = (commentId) => {
     setModalMessage('댓글을 삭제하시겠습니까?');
     setModalAction(() => async () => {
@@ -186,7 +187,7 @@ const PostDetailPage = () => {
           window.alert('댓글이 삭제되었습니다.');
           const updatedPost = await getPostByIdApi(postId);
           setPost(updatedPost);
-          await loadCommentAvatars(updatedPost.commentList); // 새로운 댓글 목록에 대한 아바타 로드
+          await loadCommentAvatars(updatedPost.commentList);
         }
       } catch (error) {
         window.alert('다시 시도해주세요.');
@@ -247,6 +248,24 @@ const PostDetailPage = () => {
     setEditContent('');
   };
 
+  const handleAvatarClick = async (authorName) => {
+    try {
+      const response = await getUserProfileApi(authorName);
+      const profile = response.data;
+      const profileData = {
+        username: authorName,
+        profileImageUrl: profile.profileImageUrl || logo,
+        introduction: profile.introduction,
+        jobName: profile.jobName,
+        experience: profile.experience
+      };
+      setProfileData(profileData);
+      setShowProfileModal(true);
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+    }
+  };
+
   if (loading) {
     return <LoadingMessage>로딩 중...</LoadingMessage>;
   }
@@ -272,7 +291,11 @@ const PostDetailPage = () => {
           <StyledContentWrapper>
             <PostContainer>
               <PostHeader>
-                <PostAuthorAvatar src={authorAvatar} alt="author avatar" />
+                <PostAuthorAvatar
+                  src={authorAvatar}
+                  alt="author avatar"
+                  onClick={() => handleAvatarClick(post.authorName)}
+                />
                 <PostInfo>
                   <PostAuthor>{post.authorName}</PostAuthor>
                   <PostDate>{new Date(post.createAt).toLocaleDateString()}</PostDate>
@@ -313,7 +336,11 @@ const PostDetailPage = () => {
               <CommentList>
                 {post.commentList.map((comment) => (
                   <Comment key={comment.id}>
-                    <CommentAvatar src={getAuthorAvatar(comment.commentAuthor)} alt="comment author avatar" />
+                    <CommentAvatar
+                      src={getAuthorAvatar(comment.commentAuthor)}
+                      alt="comment author avatar"
+                      onClick={() => handleAvatarClick(comment.commentAuthor)}
+                    />
                     <CommentContentWrapper>
                       <CommentAuthor>{comment.commentAuthor}</CommentAuthor>
                       <CommentDate>{new Date(comment.createAt).toLocaleDateString()}</CommentDate>
@@ -348,6 +375,11 @@ const PostDetailPage = () => {
           </StyledContentWrapper>
         </MainContent>
       </PageContainer>
+      <ProfileModal
+        show={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        profile={profileData}
+      />
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -382,6 +414,7 @@ const PostAuthorAvatar = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const PostInfo = styled.div`
@@ -501,6 +534,7 @@ const CommentAvatar = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const CommentContentWrapper = styled.div`
