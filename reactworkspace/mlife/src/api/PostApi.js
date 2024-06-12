@@ -1,7 +1,5 @@
-// import {apiClient} from './ApiClient'
-import UseAxiosPrivate from '../security/UseAxiosPrivate'
+import {apiClient} from '../api/ApiClient'
 
-const apiClient = UseAxiosPrivate();
 
 export const getPopulaPostsApi = async () => {
     const response = await apiClient.get(`/api/v1/category/popular-posts/100`);

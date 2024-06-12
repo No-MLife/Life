@@ -1,7 +1,5 @@
-// import { apiClient } from './ApiClient';
-import UseAxiosPrivate from '../security/UseAxiosPrivate'
+import {apiClient} from '../api/ApiClient'
 
-const apiClient = UseAxiosPrivate();
 
 export const postAuthLoginApi = (UserReqDto) => {
   return apiClient.post('/login', UserReqDto);
