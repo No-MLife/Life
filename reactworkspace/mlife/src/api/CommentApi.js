@@ -1,4 +1,7 @@
-import {apiClient} from './ApiClient'
+// import {apiClient} from './ApiClient'
+import UseAxiosPrivate from '../security/UseAxiosPrivate'
+
+const apiClient = UseAxiosPrivate();
 
 export const postCommentApi = async (postid, comment) => {
     return await apiClient.post(`/api/v1/post/${postid}/comment`, comment);
