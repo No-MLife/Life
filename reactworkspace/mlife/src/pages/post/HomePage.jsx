@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import { getPopulaPostsApi } from '../../api/PostApi';
-import { useAuth } from '../../security/AuthContext'; // AuthContext 사용
-import { getUserProfileApi } from '../../api/UserApi'; // 프로필 API 가져오기
-import ProfileModal from '../../components/ProfileModal'; // 프로필 모달 컴포넌트 가져오기
+import { useAuth } from '../../security/AuthContext';
+import { getUserProfileApi } from '../../api/UserApi';
+import ProfileModal from '../../components/ProfileModal';
 import {
   GlobalStyle,
   PageContainer,
@@ -13,7 +13,6 @@ import {
   SubTitle,
   ContentWrapper,
   PostCard,
-  Thumbnail,
   PostContent,
   PostInfo,
   PostCategory,
@@ -31,7 +30,7 @@ const Home = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth(); // 현재 로그인 여부 확인
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -113,7 +112,10 @@ const Home = () => {
                 <PostRow key={post.id}>
                   <PostCardContainer onClick={() => navigate(`/post/${post.id}`)}>
                     <PostCard>
-                      <Thumbnail src={post.postImageUrls[0] || logo} alt={post.title} />
+                      <ThumbnailContainer>
+                        <PostThumbnail src={post.postImageUrls[0] || logo} alt={post.title} />
+                        <Ranking>#{index + 1}</Ranking> {/* 순위를 포스트 이미지 아래에 추가 */}
+                      </ThumbnailContainer>
                       <PostContent>
                         <PostInfo>
                           <PostCategory>[{post.boardName}]</PostCategory>
@@ -134,7 +136,8 @@ const Home = () => {
                   <AuthorCard onClick={() => handleAvatarClick(post.authorName)}>
                     <AuthorAvatar src={post.authorAvatar} alt="author avatar" />
                     <AuthorName>{post.authorName}</AuthorName>
-                    <Ranking>#{index + 1}</Ranking>
+                    
+                    <AuthorLikes>❤️ {post.authorLikes}</AuthorLikes> {/* 총 좋아요 개수를 표시할 곳 */}
                   </AuthorCard>
                 </PostRow>
               ))}
@@ -180,6 +183,13 @@ const PostCardContainer = styled.div`
   flex: 1;
 `;
 
+const ThumbnailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 20px;
+`;
+
 // 작성자 카드
 const AuthorCard = styled.div`
   display: flex;
@@ -188,7 +198,7 @@ const AuthorCard = styled.div`
   justify-content: center;
   width: 150px;
   height: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -205,6 +215,11 @@ const AuthorAvatar = styled.img`
   margin-bottom: 10px;
 `;
 
+const AuthorLikes = styled.span`
+  color: #ff6b6b;
+  margin-bottom: 10px;
+`;
+
 const AuthorName = styled.div`
   font-size: 14px;
   font-weight: bold;
@@ -212,12 +227,19 @@ const AuthorName = styled.div`
   text-align: center;
 `;
 
-
 const Ranking = styled.div`
   font-size: 18px;
   font-weight: bold;
   color: #ffca28;
   text-align: center;
+  margin-top: 5px;
+`;
+
+const PostThumbnail = styled.img`
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
 `;
 
 // 글쓰기 버튼

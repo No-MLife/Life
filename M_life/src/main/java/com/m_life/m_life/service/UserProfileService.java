@@ -7,7 +7,6 @@ import com.m_life.m_life.dto.response.UserProfileResponse;
 import com.m_life.m_life.repository.UserAccountRepository;
 import com.m_life.m_life.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +31,9 @@ public class UserProfileService {
 
         // step2. 해당 유저가 존재한다면 다음으로 진행
         if(userProfileRepository.existsByUserAccount(userAccount)){
+            Long totalLikes = userAccountRepository.getTotalLikeCountByNickname(nick_name);
             UserProfile userProfile = userProfileRepository.findByUserAccount(userAccount);
-            return UserProfileResponse.from(userProfile);
+            return UserProfileResponse.from(userProfile, totalLikes);
         }
         else{
             return null;
@@ -65,5 +65,9 @@ public class UserProfileService {
                 userProfileRepository.save(userProfile);
             }
         }
+    }
+
+    public ResponseEntity<Long> getTotalLikeCountByNickname(String nickname) {
+        return ResponseEntity.ok().body(userAccountRepository.getTotalLikeCountByNickname(nickname));
     }
 }

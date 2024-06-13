@@ -33,7 +33,10 @@ const ProfileModal = ({ show, onClose, profile }) => {
     <Overlay onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>×</CloseButton>
-        <ProfileImage src={profile.profileImageUrl || logo} alt="Profile" />
+        <ProfileImageWrapper>
+          <ProfileImage src={profile.profileImageUrl || logo} alt="Profile" />
+          <LikesLabel>❤️ {profile.totalLikes}</LikesLabel>
+        </ProfileImageWrapper>
         <ProfileInfo>
           <ProfileName>{profile.username}</ProfileName>
           <ProfileBio>{profile.introduction}</ProfileBio>
@@ -84,13 +87,26 @@ const CloseButton = styled.button`
   color: #333;
 `;
 
+const ProfileImageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
 const ProfileImage = styled.img`
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 3px solid #ffca28; /* 노란색 테두리 추가 */
+`;
+
+const LikesLabel = styled.div`
+  font-size: 16px;
+  color: #333;
+  margin-top: 10px;
 `;
 
 const ProfileInfo = styled.div`

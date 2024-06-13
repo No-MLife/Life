@@ -110,6 +110,7 @@ export default CategoryPage;
 // 포스트 리스트
 const PostList = styled.div`
   width: 100%;
+  overflow: hidden
 `;
 
 // 글쓰기 버튼

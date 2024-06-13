@@ -19,6 +19,12 @@ public class UserController {
     private final UserProfileService userProfileService;
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
+
+    @GetMapping("/{nickname}/like")
+    public ResponseEntity<Long> getTotalLikeCountByNickname(@PathVariable(name = "nickname") String nickname) {
+        return userProfileService.getTotalLikeCountByNickname(nickname);
+    }
+
     @GetMapping("/profile/{nickname}")
     public UserProfileResponse getUserProfile(@PathVariable(name = "nickname") String nickname) {
         return userProfileService.getUserProfile(nickname);

@@ -257,7 +257,8 @@ const PostDetailPage = () => {
         profileImageUrl: profile.profileImageUrl || logo,
         introduction: profile.introduction,
         jobName: profile.jobName,
-        experience: profile.experience
+        experience: profile.experience,
+        totalLikes: profile.totalLikes // 총 좋아요 수 추가
       };
       setProfileData(profileData);
       setShowProfileModal(true);

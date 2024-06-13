@@ -14,12 +14,16 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
+      console.log("저장된 토큰 사용")
       setToken(savedToken);
       setAuthenticated(true);
       const decodedToken = jwtDecode(savedToken);
       setUsername(decodedToken.nickname);
       setAuthToken(savedToken);  // 토큰 설정
       setupInterceptors(savedToken, setToken, logout); // 인터셉터 설정
+    }else{
+      console.log("저장된 토큰이 없습니다.")
+      logout();
     }
   }, []);
 

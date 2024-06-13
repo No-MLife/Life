@@ -26,6 +26,7 @@ const UserProfilePage = () => {
   const [selectedPosition, setSelectedPosition] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(logo);
+  const [totalLikes, setTotalLikes] = useState(0); // 추가된 상태
 
   const jobOptions = ['철근공', '목수', '콘크리트공', '용접공', '설비공', '전기공', '기타'];
   const careerOptions = {
@@ -46,6 +47,7 @@ const UserProfilePage = () => {
           setSelectedJob(profileData.jobName);
           setSelectedCareer(careerOptions[profileData.experience]);
           setImagePreview(profileData.profileImageUrl || logo);
+          setTotalLikes(profileData.totalLikes); // 추가된 부분
           updatePosition(careerOptions[profileData.experience]);
         } else {
           navigate('/login');
@@ -121,6 +123,7 @@ const UserProfilePage = () => {
           <ProfileImageWrapper>
             <ProfileImage src={imagePreview} alt="Profile" />
             <ImageInputLabel htmlFor="imageUpload">📷 사진 변경</ImageInputLabel>
+            <LikesLabel>❤️ : {totalLikes}</LikesLabel>
             <ImageInput id="imageUpload" type="file" accept="image/*" onChange={handleImageChange} />
           </ProfileImageWrapper>
         </ProfileImageContainer>
@@ -155,6 +158,7 @@ const UserProfilePage = () => {
           </Select>
           <Label>직책</Label>
           <ReadOnlyInput type="text" value={selectedPosition || ''} readOnly />
+          
           <Button type="submit">저장하기</Button>
         </Form>
       </Container>
@@ -302,4 +306,10 @@ const Button = styled.button`
   &:hover {
     background-color: #ffb300;
   }
+`;
+
+const LikesLabel = styled.div`
+  font-size: 16px;
+  color: #333;
+  margin-top: 10px;
 `;
