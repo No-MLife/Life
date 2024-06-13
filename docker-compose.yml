@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ./reactworkspace/mlife
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - m_life_network
+
+  backend:
+    build:
+      context: ./M_life
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - m_life_network
+
+networks:
+  m_life_network:

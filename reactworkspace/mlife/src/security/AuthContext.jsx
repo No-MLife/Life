@@ -3,6 +3,7 @@ import {jwtDecode} from 'jwt-decode';
 import { postAuthLoginApi, postRefreshTokenApi } from '../api/UserApi';
 import { setAuthToken, setupInterceptors } from '../api/ApiClient';
 
+import backendUrl from '../config.js';
 export const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
@@ -14,6 +15,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
+      console.log(backendUrl)
       console.log("저장된 토큰 사용")
       setToken(savedToken);
       setAuthenticated(true);

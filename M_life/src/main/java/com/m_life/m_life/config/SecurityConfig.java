@@ -60,7 +60,7 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Collections.singletonList("http://3.36.235.167:80"));
+                        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));  // "*" 사용을 위해 allowedOriginPatterns 사용
                         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "access", "refresh"));
                         configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "access"));

@@ -1,15 +1,16 @@
-import axios from 'axios'
+import axios from 'axios';
 import { postRefreshTokenApi } from '../api/UserApi';
-const BASE_URL = 'http://localhost:8080'
-export const apiClient = axios.create(
-    {
-        baseURL: BASE_URL,
-        headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-    }
-)
+import backendUrl from '../config.js';
+
+console.log('Backend URL:', backendUrl);  // 디버그 문 추가
+
+export const apiClient = axios.create({
+  baseURL: backendUrl,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
 
 export const setAuthToken = (token) => {
   if (token) {
