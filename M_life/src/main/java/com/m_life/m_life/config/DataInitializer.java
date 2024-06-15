@@ -134,8 +134,8 @@ public class DataInitializer implements CommandLineRunner {
             postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8));
             // 게시글
             List<Post> posts = new ArrayList<>();
-            for (int i = 1; i <= 7; i++) {
-                Post post = Post.of("title" + i, "content" + i, postCategories.get(i));
+            for (int i = 1; i <= 1000; i++) {
+                Post post = Post.of("title" + i, "content" + i, postCategories.get(2));
                 post.setUserAccount(user);
                 posts.add(post);
             }
