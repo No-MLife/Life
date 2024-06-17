@@ -24,6 +24,7 @@ import java.util.Objects;
 public class PostController {
 
     private final PostService postService;
+    private final ObjectMapper objectMapper;
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     // 인기 게시글 조회
@@ -63,7 +64,6 @@ public class PostController {
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         if (categoryId != 1) {
-            ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;
             try {
                 postRequest = objectMapper.readValue(postRequestJson, PostRequest.class);
@@ -83,7 +83,6 @@ public class PostController {
                                              @RequestPart("postRequest") String postRequestJson,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (categoryId != 1) {
-            ObjectMapper objectMapper = new ObjectMapper();
             PostRequest postRequest;
 
             try {
