@@ -1,11 +1,9 @@
 package com.m_life.m_life.config;
 
-import com.m_life.m_life.domain.Post;
-import com.m_life.m_life.domain.PostCategory;
-import com.m_life.m_life.domain.UserAccount;
-import com.m_life.m_life.domain.UserProfile;
+import com.m_life.m_life.domain.*;
 import com.m_life.m_life.dto.Experience;
 import com.m_life.m_life.repository.*;
+import com.m_life.m_life.service.PostLikeService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,21 +16,24 @@ import java.util.List;
 //@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
     private final PostCategoryRepository postCategoryRepository;
+    private final CommentRepository commentRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserAccountRepository userAccountRepository;
     private final PostRepository postRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PostLikeService postLikeService;
 
 
 
-
-    public DataInitializer(PostCategoryRepository postCategoryRepository, PostRepository postRepository, UserAccountRepository userAccountRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserProfileRepository userProfileRepository) {
+    public DataInitializer(PostCategoryRepository postCategoryRepository, CommentRepository commentRepository, UserProfileRepository userProfileRepository, UserAccountRepository userAccountRepository, PostRepository postRepository, BCryptPasswordEncoder bCryptPasswordEncoder, PostLikeService postLikeService) {
         this.postCategoryRepository = postCategoryRepository;
-        this.postRepository = postRepository;
-        this.userAccountRepository = userAccountRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.commentRepository = commentRepository;
         this.userProfileRepository = userProfileRepository;
+        this.userAccountRepository = userAccountRepository;
+        this.postRepository = postRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.postLikeService = postLikeService;
     }
 
     @Override
@@ -134,12 +135,32 @@ public class DataInitializer implements CommandLineRunner {
             postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8));
             // 게시글
             List<Post> posts = new ArrayList<>();
-            for (int i = 1; i <= 7; i++) {
-                Post post = Post.of("title" + i, "content" + i, postCategories.get(i));
+
+
+
+            for (int i = 1; i <= 10000; i++) {
+                Post post = Post.of("title" + i, "content" + i, postCategories.get(2));
                 post.setUserAccount(user);
                 posts.add(post);
             }
             postRepository.saveAll(posts);
+
+            for (int i = 1; i <= 10000; i++) {
+                Long post_id = posts.get(i-1).getId();
+                postLikeService.likePost(post_id, user);
+            }
+
+
+
+            List<Comment> comments = new ArrayList<>();
+            Post sample_post = Post.of("title" , "content" , postCategories.get(1));
+            sample_post.setUserAccount(user);
+            postRepository.save(sample_post);
+            for(int i= 1; i<= 1000; i++){
+                Comment comment = Comment.of("content" + i, sample_post, user1);
+                comments.add(comment);
+            }
+            commentRepository.saveAll(comments);
         }
 
 

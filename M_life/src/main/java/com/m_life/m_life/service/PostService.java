@@ -12,16 +12,15 @@ import com.m_life.m_life.repository.PostRepository;
 import com.m_life.m_life.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,6 +33,8 @@ public class PostService {
     private final UserAccountRepository userAccountRepository;
     private final PostImageRepository postImageRepository;
     private final S3Service s3Service;
+    private final RedisTemplate<String, Object> myredisTemplate;
+    private static final String POPULAR_POSTS_KEY = "popular_posts";
 
     public ResponseEntity<String> save(PostRequest postRequest, UserAccount userAccount, Long categoryId, List<MultipartFile> files) {
 
@@ -167,6 +168,25 @@ public class PostService {
 
     }
 
+
+    public List<PostResponse> getPopularPostsFromAllCategories(long limit) {
+        ZSetOperations<String, Object> zSetOps = myredisTemplate.opsForZSet();
+        Set<ZSetOperations.TypedTuple<Object>> topPostIdsWithScores = zSetOps.reverseRangeWithScores(POPULAR_POSTS_KEY, 0, limit-1);
+//        System.out.println("최상위 랭킹아이디는 " + topPostIdsWithScores);
+        Set<Long> topPostIds = Objects.requireNonNull(topPostIdsWithScores).stream()
+                .map(typedTuple -> Long.valueOf(typedTuple.getValue().toString()))
+                .collect(Collectors.toSet());
+//        System.out.println("인기게시글의 개수는 :  " + topPostIds.size());
+
+        
+        List<Post> posts = postRepository.findAllById(topPostIds);
+//        System.out.println("최상위 게시글은 : " + posts);
+        return posts.stream().map(post -> PostResponse.from(post, userAccountRepository)).collect(Collectors.toList());
+    }
+
+    /* 기존 로직 postman 테스트 시 1000ms가 넘음
+
+
     public List<PostResponse> getPopularPostsFromAllCategories(long limit) {
         // 1. 모든 게시글 조회
         List<Post> allPosts = postRepository.findAll();
@@ -176,7 +196,6 @@ public class PostService {
 
         // 3. 원하는 개수만큼 선택하여 반환
         return allPosts.stream().map(post -> PostResponse.from(post, userAccountRepository)).limit(limit).collect(Collectors.toList());
-    }
-
-
+        }
+    */
 }

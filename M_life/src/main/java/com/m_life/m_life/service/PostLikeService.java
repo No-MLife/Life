@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +22,8 @@ public class PostLikeService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final Logger logger = LoggerFactory.getLogger(PostLikeService.class);
+    private final RedisTemplate<String, Object> myredisTemplate;
+    private static final String POPULAR_POSTS_KEY = "popular_posts";
 
     public void likePost(Long postId, UserAccount userAccount) {
         Post post = postRepository.findById(postId)
@@ -33,6 +37,9 @@ public class PostLikeService {
         postLike.setPost(post);
         postLike.setUserAccount(userAccount);
         postLikeRepository.save(postLike);
+
+        // Redis Sorted Set 업데이트
+        updatePostLikes(postId, 1);
     }
 
     public void unlikePost(Long postId, UserAccount userAccount) {
@@ -46,6 +53,8 @@ public class PostLikeService {
         else{
             logger.info("좋아요한 기록이 없습니다.");
         }
+
+        updatePostLikes(postId, -1);
     }
 
     private boolean isAlreadyLiked(Post post, UserAccount userAccount) {
@@ -63,5 +72,12 @@ public class PostLikeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
         return post.getLikes().stream()
                 .anyMatch(like -> like.getUserAccount().equals(userAccount));
+    }
+
+
+    private void updatePostLikes(Long postId, int delta) {
+        myredisTemplate.opsForZSet().incrementScore(POPULAR_POSTS_KEY, postId.toString(), delta);
+        System.out.println("Current PostId is " + postId.toString());
+//        myredisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
     }
 }
