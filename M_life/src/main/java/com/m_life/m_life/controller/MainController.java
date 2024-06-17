@@ -4,13 +4,12 @@ import com.m_life.m_life.domain.PostCategory;
 import com.m_life.m_life.dto.request.SignupRequest;
 import com.m_life.m_life.repository.PostCategoryRepository;
 import com.m_life.m_life.service.MyUserService;
-import com.m_life.m_life.service.S3Service;
-import com.m_life.m_life.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,4 +44,7 @@ public class MainController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+
 }

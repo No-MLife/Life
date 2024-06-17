@@ -7,10 +7,13 @@ import com.m_life.m_life.dto.request.SignupRequest;
 import com.m_life.m_life.repository.UserAccountRepository;
 import com.m_life.m_life.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class MyUserService {
     private final UserAccountRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserProfileRepository userProfileRepository;
+
 
 
     public ResponseEntity<String> joinProcess(SignupRequest signupRequest) {
@@ -71,4 +75,6 @@ public class MyUserService {
             throw new IllegalArgumentException("User not found with nickname: " + nickname);
         }
     }
+
+
 }

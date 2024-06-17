@@ -3,6 +3,7 @@ package com.m_life.m_life.config;
 import com.m_life.m_life.domain.*;
 import com.m_life.m_life.dto.Experience;
 import com.m_life.m_life.repository.*;
+import com.m_life.m_life.service.PostLikeService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,16 +22,18 @@ public class DataInitializer implements CommandLineRunner {
     private final PostRepository postRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PostLikeService postLikeService;
 
 
 
-    public DataInitializer(PostCategoryRepository postCategoryRepository, CommentRepository commentRepository, UserProfileRepository userProfileRepository, UserAccountRepository userAccountRepository, PostRepository postRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public DataInitializer(PostCategoryRepository postCategoryRepository, CommentRepository commentRepository, UserProfileRepository userProfileRepository, UserAccountRepository userAccountRepository, PostRepository postRepository, BCryptPasswordEncoder bCryptPasswordEncoder, PostLikeService postLikeService) {
         this.postCategoryRepository = postCategoryRepository;
         this.commentRepository = commentRepository;
         this.userProfileRepository = userProfileRepository;
         this.userAccountRepository = userAccountRepository;
         this.postRepository = postRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.postLikeService = postLikeService;
     }
 
     @Override
@@ -135,12 +138,19 @@ public class DataInitializer implements CommandLineRunner {
 
 
 
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 1; i <= 10000; i++) {
                 Post post = Post.of("title" + i, "content" + i, postCategories.get(2));
                 post.setUserAccount(user);
                 posts.add(post);
             }
             postRepository.saveAll(posts);
+
+            for (int i = 1; i <= 10000; i++) {
+                Long post_id = posts.get(i-1).getId();
+                postLikeService.likePost(post_id, user);
+            }
+
+
 
             List<Comment> comments = new ArrayList<>();
             Post sample_post = Post.of("title" , "content" , postCategories.get(1));

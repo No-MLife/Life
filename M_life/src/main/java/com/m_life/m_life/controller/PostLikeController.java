@@ -5,7 +5,6 @@ import com.m_life.m_life.service.CustomUserDetails;
 import com.m_life.m_life.service.PostLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostLikeController {
     private final PostLikeService postLikeService;
+
 
 
     @PostMapping
