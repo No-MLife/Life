@@ -22,6 +22,17 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - m_life_network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
     networks:
       - m_life_network
 

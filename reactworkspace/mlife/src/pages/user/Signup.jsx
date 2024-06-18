@@ -2,44 +2,72 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import logo from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
-import {postSignupApi} from '../../api/UserApi'
-
+import { postSignupApi } from '../../api/UserApi';
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    nickname: '',
+    email: ''
+  });
   const [error, setError] = useState('');
+
+  // 유효성 검사 함수
+  const validateUsername = (username) => /^[a-zA-Z0-9]+$/.test(username); // 영어와 숫자만 허용
+  const validatePassword = (password) => password.length >= 4 && password.length <= 10; // 4~10자
+  const validateNickname = (nickname) => nickname.length >= 4; // 4글자 이상
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email); // 이메일 형식
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // 회원가입 로직 구현
-    const UserReqDto = {
-        "username": username,
-        "password": password,
-        "nickname": nickname,
-        "email": email
-      }
 
-    try {
-      const response = await postSignupApi(UserReqDto);  
-      // UserRepository의 signup 메소드를 호출하여 회원가입 요청 보내기
-      console.log(response.status)
-      if (response.status == 200) {
-        window.alert("성공적으로 회원가입 되었습니다.");
-        navigate('/login');
-    } 
-    } catch (error) {
-      console.log(error)
-      if(error.response.status == 400)
-        window.alert(error.response.data);
-      else
-        window.alert("회원가입에 실패하였습니다. 다시 확인해주세요.");
+    const { username, password, nickname, email } = formData;
+
+    if (!validateUsername(username)) {
+      setError('아이디는 한글만 가능합니다.');
+      return;
+    }
+    if (!validatePassword(password)) {
+      setError('비밀번호는 4~10자 이내여야 합니다.');
+      return;
+    }
+    if (!validateNickname(nickname)) {
+      setError('닉네임은 4글자 이상이어야 합니다.');
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError('유효한 이메일 형식을 입력해주세요.');
+      return;
     }
 
-      
+    const userReqDto = {
+      username,
+      password,
+      nickname,
+      email
+    };
+
+    try {
+      const response = await postSignupApi(userReqDto);
+      if (response.status === 200) {
+        window.alert('성공적으로 회원가입 되었습니다.');
+        navigate('/login');
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.status === 400) {
+        window.alert(error.response.data);
+      } else {
+        window.alert('회원가입에 실패하였습니다. 다시 확인해주세요.');
+      }
+    }
   };
 
   return (
@@ -49,27 +77,31 @@ const SignupPage = () => {
       <Form onSubmit={handleSignup}>
         <Input
           type="text"
+          name="username"
           placeholder="아이디 입력란"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={formData.username}
+          onChange={handleInputChange}
         />
         <Input
           type="password"
+          name="password"
           placeholder="비밀번호 입력란"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleInputChange}
         />
         <Input
           type="text"
+          name="nickname"
           placeholder="닉네임 입력란"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          value={formData.nickname}
+          onChange={handleInputChange}
         />
         <Input
           type="email"
+          name="email"
           placeholder="이메일 입력란"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleInputChange}
         />
         <Button type="submit">회원가입</Button>
         {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -83,7 +115,6 @@ const SignupPage = () => {
 
 export default SignupPage;
 
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -95,7 +126,7 @@ const Container = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 200px; // 로고 크기 증가
+  width: 200px;
   height: auto;
   margin-bottom: 20px;
   background-color: white;
@@ -125,13 +156,13 @@ const Input = styled.input`
   padding: 15px;
   margin: 10px 0;
   border: 1px solid #ddd;
-  border-radius: 20px; // 입력란 라운드 추가
+  border-radius: 20px;
   color: #333;
   background-color: #fff;
   font-size: 16px;
   &:focus {
-    border-color: #ffca28; /* 포커스 상태에서 테두리 색상을 노란색으로 설정 */
-    outline: none; /* 기본 포커스 아웃라인 제거 */
+    border-color: #ffca28;
+    outline: none;
   }
 `;
 
@@ -145,7 +176,6 @@ const Button = styled.button`
   color: white;
   font-weight: bold;
   cursor: pointer;
-
   &:hover {
     background-color: #ffb300;
   }

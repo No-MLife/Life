@@ -98,69 +98,66 @@ public class DataInitializer implements CommandLineRunner {
 
 
             // 유저 2~3명 생성
-            UserAccount sample = UserAccount.of("멥쌀가루", "sample", bCryptPasswordEncoder.encode("123123"), "sample@nate.com", "ROLE_USER");
-            UserAccount user = UserAccount.of("아칸소주", "test", bCryptPasswordEncoder.encode("123123"), "sample1@nate.com","ROLE_USER");
-            UserAccount user1 = UserAccount.of("콩쥐들쥐", "test1", bCryptPasswordEncoder.encode("123123"), "sampl2@nate.com", "ROLE_USER");
-            UserAccount user2 = UserAccount.of("현모양초", "test2", bCryptPasswordEncoder.encode("123123"), "sample3@nate.com","ROLE_USER");
-            UserAccount user3 = UserAccount.of("휴지필름", "test3", bCryptPasswordEncoder.encode("123123"), "sample4@nate.com","ROLE_USER");
-            userAccountRepository.saveAll(Arrays.asList(sample, user, user1, user2, user3));
-
-            UserProfile userProfile = UserProfile.of(
-                    "",
-                    "한 줄 자기소개","", Experience.ZERO_YEAR, sample
-            );
-            userProfileRepository.save(userProfile);
-            UserProfile userProfile1 = UserProfile.of(
-                    "",
-                    "한 줄 자기소개","",Experience.ZERO_YEAR, user
-            );
-            userProfileRepository.save(userProfile1);
-            UserProfile userProfile2 = UserProfile.of(
-                    "",
-                    "한 줄 자기소개","",Experience.ZERO_YEAR, user1
-            );
-            userProfileRepository.save(userProfile2);
-
-            UserProfile userProfile3 = UserProfile.of(
-                    "",
-                    "한 줄 자기소개","",Experience.ZERO_YEAR, user2
-            );
-            userProfileRepository.save(userProfile3);
-            UserProfile userProfile4 = UserProfile.of(
-                    "",
-                    "한 줄 자기소개","",Experience.ZERO_YEAR, user3
-            );
-            userProfileRepository.save(userProfile4);
-
-            postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8));
-            // 게시글
-            List<Post> posts = new ArrayList<>();
-
-
-
-            for (int i = 1; i <= 10000; i++) {
-                Post post = Post.of("title" + i, "content" + i, postCategories.get(2));
-                post.setUserAccount(user);
-                posts.add(post);
-            }
-            postRepository.saveAll(posts);
-
-            for (int i = 1; i <= 10000; i++) {
-                Long post_id = posts.get(i-1).getId();
-                postLikeService.likePost(post_id, user);
-            }
-
-
-
-            List<Comment> comments = new ArrayList<>();
-            Post sample_post = Post.of("title" , "content" , postCategories.get(1));
-            sample_post.setUserAccount(user);
-            postRepository.save(sample_post);
-            for(int i= 1; i<= 1000; i++){
-                Comment comment = Comment.of("content" + i, sample_post, user1);
-                comments.add(comment);
-            }
-            commentRepository.saveAll(comments);
+//            UserAccount sample = UserAccount.of("멥쌀가루", "sample", bCryptPasswordEncoder.encode("123123"), "sample@nate.com", "ROLE_USER");
+//            UserAccount user = UserAccount.of("아칸소주", "test", bCryptPasswordEncoder.encode("123123"), "sample1@nate.com","ROLE_USER");
+//            UserAccount user1 = UserAccount.of("콩쥐들쥐", "test1", bCryptPasswordEncoder.encode("123123"), "sampl2@nate.com", "ROLE_USER");
+//            UserAccount user2 = UserAccount.of("현모양초", "test2", bCryptPasswordEncoder.encode("123123"), "sample3@nate.com","ROLE_USER");
+//            UserAccount user3 = UserAccount.of("휴지필름", "test3", bCryptPasswordEncoder.encode("123123"), "sample4@nate.com","ROLE_USER");
+//            userAccountRepository.saveAll(Arrays.asList(sample, user, user1, user2, user3));
+//
+//            UserProfile userProfile = UserProfile.of(
+//                    "",
+//                    "한 줄 자기소개","", Experience.ZERO_YEAR, sample
+//            );
+//            userProfileRepository.save(userProfile);
+//            UserProfile userProfile1 = UserProfile.of(
+//                    "",
+//                    "한 줄 자기소개","",Experience.ZERO_YEAR, user
+//            );
+//            userProfileRepository.save(userProfile1);
+//            UserProfile userProfile2 = UserProfile.of(
+//                    "",
+//                    "한 줄 자기소개","",Experience.ZERO_YEAR, user1
+//            );
+//            userProfileRepository.save(userProfile2);
+//
+//            UserProfile userProfile3 = UserProfile.of(
+//                    "",
+//                    "한 줄 자기소개","",Experience.ZERO_YEAR, user2
+//            );
+//            userProfileRepository.save(userProfile3);
+//            UserProfile userProfile4 = UserProfile.of(
+//                    "",
+//                    "한 줄 자기소개","",Experience.ZERO_YEAR, user3
+//            );
+//            userProfileRepository.save(userProfile4);
+//
+//            postCategories.addAll(Arrays.asList(category1, category2, category3, category4, category5, category6, category7, category8));
+//            // 게시글
+//            List<Post> posts = new ArrayList<>();
+//
+//
+//            for (int i = 1; i <= 10000; i++) {
+//                Post post = Post.of("title" + i, "content" + i, postCategories.get(2));
+//                post.setUserAccount(user);
+//                posts.add(post);
+//            }
+//            postRepository.saveAll(posts);
+//
+//            for (int i = 1; i <= 10000; i++) {
+//                Long post_id = posts.get(i-1).getId();
+//                postLikeService.likePost(post_id, user);
+//            }
+//
+//            List<Comment> comments = new ArrayList<>();
+//            Post sample_post = Post.of("title" , "content" , postCategories.get(1));
+//            sample_post.setUserAccount(user);
+//            postRepository.save(sample_post);
+//            for(int i= 1; i<= 1000; i++){
+//                Comment comment = Comment.of("content" + i, sample_post, user1);
+//                comments.add(comment);
+//            }
+//            commentRepository.saveAll(comments);
         }
 
 
