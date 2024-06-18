@@ -66,7 +66,8 @@ public class ReissueService {
         String nickname=  jwtUtil.getNickname(refresh);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", username, nickname,  role, 600000L);
+//        String newAccess = jwtUtil.createJwt("access", username, nickname,  role, 600000L);
+        String newAccess = jwtUtil.createJwt("access", username, nickname,  role, 86400000L);
         String newRefresh = jwtUtil.createJwt("refresh", username, nickname, role, 86400000L);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장

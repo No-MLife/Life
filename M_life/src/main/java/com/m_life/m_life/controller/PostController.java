@@ -82,6 +82,9 @@ public class PostController {
                                              @RequestPart(value = "images", required = false) List<MultipartFile> files,
                                              @RequestPart("postRequest") String postRequestJson,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // 디버깅용 프린트문 추가
+        System.out.println("업데이트 요청중.....");
+
         if (categoryId != 1) {
             PostRequest postRequest;
 
