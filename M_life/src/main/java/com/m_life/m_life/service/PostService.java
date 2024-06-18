@@ -72,35 +72,31 @@ public class PostService {
 
             if (postRequest.title() != null) {
                 post.setTitle(postRequest.title());
-                System.out.println("Title updated to: " + postRequest.title());
             }
 
             if (postRequest.content() != null) {
                 post.setContent(postRequest.content());
-                System.out.println("Content updated to: " + postRequest.content());
             }
 
             PostCategory postCategory = postCategoryRepository.findById(categoryId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID"));
             post.setCategory(postCategory);
-            System.out.println("Category updated to: " + postCategory.getBoardName());
 
             // 새로운 이미지 업로드
             List<String> newImageUrls = (files != null && !files.isEmpty()) ?
                     s3Service.uploadPostImages(files, post.getId()) :
                     List.of();
-            System.out.println("New image URLs: " + newImageUrls);
+
 
             // 기존 URL 유지 및 새 URL 추가
             Set<String> currentImageUrls = new HashSet<>(postRequest.postImageUrls());
             currentImageUrls.addAll(newImageUrls);
-            System.out.println("Current image URLs: " + currentImageUrls);
+
 
             // 기존 이미지 삭제 로직 - 새로운 URL에 포함되지 않은 기존 이미지 필터링
             List<PostImage> imagesToDelete = post.getImages().stream()
                     .filter(image -> !currentImageUrls.contains(image.getS3Url()))
                     .collect(Collectors.toList());
-            System.out.println("Images to delete: " + imagesToDelete);
 
             for (PostImage image : imagesToDelete) {
                 s3Service.deleteImage(image.getS3Url());
@@ -108,7 +104,7 @@ public class PostService {
 
             postImageRepository.deleteAll(imagesToDelete);
             post.getImages().removeAll(imagesToDelete);
-            System.out.println("Deleted images successfully");
+
 
             // 새 이미지를 포스트에 추가
             List<PostImage> uploadedImages = newImageUrls.stream()
@@ -117,7 +113,6 @@ public class PostService {
 
             post.getImages().addAll(uploadedImages);
             postRepository.save(post);
-            System.out.println("Added new images successfully");
 
             return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
         } catch (Exception e) {
