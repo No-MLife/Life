@@ -1,13 +1,12 @@
 package com.m_life.userservice.domain;
+
 import com.m_life.userservice.dto.Experience;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class UserProfile extends BaseTimeEntity {

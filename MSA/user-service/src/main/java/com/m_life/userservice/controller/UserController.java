@@ -1,17 +1,16 @@
 package com.m_life.userservice.controller;
+import com.m_life.userservice.dto.SignupRequest;
+import com.m_life.userservice.dto.UserResponse;
+import com.m_life.userservice.servcie.UserAccountService;
 
-import com.m_life.userservice.dto.req.SignupRequest;
-import com.m_life.userservice.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user-service")
 public class UserController {
     @Value("${greeting.message}")
     private String message;
@@ -19,7 +18,7 @@ public class UserController {
     private final UserAccountService userAccountService;
 
     // 서버가 실행중인지 확인
-    @GetMapping("/health_check")
+    @GetMapping("/")
     public String status() {
         return "It's Working in User Micro Service";
     }
@@ -27,6 +26,12 @@ public class UserController {
     @GetMapping("/welcome")
     public String welcome() {
         return message;
+    }
+
+    // 웰컴 메시지
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable(name = "userId") Long userId) {
+        return userAccountService.getUser(userId);
     }
 
     @PostMapping("/signup")

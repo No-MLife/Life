@@ -1,16 +1,15 @@
-package com.m_life.discoveryservice;
+package com.m_life.apigatewayservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication
-@EnableEurekaServer
-public class DiscoveryserviceApplication {
+@EnableDiscoveryClient
+public class ApigatewayServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DiscoveryserviceApplication.class, args);
+		SpringApplication.run(ApigatewayServiceApplication.class, args);
 	}
 
 }
