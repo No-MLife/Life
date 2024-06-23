@@ -11,8 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,13 +26,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+@Slf4j
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
-    private final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -51,17 +50,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             LoginRequest loginRequest = mapper.readValue(sb.toString(), LoginRequest.class);
 
             // LoginRequest 객체에서 username과 password를 추출
-            String username = loginRequest.getUserLoginId();
+            String username = loginRequest.getUsername();
             String password = loginRequest.getPassword();
 
 
-            //스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
+            // 스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
-            //token에 담은 검증을 위한 AuthenticationManager로 전달
+            // token에 담은 검증을 위한 AuthenticationManager로 전달
             return authenticationManager.authenticate(authToken);
-        } catch (IOException  e) {
+        } catch (IOException e) {
+            log.error("JSON 파싱 실패", e);
             throw new AuthenticationException("JSON 파싱 실패", e) {};
+        } catch (AuthenticationException e) {
+            log.error("Authentication failed", e);
+            throw e;
         }
     }
 
@@ -79,15 +82,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        //토큰 생성
-//        String access = jwtUtil.createJwt("access", username,nickname, role, 600000L);
-        String access = jwtUtil.createJwt("access", username,nickname, role, 86400000L);
+        // 토큰 생성
+        String access = jwtUtil.createJwt("access", username, nickname, role, 86400000L);
         String refresh = jwtUtil.createJwt("refresh", username, nickname, role, 86400000L);
 
-        //Refresh 토큰 저장
+        // Refresh 토큰 저장
         addRefreshEntity(username, refresh, 86400000L);
 
-        //응답 설정
+        // 응답 설정
         response.setHeader("access", access); // 헤더에 접근 토큰
         response.addCookie(createCookie("refresh", refresh)); // 쿠키에 리프레쉬 토큰
         response.setStatus(HttpStatus.OK.value());
@@ -110,27 +112,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
 
-        logger.info("로그인을 실패했습니다.");
-        response.setStatus(401);
+        log.error("로그인을 실패했습니다.", failed);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 
     private static class LoginRequest {
-        // getter와 setter는 Lombok의 @Data 어노테이션을 사용하여 자동 생성 가능
         @Getter
-        private String userLoginId;
+        private String username;
         @Getter
         private String password;
         private String nickname;
-
     }
+
     private Cookie createCookie(String key, String value) {
-
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true); // https 에서 사용
-        //cookie.setPath("/");
+        cookie.setMaxAge(24 * 60 * 60);
         cookie.setHttpOnly(true);
-
         return cookie;
     }
 }

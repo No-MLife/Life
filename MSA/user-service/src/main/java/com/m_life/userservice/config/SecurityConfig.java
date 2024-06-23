@@ -1,5 +1,10 @@
 package com.m_life.userservice.config;
 
+import com.m_life.userservice.jwt.CustomLogoutFilter;
+import com.m_life.userservice.jwt.JWTFilter;
+import com.m_life.userservice.jwt.JWTUtil;
+import com.m_life.userservice.repository.RefreshRepository;
+import com.m_life.userservice.servcie.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +42,9 @@ public class SecurityConfig {
     }
 
     private final AuthenticationConfiguration authenticationConfiguration;
-//    private final CustomUserDetailsService customUserDetailsService;
-//    private final JWTUtil jwtUtil;
-//    private final RefreshRepository refreshRepository;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
 
     @Bean
@@ -72,24 +77,24 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/user-service/**" , "/reissue", "/login", "/signup", "/" ).permitAll()
+                        .requestMatchers("/reissue", "/login", "/signup", "/" ,"/users/**" ).permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated());
 
-//        //JWTFilter 등록
-//        http
-//                .addFilterBefore(new JWTFilter(jwtUtil, customUserDetailsService), LoginFilter.class);
-//
-//        http
-//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
-//        http
-//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
-//
-//        http
-//                .sessionManagement((session) -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        //JWTFilter 등록
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil, customUserDetailsService), LoginFilter.class);
+
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+
+        http
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

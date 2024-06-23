@@ -15,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserAccountService {
@@ -27,7 +30,7 @@ public class UserAccountService {
 
     public ResponseEntity<String> joinProcess(SignupRequest signupRequest) {
 
-        String userid = signupRequest.getUserLoginId();
+        String userid = signupRequest.getUsername(); // 유저 로그인 아이디 
         String nickname = signupRequest.getNickname();
         String password = signupRequest.getPassword();
         String email = signupRequest.getEmail();
@@ -82,5 +85,14 @@ public class UserAccountService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저가 존재하지 않습니다.")
         );
         return ResponseEntity.ok().body(UserResponse.from(userAccount));
+    }
+
+    public ResponseEntity<List<UserResponse>> getUsers() {
+        List<UserAccount> userAccounts = userRepository.findAll();
+        return ResponseEntity.ok(
+                userAccounts.stream().map(
+                        UserResponse::from
+                ).collect(Collectors.toList())
+        );
     }
 }
