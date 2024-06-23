@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/user-service")
 public class UserController {
-    @Value("${greeting.message}")
-    private String message;
 
     private final UserAccountService userAccountService;
 
@@ -22,13 +20,7 @@ public class UserController {
     public String status() {
         return "It's Working in User Micro Service";
     }
-    // 웰컴 메시지
-    @GetMapping("/welcome")
-    public String welcome() {
-        return message;
-    }
 
-    // 웰컴 메시지
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable(name = "userId") Long userId) {
         return userAccountService.getUser(userId);
