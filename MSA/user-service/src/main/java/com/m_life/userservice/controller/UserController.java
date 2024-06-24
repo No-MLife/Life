@@ -75,8 +75,6 @@ public class UserController {
 
 
 
-
-
     // ====================================================== DELETE =====================================================
     @DeleteMapping("/{nickname}")
     public ResponseEntity<Void> deleteUser(@PathVariable(name="nickname") String nickname) {

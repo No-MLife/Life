@@ -2,10 +2,22 @@ server:
   port: 8888
 
 spring:
-  application:
-    name: config-service
   cloud:
     config:
       server:
         git:
-          uri: file:///C:\Users\jypor\Desktop\programing\m_life\config
+          uri: file:///Users/dak_kiwon/Jun/Springboot/git-local-repo
+          clone-on-start: true
+  application:
+    name: config-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, bus-refresh

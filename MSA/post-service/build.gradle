@@ -44,6 +44,16 @@ dependencies {
     // aws s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+
+    // config
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
+    // RabbitMQ
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    // Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 dependencyManagement {

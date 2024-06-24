@@ -11,7 +11,11 @@ eureka:
 spring:
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
-
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   application:
     name: apigateway-service
 
@@ -36,6 +40,15 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment} #-- 백엔드로 요청을 보낼 때 user-service를 버리고 요청
 
+        - id: user-service-actuator
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} #-- 백엔드로 요청을 보낼 때 user-service를 버리고 요청
+
 
         - id: user-service-info
           uri: lb://USER-SERVICE
@@ -51,3 +64,8 @@ spring:
           uri: lb://POST-SERVICE
           predicates:
             - Path=/post-service/**
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, bus-refresh

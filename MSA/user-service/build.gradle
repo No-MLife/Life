@@ -62,6 +62,12 @@ dependencies {
 	// config
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
+	// RabbitMQ
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+	// Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 }
 
 dependencyManagement {
