@@ -34,25 +34,30 @@
  <img src="https://github.com/No-MLife/Life/assets/79856225/4451b1c3-00c8-4443-b2ac-6c4df244050d", height=430 width=200/>
  <img src="https://github.com/No-MLife/Life/assets/79856225/fab0d426-4b5c-42dc-8674-4df9ff4f5c64", height=430 width=200/>
  
+</div>
+
+## 💻웹페이지
+
+
+ <div align="center">
+ <img src="https://github.com/No-MLife/Life/assets/79856225/fb7ce126-7491-4b9d-affd-34832b2995c1"/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/29c6192f-dd69-495a-9e5a-171d79e9074b"/>
+  <img src="https://github.com/No-MLife/Life/assets/79856225/a41ef1bb-9788-464c-8b98-46f51f2411f0"/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/7470f265-eea9-4562-a5ee-10713e7717a0"/>
+ <img src="https://github.com/No-MLife/Life/assets/79856225/25e1e15b-f105-4128-bba2-1bd0e564b466"/>
  
- 
-
-
-
-
 </div>
 
 
 
-
-## 🎬프로젝트 시연 동영상
+<!-- ## 🎬프로젝트 시연 동영상
 
  <div align="center">
  
 
 
 
-</div>
+</div> -->
 
 
 
@@ -60,6 +65,7 @@
 ## 🔎시스템 구성도
 
 <div align="center">
+<img src="https://github.com/No-MLife/Life/assets/79856225/13a11342-a5d5-4b09-ad61-efae3f3a3c9e"/>
 
 
 </div>

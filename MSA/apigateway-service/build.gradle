@@ -34,6 +34,13 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	// RabbitMQ + Spring Cloud Bus
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+
+	// Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 dependencyManagement {

@@ -11,14 +11,18 @@ eureka:
 spring:
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
-
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   application:
     name: apigateway-service
 
   cloud:
     gateway:
       routes:
-        - id: user-service-login
+        - id: user-service-login #-- 로그인
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/login
@@ -27,7 +31,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
-        - id: user-service-signup
+        - id: user-service-signup #-- 회원가입
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/signup
@@ -36,8 +40,17 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment} #-- 백엔드로 요청을 보낼 때 user-service를 버리고 요청
 
+        - id: user-service-actuator #-- actuator
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method= POST, GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} #-- 백엔드로 요청을 보낼 때 user-service를 버리고 요청
 
-        - id: user-service-info
+
+        - id: user-service-info #-- 그 외 서비스
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
@@ -51,3 +64,8 @@ spring:
           uri: lb://POST-SERVICE
           predicates:
             - Path=/post-service/**
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh
