@@ -27,11 +27,13 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    testImplementation 'org.springframework.security:spring-security-test'
 
-    // RabbitMQ
+    // RabbitMQ + Spring Cloud Bus
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+
     // Actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }

@@ -2,14 +2,16 @@ server:
   port: 8888
 
 spring:
+  application:
+    name: config-service
   cloud:
     config:
       server:
         git:
-          uri: file:///Users/dak_kiwon/Jun/Springboot/git-local-repo
-          clone-on-start: true
-  application:
-    name: config-service
+          uri: git@github.com:No-MLife/git-local-repo.git
+          ignoreLocalSshSettings: true
+          
+
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -20,4 +22,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, bus-refresh
+        include: health, busrefresh
