@@ -2,8 +2,8 @@ package com.m_life.postservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.m_life.postservice.dto.PostRequest;
-import com.m_life.postservice.dto.PostResponse;
+import com.m_life.postservice.dto.req.PostRequest;
+import com.m_life.postservice.dto.res.PostResponse;
 import com.m_life.postservice.servcie.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/post-service/")
 public class PostController {
     private final PostService postService;
     private final ObjectMapper objectMapper;

@@ -1,6 +1,6 @@
 package com.m_life.postservice.domain;
 
-import com.m_life.postservice.dto.PostRequest;
+import com.m_life.postservice.dto.req.PostRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +38,10 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostLike> likes = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList = new ArrayList<>();
 
     // 카테고리 ID
     @Column(nullable = false)

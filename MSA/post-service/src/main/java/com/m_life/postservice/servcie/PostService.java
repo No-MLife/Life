@@ -4,21 +4,20 @@ import com.m_life.postservice.client.CategoryServiceClient;
 import com.m_life.postservice.client.UserServiceClient;
 import com.m_life.postservice.domain.Post;
 import com.m_life.postservice.domain.PostImage;
-import com.m_life.postservice.dto.CategoryResponse;
-import com.m_life.postservice.dto.PostRequest;
-import com.m_life.postservice.dto.UserResponse;
+import com.m_life.postservice.dto.res.CategoryResponse;
+import com.m_life.postservice.dto.req.PostRequest;
+import com.m_life.postservice.dto.res.CommentResponse;
+import com.m_life.postservice.dto.res.UserResponse;
 import com.m_life.postservice.repository.PostImageRepository;
 import com.m_life.postservice.repository.PostRepository;
-import com.m_life.postservice.dto.PostResponse;
+import com.m_life.postservice.dto.res.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
+import org.json.HTTP;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -62,6 +61,8 @@ public class PostService {
 
             //  step5. 이거 어카지 + 댓글은 어카지? postid로 댓글 가져와야 할ㅇ듯
             responsePost.setAuthorLikes(0L); // 실제 작성자 좋아요 수로 설정
+
+            responsePost.setCommentList(post.getCommentList().stream().map(comment -> CommentResponse.from(comment, userResponse.getNickname())).collect(Collectors.toList()));
             return ResponseEntity.status(HttpStatus.OK).body(responsePost);
         }
         catch (Exception e){
@@ -91,6 +92,7 @@ public class PostService {
 
                     // 작성자 좋아요 수 설정 (여기서는 예시로 0으로 설정)
                     responsePost.setAuthorLikes(0L);
+                    responsePost.setCommentList(post.getCommentList().stream().map(comment -> CommentResponse.from(comment, userResponse.getNickname())).collect(Collectors.toList()));
 
                     return responsePost;
                 }).toList();
@@ -123,6 +125,7 @@ public class PostService {
 
                     // 작성자 좋아요 수 설정 (여기서는 예시로 0으로 설정)
                     responsePost.setAuthorLikes(0L);
+                    responsePost.setCommentList(post.getCommentList().stream().map(comment -> CommentResponse.from(comment, userResponse.getNickname())).collect(Collectors.toList()));
 
                     return responsePost;
                 }).toList();
@@ -260,7 +263,7 @@ public class PostService {
             postImageRepository.deleteAll(post.getImages());
         }
         postRepository.deleteById(postId);
-        return ResponseEntity.ok().body("게시글이 정상적으로 삭제되었습니다.");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
     // ============================================= DELETE ======================================================
 }

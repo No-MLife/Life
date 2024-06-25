@@ -1,4 +1,4 @@
-package com.m_life.postservice.dto;
+package com.m_life.postservice.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

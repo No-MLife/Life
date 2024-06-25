@@ -1,8 +1,9 @@
-package com.m_life.commentservice.dto;
+package com.m_life.postservice.dto.res;
 
 
 
-import com.m_life.commentservice.domain.Comment;
+
+import com.m_life.postservice.domain.Comment;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +24,7 @@ public record CommentResponse(
                 comment.getId(),
                 comment.getContent(),
                 comment.getCreateDate(),
-                comment.getPostId(),
+                comment.getPost().getId(),
                 commentAuthor
         );
     }

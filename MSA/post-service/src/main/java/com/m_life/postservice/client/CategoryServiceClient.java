@@ -1,7 +1,6 @@
 package com.m_life.postservice.client;
 
-import com.m_life.postservice.dto.CategoryResponse;
-import com.m_life.postservice.dto.UserResponse;
+import com.m_life.postservice.dto.res.CategoryResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

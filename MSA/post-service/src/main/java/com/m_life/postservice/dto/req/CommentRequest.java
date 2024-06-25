@@ -1,4 +1,4 @@
-package com.m_life.commentservice.dto;
+package com.m_life.postservice.dto.req;
 
 public record CommentRequest(
         String content
