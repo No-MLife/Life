@@ -1,4 +1,4 @@
-package com.m_life.postservice.dto;
+package com.m_life.postservice.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -16,6 +16,9 @@ public class UserResponse {
         this.userLoginId = userLoginId;
         this.email = email;
         this.nickname = nickname;
+    }
+    // 기본 생성자
+    public UserResponse() {
     }
 
 }

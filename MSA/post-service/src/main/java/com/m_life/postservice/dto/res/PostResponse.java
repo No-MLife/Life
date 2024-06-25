@@ -1,4 +1,4 @@
-package com.m_life.postservice.dto;
+package com.m_life.postservice.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.m_life.postservice.domain.Post;
@@ -20,7 +20,7 @@ public class PostResponse {
 
     private int view_count;
     // 댓글 리스트
-    private List<Objects> commentList = new ArrayList<>();
+    private List<CommentResponse> commentList = new ArrayList<>();
     private int likeCount;
     private String authorName;
 
