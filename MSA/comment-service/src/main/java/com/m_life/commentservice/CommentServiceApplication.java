@@ -1,4 +1,4 @@
-package com.m_life.postservice;
+package com.m_life.commentservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableJpaAuditing
-public class PostServiceApplication {
+public class CommentServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(PostServiceApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(CommentServiceApplication.class, args);
+	}
 
 }

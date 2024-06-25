@@ -1,7 +1,10 @@
 package com.m_life.postservice.servcie;
 
+import com.m_life.postservice.client.CategoryServiceClient;
+import com.m_life.postservice.client.UserServiceClient;
 import com.m_life.postservice.domain.Post;
 import com.m_life.postservice.domain.PostImage;
+import com.m_life.postservice.dto.CategoryResponse;
 import com.m_life.postservice.dto.PostRequest;
 import com.m_life.postservice.dto.UserResponse;
 import com.m_life.postservice.repository.PostImageRepository;
@@ -31,7 +34,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final com.m_life.postservice.service.S3Service s3Service;
-    private final RestTemplate restTemplate;
+
+    private final UserServiceClient userServiceClient;
+    private final CategoryServiceClient categoryServiceClient;
 
     // ============================================= READ ======================================================
     @Transactional(readOnly = true)
@@ -47,11 +52,13 @@ public class PostService {
             PostResponse responsePost = PostResponse.fromPost(post);
 
             // step3. user 정보를 받아와서 닉네임 변경
-            responsePost.setAuthorName(getAuthorName(-1L)); // 실제 작성자 이름으로 설정
+            UserResponse userResponse = userServiceClient.getUserByUserId(post.getUserId());
+            responsePost.setAuthorName(userResponse.getNickname()); // 실제 작성자 이름으로 설정
 
             // step4. category 정보를 받아와서 보드 이름과 설명 삽입
-            responsePost.setBoardName("Board Name"); // 실제 보드 이름으로 설정
-            responsePost.setDescription("Description"); // 실제 설명으로 설정
+            CategoryResponse categoryResponse = categoryServiceClient.getCategoryById(post.getCategoryId());
+            responsePost.setBoardName(categoryResponse.getBoardName()); // 실제 보드 이름으로 설정
+            responsePost.setDescription(categoryResponse.getDescription()); // 실제 설명으로 설정
 
             //  step5. 이거 어카지 + 댓글은 어카지? postid로 댓글 가져와야 할ㅇ듯
             responsePost.setAuthorLikes(0L); // 실제 작성자 좋아요 수로 설정
@@ -64,11 +71,8 @@ public class PostService {
     @Transactional(readOnly = true)
     // 유저별 게시글 전체 조회(로그인 고민중...)
     public ResponseEntity<List<PostResponse>> getPostsByUserId(Long userId) {
-        // step1. 유저가 작성한 게시글들을 모두 가져옴(user 고유 id로 조회해야함) -> 유저id가 없는경우 생각해야겠네
-        if(userId  != 1){
-            return ResponseEntity.badRequest().body(null);
-        }
-
+        // step1. 유저가 작성한 게시글들을 모두 가져옴(user 고유 id로 조회해야함) -> 해당 요청은 애초에 user-service에 온다
+        UserResponse userResponse = userServiceClient.getUserByUserId(userId);
         List<Post> posts = postRepository.findAllByUserId(userId);
 
         List<PostResponse> responsePosts = new ArrayList<>();
@@ -78,12 +82,12 @@ public class PostService {
                     PostResponse responsePost = PostResponse.fromPost(post);
 
                     // User 정보를 받아와서 닉네임 설정
-                    String authorName = getAuthorName(-1L);
-                    responsePost.setAuthorName(authorName);
+                    responsePost.setAuthorName(userResponse.getNickname());
 
                     // Category 정보를 받아와서 보드 이름과 설명 설정
-                    responsePost.setBoardName("Board Name"); // 실제 보드 이름으로 설정
-                    responsePost.setDescription("Description"); // 실제 설명으로 설정
+                    CategoryResponse categoryResponse = categoryServiceClient.getCategoryById(post.getCategoryId());
+                    responsePost.setBoardName(categoryResponse.getBoardName()); // 실제 보드 이름으로 설정
+                    responsePost.setDescription(categoryResponse.getDescription()); // 실제 설명으로 설정
 
                     // 작성자 좋아요 수 설정 (여기서는 예시로 0으로 설정)
                     responsePost.setAuthorLikes(0L);
@@ -91,10 +95,6 @@ public class PostService {
                     return responsePost;
                 }).toList();
         return ResponseEntity.ok(responsePosts);
-    }
-
-    private String getAuthorName(Long userId) {
-        return "Author Name";
     }
 
     @Transactional(readOnly = true)
@@ -113,12 +113,13 @@ public class PostService {
                     PostResponse responsePost = PostResponse.fromPost(post);
 
                     // User 정보를 받아와서 닉네임 설정
-                    String authorName = getAuthorName(-1L);
-                    responsePost.setAuthorName(authorName);
+                    UserResponse userResponse = userServiceClient.getUserByUserId(post.getUserId());
+                    responsePost.setAuthorName(userResponse.getNickname());
 
                     // Category 정보를 받아와서 보드 이름과 설명 설정
-                    responsePost.setBoardName("Board Name"); // 실제 보드 이름으로 설정
-                    responsePost.setDescription("Description"); // 실제 설명으로 설정
+                    CategoryResponse categoryResponse = categoryServiceClient.getCategoryById(post.getCategoryId());
+                    responsePost.setBoardName(categoryResponse.getBoardName()); // 실제 보드 이름으로 설정
+                    responsePost.setDescription(categoryResponse.getDescription()); // 실제 설명으로 설정
 
                     // 작성자 좋아요 수 설정 (여기서는 예시로 0으로 설정)
                     responsePost.setAuthorLikes(0L);
@@ -136,23 +137,22 @@ public class PostService {
         // request dto에서 가져와서 작성을 해야함
 
         // step1 해당 카테고리가 있는지 확인
-        Long category = postRequest.getCategoryId();
+        CategoryResponse categoryResponse = categoryServiceClient.getCategoryById(postRequest.getCategoryId());
+        if(categoryResponse.getBoardName().isBlank()){
+            return ResponseEntity.badRequest().body("해당 게시판은 존재하지 않습니다. 다시 확인해주세요.");
+        }
 
         // step2. 해당 유저가 있는지 확인
-        String userUrl = String.format("http://127.0.0.1:8000/user-service/users/%s", postRequest.getUserId());
-        ResponseEntity<UserResponse> userResponseResponseEntity =
-                restTemplate.exchange(userUrl, HttpMethod.GET, null, new ParameterizedTypeReference<UserResponse>() {
-                });
-        UserResponse userResponse = userResponseResponseEntity.getBody();
+        UserResponse userResponse = userServiceClient.getUserByUserId(postRequest.getUserId());
         if(Objects.requireNonNull(userResponse).getNickname().isBlank()){
             return ResponseEntity.badRequest().body("해당 유저가 존재하지 않습니다. 다시 확인해주세요.");
         }
 
         // step2-1 유저에서 닉네임 가져오기(필요없을듯... 반환해줄때만 필요할듯)
-        String nickname = userResponse.getNickname();
+//        String nickname = userResponse.getNickname();
 
         // step3. 포스트 생성
-        Post post = Post.of(postRequest, category, userResponse.getId());
+        Post post = Post.of(postRequest, categoryResponse.getId(), userResponse.getId());
         // 생성은 그냥 하고 반환할 때 닉네임으로 반환해주는 방식을 생각하자
         postRepository.save(post);
 

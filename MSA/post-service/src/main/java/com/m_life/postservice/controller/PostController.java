@@ -101,10 +101,12 @@ public class PostController {
             postRequest.setCategoryId(categoryId);
             postRequest.setUserId(userId);
 
-            List<String> imageUrls = files.stream()
-                    .map(MultipartFile::getOriginalFilename)
-                    .collect(Collectors.toList());
-            postRequest.setPostImageUrls(imageUrls);
+            if(files!=null){
+                List<String> imageUrls = files.stream()
+                        .map(MultipartFile::getOriginalFilename)
+                        .collect(Collectors.toList());
+                postRequest.setPostImageUrls(imageUrls);
+            }
             return postService.updatePost(postRequest, files);
         }
         return ResponseEntity.badRequest().body("인기 게시판에는 게시글 작성이 불가능합니다.");

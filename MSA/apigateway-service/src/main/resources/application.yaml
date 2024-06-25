@@ -59,6 +59,25 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+#              ----------------------------------------------------- user ------------------------------------------------
+        - id: category-service
+          uri: lb://CATEGORY-SERVICE
+          predicates:
+            - Path=/category-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/category-service/(?<segment>.*), /$\{segment}
+#            ----------------------------------------------------- category ------------------------------------------------
+        - id: comment-service
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/comment-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/comment-service/(?<segment>.*), /$\{segment}
+#            ----------------------------------------------------- comment ------------------------------------------------
+
 
         - id: post-service
           uri: lb://POST-SERVICE
